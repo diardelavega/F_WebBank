@@ -1,0 +1,21 @@
+
+ *****18
+18/06/2015 02:56:06, 1, OPEN, 70913919GVVTP98, null, 0, , 
+18/06/2015 02:56:06, 5, CNF_OPEN, 70913919GVVTP98, null, 0, , 
+18/06/2015 02:57:45, 1, REGISTER, null, 1111111116, 0, null, 
+18/06/2015 03:42:56, 0, DEPOSITE, null, null, 1, Amigos Diegos, 
+18/06/2015 03:46:55, 0, WITHDRAW, null, null, 2, , 
+18/06/2015 03:49:18, 0, TRANSFER, null, null, 3, , 
+
+ *****22
+22/06/2015 02:45:32, 0, DEPOSITE, null, null, 4, Maracaibo, 
+22/06/2015 02:46:43, 0, DEPOSITE, null, null, 5, Maracaibo, 
+22/06/2015 02:48:46, 0, WITHDRAW, null, null, 6, , 
+22/06/2015 15:20:18, 0, DEPOSITE, null, null, 7, Maracaibo, 
+22/06/2015 15:23:52, 0, DEPOSITE, null, null, 8, Maracaibo, 
+22/06/2015 15:24:39, 0, WITHDRAW, null, null, 9, , 
+
+ *****23
+23/06/2015 01:06:20, 0, DEPOSITE, null, null, 10, Maracaibo, 
+
+ *****1

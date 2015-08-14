@@ -1,0 +1,15 @@
+in the directors page, to get info about an employee and all of them use the same form.
+if the empId we search is entered  we disable the other fields, else we search based on the other fields and 
+return a json list of employees tha fulfill the criteria.
+
+regarding employees in Directors Page.
+
+1)new Employee (all emp data except emp id): (ret nothing)
+2)employeeInfo (empId || the rest of empData {json_String}) : (JSON{LIST<Employee>})
+3)alterEmployee 2 phase.  a) get employee info & select employee , b) alter employee data & save   
+
+4) getTransactions(date1,date2): JSON{list<transactions>}
+5) getBalance (date1, date2): JSON{ List<day,trDate,withdraw,deposit>}
+
+
+

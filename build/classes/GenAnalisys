@@ -1,0 +1,58 @@
+there is a System administrator that is initial god and adds a director.
+the directors add employees (tellers, managers)
+the teller open close account after customers request & commits transaction 
+the manager confirms open & close of accounts
+
+an account can have up to 4 co-owners 
+the client can be registered by the teller,
+commit different action, online->transaction, withdraw->atm & transfer from teller(and all the rest of the actions)
+the account can be closed when it has no more money in, and if all the co-owners agree(by submitting their personal id)
+
+A single SessionFactory for all (singelton)
+For every user a new  hibernate  session
+For every query a clear Session.
+All Strings In Capital Letters
+
+
+
+
+queries to be done
+(CLIENT)
+1) login: primeKey (e-mail, psw);
+2) balance: amount(primeKey,account)
+3) allBalance: {acc1-amount, acc2-amount,...}(primeKey)
+4) personalData: {fname,lname,...}(primaryKey)
+5) transfer : newAmount(primaryKey,accFrom,accTo,amount)
+6) withdraw: newAmount(primaryKey,acc,amount)
+7) deposit: newAmount (primaryKey,acc,amount)
+8) register: ok({fname,lname...})
+
+(TELLER)
+1)logIn :primeKey (e-mail, psw);
+2)open: accNr({fname,lname,...})
+3)close: ok (accNr)
+4) balance(),transfer(), withdraw(),deposit()
+
+(MANAGER)
+1) logIn: primaryKey(usr,psw)
+2)confirmOpen: ok(event Ok)
+3)confirmClose: ok(event Ok)
+4)bankBalance: totAmount(Sum(all balances))
+5)bankTransfers: {tranfer1,tr2,...}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

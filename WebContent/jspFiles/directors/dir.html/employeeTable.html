@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+
+<!-- <style type="text/css">
+      table.normal{
+       table-layout:fixed;
+       /* width:100%; 
+       border:solid 1px #000000;*/
+       
+       border-collapse:collapse; 
+       border-spacing:10;
+      }
+       table.normal th{
+       border:solid 0px #000000;
+       word-wrap:break-word;
+      } 
+       table.normal td{
+       border:solid 0px #000000;
+       vertical-align:top;
+       word-wrap:break-word;
+      } 
+      
+    </style> -->
+<style>
+td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: .5em;
+	padding-right: .5em;
+}
+</style>
+
+<table class="normal"
+	style="margin: 30px; margin-left: 20px; padding: 10px;">
+
+	
+	<tr>
+		<td><label> F. Name &nbsp;</label></td>
+		<td><input type="text" name="fname" id="fname"></td>
+	</tr>
+	<tr>
+		<td><label> L. Name &nbsp;</label></td>
+		<td><input type="text" name="lname"></td>
+	</tr>
+	<tr>
+		<td><label> Address&nbsp;</label></td>
+		<td><input type="text" name="address"></td>
+	</tr>
+	<tr>
+		<td><label> E-mail&nbsp;</label></td>
+		<td><input id="email" onkeyup="addemail(this);" type="text"
+			name="email"></td>
+	</tr>
+	<tr>
+		<td><label> Password&nbsp;</label></td>
+		<td><input type="text" name="psw"></td>
+	</tr>
+	<tr>
+		<td><label> Possition&nbsp;</label></td>
+		<td><select id="possition" name="possition">
+				<option value="TELLER">TELLER</option>
+				<option value="MANAGER">MANAGER</option>
+				<option value="DIRECTOR">DIRECTOR</option>
+		</select></td>
+	</tr>
+	<tr id="trid" style="visibility: visible">
+		<td><label> Emp. Id &nbsp;</label></td>
+		<td><input type="text" name="id"></td>
+	</tr>
+	<!-- <tr> 
+		<td colspan="2" align="center"><input id="butid" type="button"
+			value="SEARCH"></td>
+	</tr> -->
+</table>
+
+<script>
+	function addemail(e) {
+		//alert(e.text);
+		var k = document.getElementsByName("email");
+		k.text = e.text + "@webank.com";
+	}
+</script>
