@@ -1,8 +1,12 @@
 package utils;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +47,10 @@ public class DirMsgWsHandler {
 			// break;
 		case "balance":
 			return getBalance(df, jobj);
-//			break;
+			// break;
 		case "transaction":
 			return getTransactions(df, jobj);
-//			break;
+			// break;
 		case "empAct":
 			break;
 		default:
@@ -229,11 +233,23 @@ public class DirMsgWsHandler {
 
 	private static String getBalance(DirectorFunctions df, JsonObject jobj) {
 
-		Date fromDate = java.sql.Date.valueOf(jobj.get("fdate").getAsString());
-		Date toDate = null;
+		DateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.GERMANY);
+
+		Date fromDate = null, toDate = null;
 		try {
-			if (jobj.has("tdate"))
-				toDate = java.sql.Date.valueOf(jobj.get("tdate").getAsString());
+
+			java.util.Date d1 = format.parse(jobj.get("fdate").getAsString());
+//			System.out.println("d1-------:" + d1);
+			fromDate = new java.sql.Date(d1.getTime());
+//			System.out.println("-------:" + fromDate);
+
+			if (jobj.has("tdate")) {
+				java.util.Date d2 = format.parse(jobj.get("tdate")
+						.getAsString());
+//				System.out.println("d2-------:" + d2);
+				toDate = new java.sql.Date(d2.getTime());
+//				System.out.println("-------:" + toDate);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -245,7 +261,7 @@ public class DirMsgWsHandler {
 		jo.addProperty("head", "balance");
 		jo.add("balist", new Gson().toJsonTree(list));
 		String jsonResp = new Gson().toJson(jo);
-		logger.info(jsonResp);
+		logger.info("jsonResp :"+jsonResp);
 		// TODO check values
 		return jsonResp;
 
@@ -256,7 +272,7 @@ public class DirMsgWsHandler {
 		Date toDate = null;
 		try {
 			if (jobj.has("date2"))
-			toDate = java.sql.Date.valueOf(jobj.get("date2").getAsString());
+				toDate = java.sql.Date.valueOf(jobj.get("date2").getAsString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

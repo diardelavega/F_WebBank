@@ -41,11 +41,11 @@ public class ManagerQuery {
 		List<Object[]> ol = q.list();
 		// logger.info("List Size is : {}", ol.size());
 
-		for (Object[] row : ol) {
-			System.out.println(row[0]);
-			System.out.println(row[1]);
-			System.out.println(row[2]);
-		}
+//		for (Object[] row : ol) {
+//			System.out.println(row[0]);
+//			System.out.println(row[1]);
+//			System.out.println(row[2]);
+//		}
 		return ol;
 	}
 
@@ -68,11 +68,11 @@ public class ManagerQuery {
 		List<Object[]> ol = q.list();
 		// logger.info("List Size is : {}", ol.size());
 
-		for (Object[] row : ol) {
-			System.out.println(row[0]);
-			System.out.println(row[1]);
-			System.out.println(row[2]);
-		}
+//		for (Object[] row : ol) {
+//			System.out.println(row[0]);
+//			System.out.println(row[1]);
+//			System.out.println(row[2]);
+//		}
 		return ol;
 	}
 

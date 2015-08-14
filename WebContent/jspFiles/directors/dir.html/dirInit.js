@@ -44,11 +44,11 @@ function doClose() {
 }
 
 function onMessage(evt) {
-	// alert(evt.data);
-	// console.log("received: " + evt.data);
+//	 alert(evt.data);
+//	 console.log("received: " + evt.data);
 	var jsobj = JSON.parse(evt.data);
 
-	console.log(jsobj.head);
+//	console.log(jsobj.head);
 	var head = jsobj.head;
 
 	switch (head) {
@@ -68,6 +68,8 @@ function onMessage(evt) {
 		transactionHandler(jsobj);
 		break;
 	case 'balance':
+//		alert("BALANCEEEEE"+jsobj.balist)
+//		console.log(jsobj.balist);
 		balanceHandler(jsobj);
 		break;
 	case 'error':

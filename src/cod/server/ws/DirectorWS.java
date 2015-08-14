@@ -39,6 +39,7 @@ public class DirectorWS {
 	}
 
 	public void sendMsg(String msg, Session ses) throws IOException {
+		System.out.println(msg);
 		ses.getBasicRemote().sendText(msg);
 	}
 

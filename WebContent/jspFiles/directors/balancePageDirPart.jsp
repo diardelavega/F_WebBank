@@ -15,6 +15,9 @@
 					<button id="balsearch">OK</button>
 				</td>
 			</tr>
+			<tr><td>
+			<br>
+			</td></tr>
 			<tr>
 				<td colspan="3">
 					<div id="balancelist" class="container-fluid; ">
