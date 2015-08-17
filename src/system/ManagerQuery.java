@@ -33,7 +33,7 @@ public class ManagerQuery {
 								+ "FROM Transaction "
 								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
 								+ "WHERE trData BETWEEN :fromDate AND :toDate  "
-								+ "group by day(trDate) ")
+								+ "group by day(trDate) order  by trdata asc")
 				.setParameter("fromDate", dateFrom)
 				.setParameter("toDate", dateTo);
 
@@ -61,7 +61,7 @@ public class ManagerQuery {
 								+ "FROM Transaction "
 								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-06-23' "
 								+ "WHERE trData > :d1 and  trData < :d2 "
-								+ "group by day(trDate) ")
+								+ "group by day(trDate) order  by trdata asc")
 				.setParameter("d1", date).setParameter("d2", d2);
 
 		logger.info("the query is : {}", q.getQueryString());

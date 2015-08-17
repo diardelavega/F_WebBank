@@ -19,9 +19,6 @@
 <!-- Custom CSS -->
 <link href="../../bootstrap/css/sb-admin.css" rel="stylesheet">
 
-<!-- Morris Charts CSS -->
-<link href="../../bootstrap/css/plugins/morris.css" rel="stylesheet">
-
 <!-- Custom Fonts -->
 <link href="../../bootstrap/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
@@ -29,6 +26,8 @@
 <link href="../../jquery-ui/jquery-ui.min.css" rel="stylesheet">	
 <link href="../../jquery-ui/jquery-ui.theme.min.css" rel="stylesheet">
 <link href="../../jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
+
+<!-- <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css"> -->
 
 <script src="./dir.html/dirInit.js"></script>
 <title>Directors Page</title>
@@ -149,14 +148,17 @@
 	<script src="./dir.html/balance.js"></script>
 	<script src="./dir.html/employee.js"></script>
 	
+	<!-- flot charts -->
+	<script language="javascript" type="text/javascript" src="../../flot_f/jquery.flot.min.js"></script>
+	<script language="javascript" type="text/javascript" src="../../flot_f/jquery.flot.categories.min.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<!-- Morris Charts JavaScript -->
-	<script src="../../bootstrap/js/plugins/morris/raphael.min.js"></script>
+	<!-- <script src="../../bootstrap/js/plugins/morris/raphael.min.js"></script>
 	<script src="../../bootstrap/js/plugins/morris/morris.min.js"></script>
-	<script src="../../bootstrap/js/plugins/morris/morris-data.js"></script>
+	<script src="../../bootstrap/js/plugins/morris/morris-data.js"></script> -->
 
 	<!-- jquery-ui -->
 	<script src="../../jquery-ui/jquery-ui.min.js"></script>

@@ -1,24 +1,24 @@
 function alterEmpRes(jsobj) {
 	// todoconfirm the action
-	console.log(jsobj.newId);
+	//console.log(jsobj.newId);
 	alert("All DONE" + jsobj.newId);
 }
 
 function deleteEmpRes(jsobj) {
 	// todoconfirm the action
-	console.log(jsobj.newId);
+	//console.log(jsobj.newId);
 	alert("All DONE" + jsobj.newId);
 }
 
 function newEmpRes(jsobj) {
 	// todoconfirm the action
-	console.log(jsobj.newId);
+	//console.log(jsobj.newId);
 	alert("All DONE" + jsobj.newId);
 }
 
 function errorRes(jsobj) {
 	// todoconfirm the action
-	console.log(jsobj.msg);
+	//console.log(jsobj.msg);
 	alert("Error MSG  " + jsobj.msg);
 }
 
@@ -37,7 +37,7 @@ function empInfoHandler(jsobj) {
 					// empTableListBody(line[key]);
 				}
 				empTableListBody(line[key]);
-				console.log(i + " --- " + key + " --- " + line[key]);
+//				console.log(i + " --- " + key + " --- " + line[key]);
 			}
 		}
 	}
@@ -124,23 +124,6 @@ function clear1() {
 	$('[name=psw1]').val("");
 }
 
-/*
- * function disableFields() { var inval = $('[name=id2]').val(); if
- * (inval.length > 0) { //$('[name=id2]').prop('disabled', true);
- * $('[name=fname2]').prop('disabled', true);
- * $('[name=lname2]').prop('disabled', true);
- * $('[name=address2]').prop('disabled', true);
- * $('[name=possition2]').prop('disabled', true);
- * $('[name=email2]').prop('disabled', true); $('[name=psw2]').prop('disabled',
- * true); } else { //$('[name=id2]').prop('disabled', false);
- * $('[name=fname2]').prop('disabled', false);
- * $('[name=lname2]').prop('disabled', false);
- * $('[name=address2]').prop('disabled', false);
- * $('[name=possition2]').prop('disabled', false);
- * $('[name=email2]').prop('disabled', false); $('[name=psw2]').prop('disabled',
- * false);
- *  } }
- */
 
 function alterEmployee() {
 	var emp = getEmpData("alter");
@@ -174,20 +157,7 @@ function newEmployee() {
 function getEmpInfo() {
 	// alert('emp infoing!!');
 	var emp = getEmpData("info");
-
-	/*
-	 * var emp = { head : "info", //dirId: '${sessionScope.empId}', id :
-	 * $('[name=id2]').val(), fname : $('[name=fname2]').val(), lname :
-	 * $('[name=lname2]').val(), address : $('[name=address2]').val(), possition :
-	 * $('[name=possition2]').val(), eMail : $('[name=email2]').val(), password :
-	 * $('[name=psw2]').val() };
-	 */
 	doSend(JSON.stringify(emp));
-	// ws.send('HELLOOOO!!!!'+" "+id+" "+fname);
-	/*
-	 * var elem = document.getElementById("fname2"); elem.value = "San
-	 * SAlvador";
-	 */
 }
 
 function getEmpData(headVal) {
