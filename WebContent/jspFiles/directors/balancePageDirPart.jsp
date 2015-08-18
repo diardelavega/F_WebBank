@@ -8,7 +8,11 @@
 <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css">
 <div id="balanceDir" class="hidable">
 	<table>
-		<thead></thead>
+		<thead>
+			<tr>
+				<th colspan="3" align="center"><h4>search for a range of dates to get it's balance</h4></th>
+			</tr>
+		</thead>
 		<tbody>
 			<tr>
 				<td>From Date:<input type="text" id="datepicker1">
@@ -19,6 +23,12 @@
 					<button id="balsearch" onclick="search();">OK</button>
 				</td>
 			</tr>
+		</tbody>
+	</table>
+	<hr>
+	<table>
+		<thead></thead>
+		<tbody>
 			<tr>
 				<td><br></td>
 			</tr>
@@ -26,21 +36,22 @@
 				<td colspan="3">
 					<!-- panel header -->
 					<ul class="nav nav-tabs" role="tablist">
-						<li class="active" onclick="showBalChart();"><a
-							data-toggle="tab" href="#balTab">balance chart </a></li>
-						<li onclick="showBalTab ();"><a data-toggle="tab"
-							href="#balChart">balance table</a></li>
+						<li class="active"><a data-toggle="tab" href="#balChart">balance
+								chart </a></li>
+						<li><a data-toggle="tab" href="#balTab">balance table</a></li>
 					</ul>
 
 					<div class="tab-content">
-
-						<div id="content">
-							<div class="demo-container">
-								<div id="placeholder" class="demo-placeholder"></div>
+						<div id="balChart" class="tab-pane active">
+							<div id="content">
+								<div class="demo-container">
+									<div id="placeholder" class="demo-placeholder"></div>
+								</div>
 							</div>
 						</div>
 
-						<div id="balTab" class="tab-pane active" style="display: none">
+						<!-- style="display: none" -->
+						<div id="balTab" class="tab-pane ">
 							<div id="balancelist" class="container-fluid; ">
 								<table id="balTableList" border="1" class="table-condensed">
 									<thead>

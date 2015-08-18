@@ -18,30 +18,40 @@ function balanceHandler(jsobj) {
 		// TODO delete table content
 		deleteBalContent();
 		clearTables();
-		
+
 		balHeader();
-		
+
 		var bal = jsobj.balist;
 		var tbody = $("#balTableList").find("tbody");
+		
+		var prevCum=0;
 		for (var i = 0; i < bal.length; i++) {
 			var tr = document.createElement('tr');
 			tbody.append(tr);
+
 			for (var j = 0; j < bal[i].length; j++) {
 				var td = document.createElement('td');
-				var t = document.createTextNode(bal[i][j]);
+				var t;
+				if (bal[i][j] == null) {
+					t = document.createTextNode("-");
+				} else {
+					t = document.createTextNode(bal[i][j]);
+				}
 				td.appendChild(t);
 				tr.appendChild(td);
 			}
 
 			d = new Date(bal[i][0]);// create a new date with the db date
 			dates.push(d.ddmmyyy());// format to yy_mm_dd and store
-			withdraw.push(bal[i][1]);
-			deposite.push(bal[i][2]);
+			 withdraw.push(bal[i][1]);
+			 deposite.push(bal[i][2]);
+
+			 prevCum += deposite[i] - withdraw[i];
 			
-			
-			//append the analog cumulative val
-			var td = document.createElement('td');
-			var t = document.createTextNode(bal[i][j]);
+			// append the analog cumulative val
+			 var td = document.createElement('td');
+			var t = document
+					.createTextNode(prevCum);
 			td.appendChild(t);
 			tr.appendChild(td);
 
@@ -51,45 +61,22 @@ function balanceHandler(jsobj) {
 	}
 }
 
-function showBalTab(){
-//	alert("showTabBal");
-	 document.getElementById("balTab").style.display = 'block';
-	    document.getElementById("content").style.display = 'none';
-	
-//	$("#balTab").show();
-//	$("#content").hide();
+function showBalTab() {
+	// alert("showTabBal");
+	document.getElementById("balTab").style.display = 'block';
+	document.getElementById("content").style.display = 'none';
+
+	// $("#balTab").show();
+	// $("#content").hide();
 }
 
-function showBalChart(){
-//	alert("showTabChart");
-	 document.getElementById("balTab").style.display = 'none';
-	    document.getElementById("content").style.display = 'block';
+function showBalChart() {
+	// alert("showTabChart");
+	document.getElementById("balTab").style.display = 'none';
+	document.getElementById("content").style.display = 'block';
 }
 
-/*function swap(one, two) {
-    document.getElementById(one).style.display = 'block';
-    document.getElementById(two).style.display = 'none';
-}
-document.getElementById('bt1').addEventListener('click',function(e){
-    swap('one','two');
-});
-document.getElementById('bt2').addEventListener('click',function(e){
-    swap('two','one');
-});
-*/
-
-$(function() {
-	/*
-	 * get date JS object from a string based date and format it as dd_mm_yy*/
-	
-	Date.prototype.ddmmyyy /*yyyymmdd */= function() {
-		var yyyy = this.getFullYear().toString();
-		var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-		var dd = this.getDate().toString();
-		return (dd[1] ? dd : "0" + dd[0]) + "_" + (mm[1] ? mm : "0" + mm[0])
-				+ "_" + yyyy;
-	};
-});
+// function balBody
 
 function balHeader() {
 	// create a static table header
@@ -143,7 +130,8 @@ function search() {
 }
 
 $(function() {
-	// append the datepicker functionality to the "From date" and "To date" input
+	// append the datepicker functionality to the "From date" and "To date"
+	// input
 	// fields
 	$("#datepicker1").datepicker({
 		changeMonth : true,
@@ -161,6 +149,20 @@ $(function() {
 	// alert(tDate);
 	// }
 	});
+});
+
+$(function() {
+	/*
+	 * get date JS object from a string based date and format it as dd_mm_yy
+	 */
+
+	Date.prototype.ddmmyyy /* yyyymmdd */= function() {
+		var yyyy = this.getFullYear().toString();
+		var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+		var dd = this.getDate().toString();
+		return (dd[1] ? dd : "0" + dd[0]) + "_" + (mm[1] ? mm : "0" + mm[0])
+				+ "_" + yyyy;
+	};
 });
 
 function plot() {

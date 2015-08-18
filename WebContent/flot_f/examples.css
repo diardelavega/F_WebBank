@@ -19,6 +19,12 @@ h3 {
 	color: #666;
 }
 
+h4 {
+	margin-left: 30px;
+	font: normal 20px "omnes-pro", Helvetica, Arial, sans-serif;
+	color: #666;
+}
+
 p {
 	margin-top: 10px;
 }
