@@ -33,7 +33,7 @@ public class ManagerQuery {
 								+ "FROM Transaction "
 								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
 								+ "WHERE trData BETWEEN :fromDate AND :toDate  "
-								+ "group by day(trDate) order  by trdata asc")
+								+ "group by date(trDate) order  by trdata asc")
 				.setParameter("fromDate", dateFrom)
 				.setParameter("toDate", dateTo);
 
@@ -61,7 +61,7 @@ public class ManagerQuery {
 								+ "FROM Transaction "
 								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-06-23' "
 								+ "WHERE trData > :d1 and  trData < :d2 "
-								+ "group by day(trDate) order  by trdata asc")
+								+ "group by date(trDate) order  by trdata asc")
 				.setParameter("d1", date).setParameter("d2", d2);
 
 		logger.info("the query is : {}", q.getQueryString());
@@ -84,13 +84,13 @@ public class ManagerQuery {
 				.setParameter("toDate", dateTo);
 		List<Transaction> tl = q.list();
 
-		for (Transaction t : tl) {
-			System.out.println("trNr :"+t.getTransactionNr());
-			System.out.println("trAcc :"+t.getAcction());
-			System.out.println("trAmm :"+t.getAmount());
-			System.out.println("trAcc1 :"+t.getAccount1());
-		}
-		logger.info("------------> Transaction SERVED SUCAZZ");
+//		for (Transaction t : tl) {
+//			System.out.println("trNr :"+t.getTransactionNr());
+//			System.out.println("trAcc :"+t.getAcction());
+//			System.out.println("trAmm :"+t.getAmount());
+//			System.out.println("trAcc1 :"+t.getAccount1());
+//		}
+//		logger.info("------------> Transaction SERVED SUCAZZ");
 		return tl;
 	}
 
@@ -105,13 +105,15 @@ public class ManagerQuery {
 				.setParameter("d1", date).setParameter("d2", d2);
 		List<Transaction> tl = q.list();
 
-		for (Transaction t : tl) {
-			System.out.println("trNr :"+t.getTransactionNr());
-			System.out.println("trAcc :"+t.getAcction());
-			System.out.println("trAmm :"+t.getAmount());
-			System.out.println("trAcc1 :"+t.getAccount1());
-		}
-		logger.info("------------> Transaction SERVED SUCAZZ");
+//		for (Transaction t : tl) {
+//			System.out.println("trNr :"+t.getTransactionNr());
+//			System.out.println("trAcc :"+t.getAcction());
+//			System.out.println("trAmm :"+t.getAmount());
+//			System.out.println("trAcc1 :"+t.getAccount1());
+//			System.out.println("account2 :"+t.getAccount2());
+//			
+//		}
+//		logger.info("------------> Transaction SERVED SUCAZZ");
 		return tl;
 	}
 

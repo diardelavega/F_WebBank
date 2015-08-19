@@ -27,7 +27,8 @@
 <link href="../../jquery-ui/jquery-ui.theme.min.css" rel="stylesheet">
 <link href="../../jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
 
-<!-- <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css"> -->
+<!-- flot charts -->
+<link href="../../flot_f/examples.css" rel="stylesheet" type="text/css">
 
 <script src="./dir.html/dirInit.js"></script>
 <title>Directors Page</title>
@@ -131,6 +132,7 @@
 				<jsp:include page="./empPageDirPart.jsp"></jsp:include>
 				<!-- import employee details -->
 				<jsp:include page="./balancePageDirPart.jsp"></jsp:include>
+				<jsp:include page="./transPageDirPart.jsp"></jsp:include>
 				
 
 			</div>
@@ -147,9 +149,11 @@
 	<script src="./dir.html/dir.js"></script>
 	<script src="./dir.html/balance.js"></script>
 	<script src="./dir.html/employee.js"></script>
+	<script src="./dir.html/transaction.js"></script>
 	
 	<!-- flot charts -->
 	<script language="javascript" type="text/javascript" src="../../flot_f/jquery.flot.min.js"></script>
+	<script language="javascript" type="text/javascript" src="../../flot_f/jquery.flot.pie.min.js"></script>
 	<script language="javascript" type="text/javascript" src="../../flot_f/jquery.flot.categories.min.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->

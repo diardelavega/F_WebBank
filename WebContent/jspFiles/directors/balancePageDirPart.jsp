@@ -2,22 +2,22 @@
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<!-- <link href="../../../flot_f/examples.css" rel="stylesheet" type="text/css">
-<script language="javascript" type="text/javascript" src="../../../flot_f/jquery.flot.min.js"></script>
-	<script language="javascript" type="text/javascript" src="../../../flot_f/jquery.flot.categories.min.js"></script> -->
-<link href="../../flot_f/examples.css" rel="stylesheet" type="text/css">
+<!-- <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css"> -->
 <div id="balanceDir" class="hidable">
 	<table>
 		<thead>
 			<tr>
-				<th colspan="3" align="center"><h4>search for a range of dates to get it's balance</h4></th>
+				<th colspan="3" align="center"><h4>search for the balance
+						in the date range</h4></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<td>From Date:<input type="text" id="datepicker1">
+				<td>From Date:<input type="text" id="datepicker1"
+					class="datePicker">
 				</td>
-				<td>To Date:<input type="text" id="datepicker2">
+				<td>To Date:<input type="text" id="datepicker2"
+					class="datePicker">
 				</td>
 				<td>
 					<button id="balsearch" onclick="search();">OK</button>
@@ -42,10 +42,11 @@
 					</ul>
 
 					<div class="tab-content">
+					
 						<div id="balChart" class="tab-pane active">
 							<div id="content">
 								<div class="demo-container">
-									<div id="placeholder" class="demo-placeholder"></div>
+									<div id="placeholderBal" class="demo-placeholder"></div>
 								</div>
 							</div>
 						</div>

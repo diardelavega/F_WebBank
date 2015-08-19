@@ -16,7 +16,6 @@ td {
 
 .Content {
 	/*width: 300px;*/
-	
 }
 
 .Flipped, .Flipped .Content {
@@ -25,8 +24,8 @@ td {
 	-webkit-transform: rotateX(180deg); /* Safari and Chrome */
 }
 </style>
-<div id="empDir" class="hidable">
 
+<div id="empDir" class="hidable">
 	<table>
 		<tbody>
 			<!-- divade the page to display the results -->
@@ -154,10 +153,6 @@ td {
 				<td>
 					<div id="emplist" class="container-fluid; ">
 						<div class="Container Flipped;">
-
-							<!-- <div id=extrabutton>
-							<button id="clearbut" onclick="clear2();"><span class="glyphicon glyphicon-refresh"></span></button>
-						</div> -->
 							<!-- style="background-color: gray; padding: 30px; margin: 20px" -->
 							<div class="Content">
 								<table id="empTableList" border="1" class="table-condensed">

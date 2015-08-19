@@ -129,27 +129,7 @@ function search() {
 	// $("#content").attr("style", "visibility: visible");
 }
 
-$(function() {
-	// append the datepicker functionality to the "From date" and "To date"
-	// input
-	// fields
-	$("#datepicker1").datepicker({
-		changeMonth : true,
-		changeYear : true,
-		dateFormat : 'dd/mm/yy',
-	});
-	$("#datepicker2").datepicker({
-		changeMonth : true,
-		changeYear : true,
-		dateFormat : 'dd/mm/yy',
-	// onSelect : function(dateText, inst) {
-	// window.tDate= dateText;
-	// window.tDate = $(this).datepicker('getDate');
-	// alert(dateAsString);
-	// alert(tDate);
-	// }
-	});
-});
+
 
 $(function() {
 	/*
@@ -190,7 +170,7 @@ function plot() {
 		}
 	}// for
 
-	$.plot("#placeholder", [ {
+	$.plot("#placeholderBal", [ {
 		label : "deposite",
 		data : _deposite,
 		color : 13,
@@ -246,7 +226,7 @@ function plot() {
 		opacity : 0.80
 	}).appendTo("body");
 
-	$("#placeholder").bind("plothover", function(event, pos, item) {
+	$("#placeholderBal").bind("plothover", function(event, pos, item) {
 		if (item) {
 			var y = item.datapoint[1].toFixed(3);
 

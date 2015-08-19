@@ -50,7 +50,6 @@ public class DirectorQuery {
 		if (existsEmail(e.geteMail())) {
 			logger.info("NON_UNIQUE_EMAIL");
 			return StaticVars.NON_UNIQUE_EMAIL;
-
 		}
 
 		// if (getEmp(e.getEmpId()) == null) {
@@ -74,8 +73,6 @@ public class DirectorQuery {
 		s.close();
 		logger.info("registration is completed empId= {}", empId);
 		return empId;
-		// }
-		// return StaticVars.DUPLICATE_ENTRY;
 	}
 
 	public long delete(Employee e) {

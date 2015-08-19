@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import system.DirectorQuery;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import comon.StaticVars;
@@ -25,6 +26,7 @@ public class DirMsgWsHandler {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(DirMsgWsHandler.class);
+	private static Gson gson = new GsonBuilder().serializeNulls().create();
 
 	public static String switchit(String msg) {
 		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
@@ -93,7 +95,7 @@ public class DirMsgWsHandler {
 			jo.addProperty("head", "deleteEmployee");
 			jo.addProperty("newId", empId);
 		}
-		String jsonResp = new Gson().toJson(jo);
+		String jsonResp = gson.toJson(jo);
 		logger.info("jsonResp ={}", jsonResp);
 		return jsonResp;
 
@@ -137,7 +139,7 @@ public class DirMsgWsHandler {
 			jo.addProperty("head", "error");
 			jo.addProperty("msg", "unable to update, comit problem");
 		}
-		String jsonResp = new Gson().toJson(jo);
+		String jsonResp = gson.toJson(jo);
 		return jsonResp;
 
 	}
@@ -174,7 +176,7 @@ public class DirMsgWsHandler {
 			jo.addProperty("head", "newEmployee");
 			jo.addProperty("newId", newEmpId);
 		}
-		String jsonResp = new Gson().toJson(jo);
+		String jsonResp = gson.toJson(jo);
 		logger.info(jsonResp);
 
 		return jsonResp;
@@ -214,8 +216,8 @@ public class DirMsgWsHandler {
 					password);
 
 			jo.addProperty("head", "empList");
-			jo.add("employees", new Gson().toJsonTree(emps));
-			jsonEmps = new Gson().toJson(jo);
+			jo.add("employees", gson.toJsonTree(emps));
+			jsonEmps = gson.toJson(jo);
 			logger.info("JSON FORM jsonEmps ={}", jsonEmps);
 
 		} else if (id != -1) {
@@ -224,8 +226,8 @@ public class DirMsgWsHandler {
 			// emps.add(df.getEmplyee(8));
 			// emps.add(df.getEmplyee(2));
 			jo.addProperty("head", "empList");
-			jo.add("employees", new Gson().toJsonTree(emps));
-			jsonEmps = new Gson().toJson(jo);
+			jo.add("employees", gson.toJsonTree(emps));
+			jsonEmps = gson.toJson(jo);
 			logger.info(jsonEmps);
 		}
 		return jsonEmps;
@@ -259,8 +261,8 @@ public class DirMsgWsHandler {
 		List<Object[]> list = df.getBalance(fromDate, toDate);
 
 		jo.addProperty("head", "balance");
-		jo.add("balist", new Gson().toJsonTree(list));
-		String jsonResp = new Gson().toJson(jo);
+		jo.add("balist", gson.toJsonTree(list));
+		String jsonResp = gson.toJson(jo);
 		logger.info("jsonResp :"+jsonResp);
 		// TODO check values
 		return jsonResp;
@@ -268,21 +270,36 @@ public class DirMsgWsHandler {
 	}
 
 	private static String getTransactions(DirectorFunctions df, JsonObject jobj) {
-		Date fromDate = java.sql.Date.valueOf(jobj.get("date1").getAsString());
-		Date toDate = null;
+		
+		DateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.GERMANY);
+
+		Date fromDate = null, toDate = null;
 		try {
-			if (jobj.has("date2"))
-				toDate = java.sql.Date.valueOf(jobj.get("date2").getAsString());
+
+			java.util.Date d1 = format.parse(jobj.get("fdate").getAsString());
+//			System.out.println("d1-------:" + d1);
+			fromDate = new java.sql.Date(d1.getTime());
+//			System.out.println("-------:" + fromDate);
+
+			if (jobj.has("tdate")) {
+				java.util.Date d2 = format.parse(jobj.get("tdate")
+						.getAsString());
+//				System.out.println("d2-------:" + d2);
+				toDate = new java.sql.Date(d2.getTime());
+//				System.out.println("-------:" + toDate);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		JsonObject jo = new JsonObject();
 		List<Transaction> trl = df.getTransactions(fromDate, toDate);
 		jo.addProperty("head", "transaction");
-		jo.add("trlist", new Gson().toJsonTree(trl));
-		String jsonResp = new Gson().toJson(jo);
+		
+		jo.add("translist", gson.toJsonTree(trl));
+		String jsonResp = gson.toJson(jo);
 		// TODO check values
-		logger.info(jsonResp);
+		logger.info("--------------- >>>>>>>>>>"+jsonResp);
 		return jsonResp;
 	}
 

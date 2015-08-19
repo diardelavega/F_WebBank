@@ -8,16 +8,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 //import java.util.logging.Logger;
-
-
-
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+//import org.hibernate.Transaction;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 
@@ -36,6 +34,7 @@ import entity.Customers;
 import entity.CustomersAccount;
 import entity.Employee;
 import entity.EmployeeAction;
+import entity.Transaction;
 import fileLog.FileHandler;
 import functions.CustomerFunctions;
 import functions.DirectorFunctions;
@@ -63,30 +62,30 @@ public class Run {
 		// e.print();
 		// log.closeSession();
 		// logger.info(resp);
-		// // Session ses = DBHandler.getSessionFactory().openSession();
+		Session ses = DBHandler.getSessionFactory().openSession();
 
 		// TellerFunctions tf = new TellerFunctions(1);
 		// tf.register("1111111116", "ARMANDO", "Delavega", "delavega@that.com",
 		// "12/01/1990", "under the bridge", "+355...", "321");
 
-//		DirectorFunctions df = new DirectorFunctions(2);
-//		for(String s:df.getEmployeeActionsDates()){
-//			System.out.println(s);
-//		}
-//		System.out.println(df.getEmployeeActionData("13"));
-		
-		// df.alterEmployee(17, "JOHN", "CENNA", "", "TELLER", "", "");
-//		Session s = DBHandler.getSessionFactory().openSession();
-//		s.beginTransaction();
-//		Query q = s
-//				.createQuery("UPDATE Employee set fname = 'JOHN' , lname = 'CENNA', possition = 'TELLER' WHERE empId = 17");
-//		System.out.println(q.executeUpdate());
-//		s.getTransaction().commit();
+		// DirectorFunctions df = new DirectorFunctions(2);
+		// for(String s:df.getEmployeeActionsDates()){
+		// System.out.println(s);
+		// }
+		// System.out.println(df.getEmployeeActionData("13"));
 
-//		List<Employee> empl = df.getEmployees("", "", "", "TELLER", "", "");
-//		for (Employee e : empl) {
-//			e.print();
-//		}
+		// df.alterEmployee(17, "JOHN", "CENNA", "", "TELLER", "", "");
+		// Session s = DBHandler.getSessionFactory().openSession();
+		// s.beginTransaction();
+		// Query q = s
+		// .createQuery("UPDATE Employee set fname = 'JOHN' , lname = 'CENNA', possition = 'TELLER' WHERE empId = 17");
+		// System.out.println(q.executeUpdate());
+		// s.getTransaction().commit();
+
+		// List<Employee> empl = df.getEmployees("", "", "", "TELLER", "", "");
+		// for (Employee e : empl) {
+		// e.print();
+		// }
 
 		// System.out.println(df.createEmployee(12, "Diego", "Delavega",
 		// "vasil bozo st.", "TELLER", "diego@webank.com", "1234"));
@@ -116,9 +115,9 @@ public class Run {
 		// tf.closeAccount(sl, "72418514LUCGU34");
 
 		/* Transactions */
-		// TellerFunctions tf = new TellerFunctions ();
-		// tf.deposite("42218529RQQGP13", 100,"Maracaibo");
-		// tf.withdraw("1111111112", "42218529RQQGP13", 75,"Sa Sa Sa");
+		 TellerFunctions tf = new TellerFunctions ();
+//		 tf.deposite("42218529RQQGP13", 50,"Mario Rista");
+		 tf.withdraw("1111111112", "42218529RQQGP13", 100,"Sa Sa Sa");
 		// tf.transfer("1111111111", "42218529RQQGP13", "70913919GVVTP98",
 		// 10.5,"AAAAA");
 
@@ -137,29 +136,46 @@ public class Run {
 		// // System.out.println(format(gc));
 		// s2 = format(gc);
 
-		 Date d1 = new Date();
-		 Date d2 = new Date();
-		 d1.setDate(18);
-		 d1.setMonth(5);
-		 System.out.println("d1 : "+d1);
-		 
-		 java.sql.Date sq1 = new java.sql.Date(d1.getTime());
-		 java.sql.Date sq2 = new java.sql.Date(d2.getTime());
-		 System.out.println("sq1 : "+sq1);
-		//
+//		Date d1 = new Date();
+//		Date d2 = new Date();
+//		d1.setDate(18);
+//		d1.setMonth(7);
+//		System.out.println("d1 : " + d1);
+//
+//		java.sql.Date sq1 = new java.sql.Date(d1.getTime());
+//		java.sql.Date sq2 = new java.sql.Date(d2.getTime());
+//		System.out.println("sq1 : " + sq1);
+//		//
+//
+//		Query q = ses
+//				.createQuery(
+//						"FROM Transaction WHERE trData > :d1 and trData <:d2 ")
+//				.setParameter("d1", sq1).setParameter("d2", d2);
+//		// List<Transaction> tl =q.getNamedParameters();
+//		// q.list();
+//		Iterator a = q.iterate();
+//
+//		while (a.hasNext()) {
+//			Transaction b = (Transaction) a.next();
+////			for (String c : b.) {
+//				System.out
+//						.println("--------***********------------" + b.getAccount2());
+////			}
+//		}
+
+
 //		 ManagerQuery mq = new ManagerQuery();
-//		 mq.getBalance(sq1,sq2);
-//		 mq.getBalance(sq1);
+		// mq.getBalance(sq1,sq2);
+		// mq.getBalance(sq1);
 //		 mq.getTransaction(sq1);
-		 
-		 JsonObject jo = new JsonObject ();
-		 jo.addProperty("head", "balance");
-		 jo.addProperty("date1", sq1.toString());
-		 jo.addProperty("date2", sq2.toString());
-		 //jo.addProperty("head", "transaction");
-		 
-		 DirMsgWsHandler.switchit(jo.toString());
-		 
+
+		// JsonObject jo = new JsonObject ();
+		// jo.addProperty("head", "balance");
+		// jo.addProperty("date1", sq1.toString());
+		// jo.addProperty("date2", sq2.toString());
+		// //jo.addProperty("head", "transaction");
+		//
+		// DirMsgWsHandler.switchit(jo.toString());
 
 		DBHandler.closeSessionFactory();
 
