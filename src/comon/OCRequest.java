@@ -5,6 +5,9 @@ import java.util.List;
 import functions.TellerFunctions;
 
 public class OCRequest {
+	private  String note;
+	
+
 	private TellerFunctions tellersFunction;
 	private List<String> clientIdsList;
 	private String reqType; // open ||close
@@ -12,18 +15,19 @@ public class OCRequest {
 	private String response;// accepted || denied
 	private boolean pin = false;
 	private String accNr;
+	private boolean status = false;// true -complete, false-incomplete
 
 	public OCRequest() {
 	}
 
-	//open acc OCR
-	public OCRequest(TellerFunctions tf, List<String> persIds,
-			String reqType, AccountType type) {
+	// open acc OCR
+	public OCRequest(TellerFunctions tf, List<String> persIds, String reqType,
+			AccountType type) {
 		super();
 		this.tellersFunction = tf;
 		this.clientIdsList = persIds;
 		this.reqType = reqType;
-		this.accType=type.value;
+		this.accType = type.value;
 	}
 
 	public OCRequest(TellerFunctions tellersFunction, List<String> cList,
@@ -34,8 +38,6 @@ public class OCRequest {
 		this.reqType = reqType;
 		this.accNr = accNr;
 	}
-
-	
 
 	public TellerFunctions getTellersFunction() {
 		return tellersFunction;
@@ -97,4 +99,23 @@ public class OCRequest {
 		this.accType = accType;
 	}
 
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatusComplete() {
+		this.status = true;
+	}
+
+	public void setStatusInComplete() {
+		this.status = false;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
 }

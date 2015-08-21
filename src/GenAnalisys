@@ -42,6 +42,13 @@ queries to be done
 
 
 
+**(OPEN/CLOSE) ACCOUNT. requires the collaboration of teller and  manager.
+the interaction goes as such: The teller gets the necessary information from the client,does the 
+necessary controls and creates an OCRequest object. All the managers are alerted about the new 
+arrived OCR, they can chose to get an available ( not gotten by the other managers) OCR, after examining the 
+request they decide to confirm, deny or return the request. The apropriate teller is alerted in case of 
+confirmation of the request
+ 
 
 
 

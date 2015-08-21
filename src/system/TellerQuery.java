@@ -35,7 +35,10 @@ public class TellerQuery {
 		}
 	}
 
-	public long transfer(String key, String accFrom, String accTo, double amount,char method) {
+	public long transfer(String key, String accFrom, String accTo,
+			double amount, char method) {
+
+		// TODO check if transfer amount is greater than 1000 (alert manager)
 		GeneralFunctions gf = new GeneralFunctions();
 		List<String> dbClients = gf.accountsClients(accFrom);
 		if (!dbClients.contains(key)) {
@@ -73,6 +76,7 @@ public class TellerQuery {
 				long idTra = (long) s.save(t);
 				s.flush();
 				tr.commit();
+				// TODO alert everyone interested in new transactions
 
 				// EmployeeAction ea = new EmployeeAction(StaticVars.TRANSFER,
 				// note, empId, idTra);
@@ -113,6 +117,8 @@ public class TellerQuery {
 				s.flush();
 				tr.commit();
 				logger.info("DEPOSITE OPERATION DONE");
+				// TODO alert everyone interested in new transactions
+
 			} catch (HibernateException e) {
 				tr.rollback();
 				e.printStackTrace();
@@ -155,10 +161,19 @@ public class TellerQuery {
 						StaticVars.WITHDRAW, accNr, null, amount, 't');
 				// upSession();
 				tr = s.beginTransaction();
-				long idTra = (long) s.save(t);
-				s.flush();
-				tr.commit();
+				long idTra = StaticVars.ERROR;//invalid data for the initialisation
+				try {
+					idTra = (long) s.save(t);
+					s.flush();
+					tr.commit();
+				} catch (Exception e) {
+					tr.rollback();
+					logger.info("problem with the db at transaction storage phase");
+				}
 				s.close();
+				// TODO alert everyone interested in new transactions
+
+				
 				return idTra;
 				// EmployeeAction ea = new EmployeeAction(StaticVars.WITHDRAW,
 				// note, empId, idTra);

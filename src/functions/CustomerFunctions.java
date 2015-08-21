@@ -54,7 +54,7 @@ public class CustomerFunctions {
 			double amount, String note) {
 		TellerQuery tq = new TellerQuery();
 		tq.transfer(personalId, accFrom, accTo, amount, 'o');
-		
+		//the 'o' above means online
 	}
 
 	public String info(String accountId) {

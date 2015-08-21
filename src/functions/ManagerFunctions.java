@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import system.AccountsManagment;
-import system.Lists;
+import system.Coordinator;
 import system.ManagerQuery;
 import utils.GeneralFunctions;
 import comon.OCRequest;
@@ -23,7 +23,7 @@ public class ManagerFunctions extends EmployeeFunctions {
 	private final Logger logger = LoggerFactory
 			.getLogger(ManagerFunctions.class);
 
-	private Lists lists = new Lists();
+	private Coordinator lists = new Coordinator();
 	private OCRequest req;
 	// private List<String> clientsPersonalIds;
 	private int empId;
@@ -39,15 +39,24 @@ public class ManagerFunctions extends EmployeeFunctions {
 		this.empId = 000;
 	}
 
-	public void confirmOpen(String response) {
-		lists.deleteOCR(req);
+	public void confirmOpen(String response,String note) {
+
+		//the coordinator should delete OCR
 		String accNr = "";
 		String msgResponse = "";
 		if (response.equals(StaticVars.ACCEPT)) {
 			accNr = accm.openAccount(req.getAccType(), req.getClientIdsList());
 			logger.info("ACCOUNT {}. is oppen", accNr);
-			req.getTellersFunction().alert(StaticVars.OPEN,
-					StaticVars.REQ_APPROVE, accNr);
+			req.getTellersFunction().alert(StaticVars.OPEN,// alert the teller
+															// of response
+					StaticVars.REQ_APPROVE, accNr, note);
+			req.setStatusComplete();
+			lists.deleteOCR(req);
+			/*
+			 * alternative method*** change OCR to completed & the Coordinator
+			 * (Lists) will alert the TellerFunction Object on the appropriate
+			 * index of the appropriate list
+			 */
 			// ----------------------------
 			EmployeeAction ea = new EmployeeAction(accNr, StaticVars.CNF_OPEN,
 					"", empId);
@@ -56,14 +65,15 @@ public class ManagerFunctions extends EmployeeFunctions {
 		} else {
 			logger.info("OPEN ACCOUNT REQEST WAS DENNIED");
 			req.getTellersFunction().alert(StaticVars.OPEN,
-					StaticVars.REQ_DENIED, null);
+					StaticVars.REQ_DENIED, null,note);
 		}
 	}
 
-	public void confirmClose(String response) {
-		lists.deleteOCR(req);
+	public void confirmClose(String response,String note ) {
 		if (response.equals(StaticVars.ACCEPT)) {
 			accm.closeAccount(req.getAccNr());
+			req.setStatusComplete();
+			lists.deleteOCR(req);
 			logger.info("CLOSE ACCOUNT {}. REQEST WAS APPROVED", req.getAccNr());
 			// ----------------------------
 			EmployeeAction ea = new EmployeeAction(req.getAccNr(),
@@ -71,14 +81,21 @@ public class ManagerFunctions extends EmployeeFunctions {
 			super.confirmCloseAcc(ea);
 			// ----------------------------
 			req.getTellersFunction().alert(StaticVars.CLOSE,
-					StaticVars.REQ_APPROVE, req.getAccNr());
+					StaticVars.REQ_APPROVE, req.getAccNr(),note);
 		} else {
 			logger.info("CLOSE ACCOUNT {}. REQEST WAS DENNIED", req.getAccNr());
 			req.getTellersFunction().alert(StaticVars.CLOSE,
-					StaticVars.REQ_DENIED, null);
+					StaticVars.REQ_DENIED, null,note);
 		}
 	}
 
+	public void returnRequest(){
+		if(req!=null){
+			req.unPin();
+			req.setStatusInComplete();
+		}
+	}
+	
 	public void alert() {
 		// to be summoned in every ocr addition
 		System.out.println("A NEW REQUEST ARIVED");
@@ -132,12 +149,12 @@ public class ManagerFunctions extends EmployeeFunctions {
 			}
 
 			if (req.getReqType() == (StaticVars.OPEN)) {
-				confirmOpen(response);
+				confirmOpen(response, response);
 			} else if (req.getReqType() == (StaticVars.CLOSE)) {
-				confirmClose(response);
+				confirmClose(response, response);
 			} else {
 				req.getTellersFunction().alert(null, "UNDEFINED ERROR OCOURED",
-						null);
+						null,"");
 			}
 		}
 
@@ -153,14 +170,14 @@ public class ManagerFunctions extends EmployeeFunctions {
 		}
 	}
 
-	public List<Transaction> getTransaction(Date t1, Date t2){
+	public List<Transaction> getTransaction(Date t1, Date t2) {
 		ManagerQuery mq = new ManagerQuery();
 		if (t2 == null) {
 			return mq.getTransaction(t1);
 		} else {
 			return mq.getTransaction(t1, t2);
 		}
-		
+
 	}
-	
+
 }

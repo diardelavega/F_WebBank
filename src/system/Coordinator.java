@@ -7,11 +7,13 @@ import java.util.Queue;
 import comon.OCRequest;
 import entity.Employee;
 import functions.ManagerFunctions;
+import functions.TellerFunctions;
 
-public class Lists {
+public class Coordinator {
 
 	private static List<OCRequest> ocr = new ArrayList<>();
 	private static List<ManagerFunctions> managers = new ArrayList<>();
+	//private static List<TellerFunctions> tellers = new ArrayList<>();
 
 	public void addOCR(OCRequest req) {
 		ocr.add(req);
@@ -36,6 +38,7 @@ public class Lists {
 	}
 
 	private void scatterAlertNewOCR() {
+		//TODO implement method for client side manager alert {new request}
 		for (int i = 0; i < managers.size(); i++) {
 			managers.get(i).alert();
 		}
@@ -49,4 +52,6 @@ public class Lists {
 		managers.remove(manager);
 	}
 
+	
+	
 }

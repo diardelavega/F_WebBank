@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import system.Lists;
+import system.Coordinator;
 import system.TellerQuery;
 import utils.GeneralFunctions;
 import comon.AccountType;
@@ -16,6 +16,12 @@ import comon.StaticVars;
 import entity.EmployeeAction;
 import entity.Transaction;
 
+/**
+ * @author Administrator class teller functions represents the functionality of
+ *         a teller. the open and close account require the collaboration of a
+ *         manager.
+ *
+ */
 public class TellerFunctions extends EmployeeFunctions {
 	Logger logger = LoggerFactory.getLogger(TellerFunctions.class);
 	private int empId;
@@ -30,7 +36,9 @@ public class TellerFunctions extends EmployeeFunctions {
 		this.empId = 000;
 	}
 
-	public void alert(String requestType, String response, String accNr) {
+	public void alert(String requestType, String response, String accNr,
+			String note) {
+		// TODO implement an alert for client side the operation was evaluated
 		EmployeeAction ea;
 		if (response.equals(StaticVars.REQ_APPROVE)) {
 			if (requestType.equals(StaticVars.OPEN)) {
@@ -46,7 +54,8 @@ public class TellerFunctions extends EmployeeFunctions {
 				super.requestOpenAcc(ea);
 			}
 		} else if (response.equals(StaticVars.REQ_DENIED)) {
-			logger.info("{}. for the operation {}.", response, requestType);
+			logger.info("{} for the operation {} under the reason '{}'",
+					response, requestType, note);
 		} else {
 			logger.info("{}. ", response);
 		}
@@ -63,7 +72,7 @@ public class TellerFunctions extends EmployeeFunctions {
 		} else {
 			GeneralFunctions gf = new GeneralFunctions();
 			if (gf.registrationCheck(personalIds).size() == 0) {
-				Lists list = new Lists();
+				Coordinator list = new Coordinator();
 				OCRequest req = new OCRequest(this, personalIds,
 						StaticVars.OPEN, accType);
 				list.addOCR(req);
@@ -73,7 +82,7 @@ public class TellerFunctions extends EmployeeFunctions {
 	}
 
 	public void closeAccount(List<String> personalIds, String accNr) {
-		Lists list = new Lists();
+		Coordinator list = new Coordinator();
 		TellerQuery tq = new TellerQuery();
 		List<String> remaining = tq.clientAccountCompatibility(personalIds,
 				accNr);

@@ -145,6 +145,7 @@ public class GeneralFunctions {
 
 	public List<String> registrationCheck(List<String> pId) {
 		// check for unregistered clients
+		upSession();
 		List<String> unreg = new ArrayList<String>();
 		Query q = s
 				.createQuery("SELECT personalId FROM Customers WHERE personalId=:pid");
@@ -157,6 +158,7 @@ public class GeneralFunctions {
 	}
 
 	public void registrationCheck(String pId) {
+		upSession();
 		String query = "SELECT personalId FROM Customers WHERE personalId=:pid";
 		Query q = s.createQuery(query).setParameter("pid", pId);
 		String ss = null;
