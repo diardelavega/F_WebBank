@@ -12,9 +12,21 @@ import functions.TellerFunctions;
 public class Coordinator {
 
 	private static List<OCRequest> ocr = new ArrayList<>();
+//	private static List<OCRequest> dirOcr = new ArrayList<>();
 	private static List<ManagerFunctions> managers = new ArrayList<>();
-	//private static List<TellerFunctions> tellers = new ArrayList<>();
+	private static List<TellerFunctions> tellers = new ArrayList<>();
 
+	
+//	public void addDirOcr(OCRequest req){
+//		dirOcr.add(req);
+//		//TODO alert Directors
+//	}
+//	
+//	public void deleteDirOCR(OCRequest req){
+//		dirOcr.remove(req);
+//	}
+	
+	
 	public void addOCR(OCRequest req) {
 		ocr.add(req);
 		scatterAlertNewOCR();

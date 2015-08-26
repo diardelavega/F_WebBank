@@ -103,20 +103,24 @@ public class Run {
 		// fh.init();
 		// fh.filePlacementControl();
 
-		 ManagerFunctions mf1 = new ManagerFunctions(5);
-		 Coordinator list = new Coordinator();
-		 list.addMenager(mf1);
-		 TellerFunctions tf = new TellerFunctions(1);
-		 List<String> sl = new ArrayList<>();
-		 sl.add("1234567890");
+//		 ManagerFunctions mf1 = new ManagerFunctions(5);
+//		 Coordinator list = new Coordinator();
+//		 list.addMenager(mf1);
+//		 TellerFunctions tf = new TellerFunctions(1);
+//		 List<String> sl = new ArrayList<>();
+//		 sl.add("1234567890");
 //		 sl.add("1234567800");
 //		 sl.add("1111111112");
-		 tf.openAccount(sl, AccountType.BASIC_CHECKING);
+//		 tf.openAccount(sl, AccountType.BASIC_CHECKING);
 		// tf.closeAccount(sl, "72418514LUCGU34");
 
+//		 GeneralFunctions gf = new GeneralFunctions();
+//		 gf.accountsCountCheck(sl);
+		 
 		/* Transactions */
 //		 TellerFunctions tf = new TellerFunctions ();
-//		 tf.deposite("42218529RQQGP13", 50,"Mario Rista");
+//		 tf.deposite("42218529RQQGP13", 150,"Mario Rista LUVs u");
+//		 tf.deposite("13105279LUKHI54", 300,"Mario Rista LUVs u 2");
 //		 tf.withdraw("1111111112", "42218529RQQGP13", 100,"Sa Sa Sa");
 		// tf.transfer("1111111111", "42218529RQQGP13", "70913919GVVTP98",
 		// 10.5,"AAAAA");

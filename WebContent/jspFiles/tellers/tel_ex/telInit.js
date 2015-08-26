@@ -1,28 +1,11 @@
-function hideShow(chosen) {
-	$('.hidable').each(function(index) {
-		if ($(this).attr("id") === chosen) {
-			$(this).show();
-//			$(this).attr("style", "visibility: visible");
-		} else {
-//			$(this).attr("style", "visibility: collapse");
-			$(this).hide();
-		}
-	});
-}
-function divhide() {
-	hideShow('mainDir');
-	// $('.hidable').attr("style", "visibility: visible");
-}
-
-
-var ws = new WebSocket("ws://localhost:8080/F_WebBank/dir");
+var ws = new WebSocket("ws://localhost:8080/F_WebBank/tel");
 
 function newWs() {
 	if (ws !== undefined && ws.readyState !== ws.CLOSED) {
 		msgPost.innerHTML = "WebSocket is already opened.";
 		return;
 	}
-	ws = new WebSocket("ws://localhost:8080/F_WebBank/dir");
+	ws = new WebSocket("ws://localhost:8080/F_WebBank/tel");
 }
 
 ws.onmessage = function(evt) {
@@ -48,7 +31,7 @@ function onMessage(evt) {
 //	 console.log("received: " + evt.data);
 	var jsobj = JSON.parse(evt.data);
 
-//	console.log(jsobj.head);
+	console.log(jsobj.head);
 	var head = jsobj.head;
 
 	switch (head) {

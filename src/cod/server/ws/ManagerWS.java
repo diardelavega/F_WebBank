@@ -9,31 +9,32 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import utils.DirMsgWsHandler;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-@ServerEndpoint("/dir")
-public class DirectorWS {
-
+@ServerEndpoint("/man")
+public class ManagerWS {
+	Logger logger = LoggerFactory.getLogger(ManagerWS.class);
+	
 	@OnOpen
 	public void open(Session ses) {
-		System.out.println("ses opened");
-		//TODO add web socket session to a new array 
+		System.out.println("ON MANAGER :ses opened");
+		// TODO add web socket session to a new array
 		// sessions.add(ses);
 	}
 
 	@OnClose
 	public void close(Session ses) {
-		System.out.println("ses with id :" + ses.getId() + " is closed");
+		System.out.println("ON MANAGER :ses with id :" + ses.getId() + " is closed");
 		// sessions.remove(ses);
 	}
 
 	@OnMessage
 	public void recMsg(String msg, Session ses) throws IOException {
 		// System.out.println("received msg from: " + ses.getId());
-		System.out.println("received msg seas : " + msg);
+		System.out.println("ON MANAGER :received msg seas : " + msg);
 		String webResponse = DirMsgWsHandler.switchit(msg);
 
 		sendMsg(webResponse, ses);
@@ -46,7 +47,7 @@ public class DirectorWS {
 
 	@OnError
 	public void error(Session ses, Throwable t) {
-		System.out.println("ses with id :" + ses.getId()
+		System.out.println("ON MANAGER :ses with id :" + ses.getId()
 				+ " encountered an error");
 		t.printStackTrace();
 	}

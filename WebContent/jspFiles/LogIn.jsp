@@ -12,11 +12,12 @@
 	if (ses.getAttribute("validity") != "ok") {
 	}
 %> --%>
+
 </head>
-<body>
+<body onload="foo();">
 	<form action="../Log.do" method="post">
 		<p>
-			username <input name="usr" type="text">
+			username <input type="text" name="usr" >
 		</p>
 
 		<p>
@@ -32,5 +33,11 @@
 		
 		<p>${sessionScope.validity}</p>
 	</div>
+	
+	
+	
+	<!-- jQuery -->
+	<script src="../bootstrap/js/jquery.js"></script>
+	<script src="./js/general.js"></script>
 </body>
 </html>

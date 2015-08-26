@@ -50,15 +50,17 @@ request they decide to confirm, deny or return the request. The apropriate telle
 confirmation of the request
  
 
+***
+On login you are checked against the DB data and upon confirmation you are entered in a list held by the Coordinator
+class.
 
 
 
 
+**For transaction >=500 the dir gets notified (push transaction to client side director)
 
 
-
-
-
+//TODO create manager and teller client side pages and continue the interaction
 
 
 

@@ -260,7 +260,7 @@ public class DirMsgWsHandler {
 		JsonObject jo = new JsonObject();
 		List<Object[]> list = df.getBalance(fromDate, toDate);
 
-		jo.addProperty("head", "balance");
+		jo.addProperty("head", "dirBalance");
 		jo.add("balist", gson.toJsonTree(list));
 		String jsonResp = gson.toJson(jo);
 		logger.info("jsonResp :"+jsonResp);
@@ -270,23 +270,15 @@ public class DirMsgWsHandler {
 	}
 
 	private static String getTransactions(DirectorFunctions df, JsonObject jobj) {
-		
 		DateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.GERMANY);
-
 		Date fromDate = null, toDate = null;
 		try {
-
 			java.util.Date d1 = format.parse(jobj.get("fdate").getAsString());
-//			System.out.println("d1-------:" + d1);
 			fromDate = new java.sql.Date(d1.getTime());
-//			System.out.println("-------:" + fromDate);
-
 			if (jobj.has("tdate")) {
 				java.util.Date d2 = format.parse(jobj.get("tdate")
 						.getAsString());
-//				System.out.println("d2-------:" + d2);
 				toDate = new java.sql.Date(d2.getTime());
-//				System.out.println("-------:" + toDate);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -294,7 +286,7 @@ public class DirMsgWsHandler {
 
 		JsonObject jo = new JsonObject();
 		List<Transaction> trl = df.getTransactions(fromDate, toDate);
-		jo.addProperty("head", "transaction");
+		jo.addProperty("head", "dirTransaction");
 		
 		jo.add("translist", gson.toJsonTree(trl));
 		String jsonResp = gson.toJson(jo);

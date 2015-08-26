@@ -1,6 +1,7 @@
 package functions;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,10 +10,12 @@ import org.slf4j.LoggerFactory;
 import system.Coordinator;
 import system.TellerQuery;
 import utils.GeneralFunctions;
+import utils.PushClientSide;
 import comon.AccountType;
 import comon.OCRequest;
 import comon.Response;
 import comon.StaticVars;
+import entity.Account;
 import entity.EmployeeAction;
 import entity.Transaction;
 
@@ -39,6 +42,8 @@ public class TellerFunctions extends EmployeeFunctions {
 	public void alert(String requestType, String response, String accNr,
 			String note) {
 		// TODO implement an alert for client side the operation was evaluated
+		PushClientSide pcs = new PushClientSide();
+		pcs.pushToClient(requestType, response, accNr, note);
 		EmployeeAction ea;
 		if (response.equals(StaticVars.REQ_APPROVE)) {
 			if (requestType.equals(StaticVars.OPEN)) {
@@ -56,8 +61,10 @@ public class TellerFunctions extends EmployeeFunctions {
 		} else if (response.equals(StaticVars.REQ_DENIED)) {
 			logger.info("{} for the operation {} under the reason '{}'",
 					response, requestType, note);
+		} else if (response.equals(StaticVars.UNREG_USR)) {
+			logger.info("{}  for the operation {}. ", response, requestType);
 		} else {
-			logger.info("{}. ", response);
+			logger.info("note :{}  , {}. ", note, response);
 		}
 	}
 
@@ -67,18 +74,27 @@ public class TellerFunctions extends EmployeeFunctions {
 	}
 
 	public void openAccount(List<String> personalIds, AccountType accType) {
+
 		if (personalIds.size() > 4) {
 			System.out.println("TOO MANY CO-OWNERS");
 		} else {
 			GeneralFunctions gf = new GeneralFunctions();
 			if (gf.registrationCheck(personalIds).size() == 0) {
 				Coordinator list = new Coordinator();
-				OCRequest req = new OCRequest(this, personalIds,
-						StaticVars.OPEN, accType);
+				OCRequest req;
+				if (gf.accountsCountCheck(personalIds).size() == 0) {
+					req = new OCRequest(this, personalIds, StaticVars.OPEN,
+							accType);
+				} else {// accounts count check
+					req = new OCRequest(this, personalIds,
+							StaticVars.PLUS_6_ACC, accType);
+				}
 				list.addOCR(req);
-			}// if
+			} else {// registration check
+				alert(StaticVars.OPEN, StaticVars.UNREG_USR, null,
+						"unregistere users");
+			}
 		}
-
 	}
 
 	public void closeAccount(List<String> personalIds, String accNr) {
@@ -114,34 +130,71 @@ public class TellerFunctions extends EmployeeFunctions {
 
 	public void deposite(String accNr, double amount, String note) {
 		TellerQuery tq = new TellerQuery();
-		long trNr = tq.deposite(accNr, amount);
-		if (trNr > 0) {
-			EmployeeAction ea = new EmployeeAction(StaticVars.DEPOSITE, note,
-					empId, trNr);
-			ea.setAmount(amount);
-			ea.setAccountId(accNr);
-			super.deposite(ea);
+
+		if (tq.checkDepositeRegularity(accNr, amount)) {
+			if (amount >= 1000) {// alert the manager to confirm
+				Coordinator cord = new Coordinator();
+				OCRequest req = new OCRequest(this, null,
+						StaticVars.PLUS_1K_DEP, accNr,null,amount, note);
+				cord.addOCR(req);
+			} else {
+				long trNr = tq.deposite(accNr, amount);
+				if (trNr > 0) {
+					EmployeeAction ea = new EmployeeAction(StaticVars.DEPOSITE,
+							note, empId, trNr);
+					ea.setAmount(amount);
+					ea.setAccountId(accNr);
+					super.deposite(ea);
+				}
+			}
 		}
 
 	}
 
-	public void withdraw(String personalId, String account, double amount,
+	public void withdraw(String personalId, String accNr, double amount,
 			String note) {
 		TellerQuery tq = new TellerQuery();
-		long trNr = tq.withdraw(personalId, account, amount);
-		if (trNr > 0) {
-			EmployeeAction ea = new EmployeeAction(StaticVars.WITHDRAW, note,
-					empId, trNr);
-			ea.setCustomerId(personalId);
-			ea.setAmount(amount);
-			ea.setAccountId(account);
-			super.withdraw(ea);
+		if (tq.checkWithdrawRegularity(personalId, accNr, amount)) {
+			if (amount >= 1000) {// alert the manager to confirm
+				ArrayList<String> ocrAl = new ArrayList<>();
+				Coordinator cord = new Coordinator();
+				ocrAl.add(personalId);
+				OCRequest req = new OCRequest(this, ocrAl,
+						StaticVars.PLUS_1K_WITH, accNr);
+				cord.addOCR(req);
+			} else {
+
+				long trNr = tq.withdraw(personalId, accNr, amount);
+				if (trNr > 0) {
+					EmployeeAction ea = new EmployeeAction(StaticVars.WITHDRAW,
+							note, empId, trNr);
+					ea.setCustomerId(personalId);
+					ea.setAmount(amount);
+					ea.setAccountId(accNr);
+					super.withdraw(ea);
+				}
+			}
 		}
 	}
 
 	public void transfer(String personalId, String accFrom, String accTo,
 			double amount, String note) {
+		// TODO check if amount >=1000; if yes
+		// check transaction regularity; if yes
+		// ask manager for permission; if confirmed
+		// proceed to action;
+
 		TellerQuery tq = new TellerQuery();
+		if (tq.checkTransferRegularity(personalId, accFrom, accTo, amount, 't')){
+			if (amount >= 1000) {// alert the manager to confirm
+				ArrayList<String> ocrAl = new ArrayList<>();
+				Coordinator cord = new Coordinator();
+				ocrAl.add(personalId);
+				OCRequest req = new OCRequest(this, ocrAl,
+						StaticVars.PLUS_1K_WITH, accFrom,accTo,amount,null);
+				cord.addOCR(req);
+			} else {
+		
 		long trNr = tq.transfer(personalId, accFrom, accTo, amount, 't');
 		if (trNr > 0) {
 			EmployeeAction ea = new EmployeeAction(StaticVars.TRANSFER, note,
@@ -150,23 +203,30 @@ public class TellerFunctions extends EmployeeFunctions {
 			ea.setAmount(amount);
 			ea.setAccountId(accFrom);
 			super.transfer(ea);
-		}
+		}}}
 	}
 
-	public void getAccountClients(String accountId) {
+	public List<String> getAccountClients(String accountId) {
 		GeneralFunctions gf = new GeneralFunctions();
-		for (String c : gf.accountsClients(accountId)) {
-			gf.getCustomer(c).print();
-		}
+//		for (String c : gf.accountsClients(accountId)) {
+//			gf.getCustomer(c).print();
+//		}
+		return gf.accountsClients(accountId);
 	}
 
-	public void getClientAccounts(String personalId) {
+	public List<String> getClientAccounts(String personalId) {
 		GeneralFunctions gf = new GeneralFunctions();
-		for (String s : gf.accountsClients(personalId)) {
-			gf.getAccount(s).print();
-		}
+//		for (String s : gf.accountsClients(personalId)) {
+//			gf.getAccount(s).print();
+//		}
+		return gf.accountsClients(personalId);
 	}
 
+	public Account getAccount(String accId){
+		TellerQuery tq = new TellerQuery ();
+		return tq.getAccount(accId);
+	} 
+	
 	public int getEmpId() {
 		return empId;
 	}

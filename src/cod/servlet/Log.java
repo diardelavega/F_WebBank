@@ -85,14 +85,27 @@ public class Log extends HttpServlet {
 			if (domain == null) {
 				session.setAttribute("validity", "not_ok");
 			} else {
+				logger.info("------------------------>usr :{} and psw:{}",usr,psw);
+				
 				LogIn log = new LogIn();
-				if (domain.equals("webank")) {
+				if (domain.equalsIgnoreCase("webank")) {
 					Employee e = log.logInEmp(usr, psw);
 					if (e != null) {
 						session = request.getSession(true);
 						session.setAttribute("primeKey", e.getEmpId());
 						session.setAttribute("name", e.getFname());
-						destination = "jspFiles/Test.jsp";
+						switch(e.getPossition()){
+						case "TELLER":
+							destination = "jspFiles/tellers/tellersPage.jsp";
+							break;
+						case "MANAGER":
+							destination = "jspFiles/managers/managersPage.jsp";
+							break;
+						case "DIRECTOR":
+							destination = "jspFiles/directors/directorsPage.jsp";
+							break;
+						}
+						//destination = "jspFiles/Test.jsp";
 					} else {
 						session.setAttribute("validity", "user not found");
 					}
@@ -116,6 +129,7 @@ public class Log extends HttpServlet {
 		// log.closeSession();
 		// rd = request.getRequestDispatcher(destination);
 		// rd.forward(request, response);
+		
 		response.sendRedirect(destination);
 	}
 
@@ -124,6 +138,7 @@ public class Log extends HttpServlet {
 		String[] temp;
 		if ((mail.contains("@")) && (mail.contains("."))) {
 			temp = mail.split("[@.]");
+			System.out.println("TEN!!111111---:"+temp[1]);
 			return temp[1];
 		}
 		return null;

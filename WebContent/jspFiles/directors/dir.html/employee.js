@@ -1,24 +1,24 @@
 function alterEmpRes(jsobj) {
 	// todoconfirm the action
-	//console.log(jsobj.newId);
+	// console.log(jsobj.newId);
 	alert("All DONE" + jsobj.newId);
 }
 
 function deleteEmpRes(jsobj) {
 	// todoconfirm the action
-	//console.log(jsobj.newId);
+	// console.log(jsobj.newId);
 	alert("All DONE" + jsobj.newId);
 }
 
 function newEmpRes(jsobj) {
 	// todoconfirm the action
-	//console.log(jsobj.newId);
+	// console.log(jsobj.newId);
 	alert("All DONE" + jsobj.newId);
 }
 
 function errorRes(jsobj) {
 	// todoconfirm the action
-	//console.log(jsobj.msg);
+	// console.log(jsobj.msg);
 	alert("Error MSG  " + jsobj.msg);
 }
 
@@ -37,7 +37,7 @@ function empInfoHandler(jsobj) {
 					// empTableListBody(line[key]);
 				}
 				empTableListBody(line[key]);
-//				console.log(i + " --- " + key + " --- " + line[key]);
+				// console.log(i + " --- " + key + " --- " + line[key]);
 			}
 		}
 	}
@@ -124,7 +124,6 @@ function clear1() {
 	$('[name=psw1]').val("");
 }
 
-
 function alterEmployee() {
 	var emp = getEmpData("alter");
 	doSend(JSON.stringify(emp));
@@ -135,8 +134,6 @@ function deleteEmployee() {
 	doSend(JSON.stringify(emp));
 	clear2();
 }
-
-
 
 function newEmployee() {
 	var emp = {
@@ -163,7 +160,7 @@ function getEmpInfo() {
 function getEmpData(headVal) {
 	var emp = {
 		head : headVal,
-		// dirId: '${sessionScope.empId}',
+		//dirId : ${sessionScope.empId},
 		id : $('[name=id2]').val(),
 		fname : $('[name=fname2]').val(),
 		lname : $('[name=lname2]').val(),

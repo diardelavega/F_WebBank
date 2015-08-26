@@ -24,10 +24,14 @@ public class StaticVars {
 	public static final String WITHDRAW = "WITHDRAW";
 	public static final String TRANSFER = "TRANSFER";
 	public static final String REGISTER = "REGISTER";
-	
-	public static final String PLUS_4_ACC = "PLUS_4_ACC";
-	public static final String PLUS_1K_TRANS= "PLUS_1K_TRANS";
-	
+
+	public static final String PLUS_6_ACC = "PLUS_6_ACC";
+	public static final String PLUS_1K_TRANS = "PLUS_1K_TRANSFER";
+	public static final String PLUS_1K_DEP = "PLUS_1K_DEPOSIE";
+	public static final String PLUS_1K_WITH = "PLUS_1K_WITHDRAW";
+
+	public static final String UNREG_USR = "UNREGISTERED USER";
+
 	public static final long ERROR = -1;
 	public static final long DOES_NOT_EXISTS = -2;
 	public static final long DUPLICATE_ENTRY = -3;

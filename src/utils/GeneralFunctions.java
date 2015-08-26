@@ -22,7 +22,7 @@ public class GeneralFunctions {
 	private Session s;// = DBHandler.getSessionFactory().openSession();
 
 	public String logIn(String usr, String psw) {
-//		Session s = DBHandler.getSessionFactory().openSession();
+		// Session s = DBHandler.getSessionFactory().openSession();
 		upSession();
 		String[] temp = usr.split("@");
 		String query;
@@ -32,7 +32,7 @@ public class GeneralFunctions {
 		} else {
 			query = "FROM Customers WHERE eMail= :email AND password= :pas";
 		}
-//		Session s = DBHandler.getSessionFactory().openSession();
+		// Session s = DBHandler.getSessionFactory().openSession();
 		upSession();
 		Query q = s.createQuery(query).setParameter("email", usr)
 				.setParameter("pas", psw);
@@ -86,8 +86,8 @@ public class GeneralFunctions {
 						"SELECT personalId FROM CustomersAccount WHERE accountId = :accNr")
 				.setParameter("accNr", accNr).list();
 		// s.close();
-		if (clientIds == null)
-			return null;
+//		if (clientIds == null)
+//			return null;
 		return clientIds;
 	}
 
@@ -157,6 +157,22 @@ public class GeneralFunctions {
 		return unreg;
 	}
 
+	public List<String> accountsCountCheck(List<String> pId) {
+		upSession();
+		List<String> unreg = new ArrayList<String>();
+		Query q = s
+				.createQuery("SELECT count(*) FROM CustomersAccount WHERE personalId=:pid");
+		long acs;
+		for (String ss : pId) {
+			if ((acs=(long) q.setParameter("pid", ss).list().get(0)) >= 6) {
+				unreg.add(ss);
+//				System.out.println("--- "+((long)q.setParameter("pid", ss).list().get(0)));
+//				System.out.println("--- "+(acs));
+			}
+		}
+		return unreg;
+	}
+
 	public void registrationCheck(String pId) {
 		upSession();
 		String query = "SELECT personalId FROM Customers WHERE personalId=:pid";
@@ -184,9 +200,9 @@ public class GeneralFunctions {
 	}
 
 	public void upSession() {
-	//	if (!s.isConnected() || !s.isOpen()) {
-			s = DBHandler.getSessionFactory().openSession();
-		//}
+		// if (!s.isConnected() || !s.isOpen()) {
+		s = DBHandler.getSessionFactory().openSession();
+		// }
 	}
 
 	public void closeSession() {

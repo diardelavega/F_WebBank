@@ -71,19 +71,19 @@ public class ManagerFunctions extends EmployeeFunctions {
 
 	public void confirmClose(String response,String note ) {
 		if (response.equals(StaticVars.ACCEPT)) {
-			accm.closeAccount(req.getAccNr());
+			accm.closeAccount(req.getAccFromNr());
 			req.setStatusComplete();
 			lists.deleteOCR(req);
-			logger.info("CLOSE ACCOUNT {}. REQEST WAS APPROVED", req.getAccNr());
+			logger.info("CLOSE ACCOUNT {}. REQEST WAS APPROVED", req.getAccFromNr());
 			// ----------------------------
-			EmployeeAction ea = new EmployeeAction(req.getAccNr(),
+			EmployeeAction ea = new EmployeeAction(req.getAccFromNr(),
 					StaticVars.CNF_CLOSE, "", empId);
 			super.confirmCloseAcc(ea);
 			// ----------------------------
 			req.getTellersFunction().alert(StaticVars.CLOSE,
-					StaticVars.REQ_APPROVE, req.getAccNr(),note);
+					StaticVars.REQ_APPROVE, req.getAccFromNr(),note);
 		} else {
-			logger.info("CLOSE ACCOUNT {}. REQEST WAS DENNIED", req.getAccNr());
+			logger.info("CLOSE ACCOUNT {}. REQEST WAS DENNIED", req.getAccFromNr());
 			req.getTellersFunction().alert(StaticVars.CLOSE,
 					StaticVars.REQ_DENIED, null,note);
 		}
@@ -147,11 +147,32 @@ public class ManagerFunctions extends EmployeeFunctions {
 			} else {
 				response = StaticVars.DENIE;
 			}
+			
+			switch(req.getReqType() ){
+			case StaticVars.OPEN:
+				confirmOpen(response, response);
+				break;
+			case StaticVars.CLOSE:
+				confirmClose(response, response);
+				break;
+			case StaticVars.PLUS_1K_DEP:
+				confirmClose(response, response);
+				break;
+			case StaticVars.PLUS_1K_TRANS:
+				confirmClose(response, response);
+				break;
+			case StaticVars.PLUS_1K_WITH:
+				confirmClose(response, response);
+				break;
+			case StaticVars.PLUS_6_ACC:
+				confirmClose(response, response);
+				break;
+			}
 
 			if (req.getReqType() == (StaticVars.OPEN)) {
-				confirmOpen(response, response);
+				confirmOpen(response, req.getNote());
 			} else if (req.getReqType() == (StaticVars.CLOSE)) {
-				confirmClose(response, response);
+				confirmClose(response, req.getNote());
 			} else {
 				req.getTellersFunction().alert(null, "UNDEFINED ERROR OCOURED",
 						null,"");
