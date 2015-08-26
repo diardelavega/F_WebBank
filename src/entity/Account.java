@@ -6,6 +6,7 @@
  */
 package entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "account")
-public class Account {
+public class Account implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
 	@Id
 	@Column(name = "accountId")
 	private String accountId;
@@ -45,7 +52,7 @@ public class Account {
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "customers_account", joinColumns = { @JoinColumn(name = "accountId") }, inverseJoinColumns = { @JoinColumn(name = "personalId") })
-	private List<Customers> customers = new ArrayList<Customers>();
+	private transient  List<Customers> customers = new ArrayList<Customers>();
 
 	// @ManyToMany(mappedBy = "accounts")
 	// private List<Customers> customers = new ArrayList<Customers>();
@@ -113,7 +120,7 @@ public class Account {
 
 	public void print() {
 		System.out.print(accountId + " " + accType + " " + balance + " "
-				+ accStatus);
+				+ accStatus+ " "+openDate);
 	}
 
 }

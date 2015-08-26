@@ -24,13 +24,12 @@
 
 <!-- flot charts -->
 <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css">
-<title>Insert title here</title>
+
+<title>Teller's Page</title>
 </head>
 <body>
-	<h1>${sessionScope.name}</h1>
 
 	<div id="wrapper">
-
 		<!-- Navigation -->
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
@@ -122,14 +121,6 @@
 			<div class="container-fluid">
 
 				<jsp:include page="./mainPageTelPart.jsp"></jsp:include>
-				<!-- import director main details -->
-				<%-- <jsp:include page="./mainPageDirPart.jsp"></jsp:include>
-				<!-- import employee details -->
-				<jsp:include page="./empPageDirPart.jsp"></jsp:include>
-				<!-- import employee details -->
-				<jsp:include page="./balancePageDirPart.jsp"></jsp:include>
-				<jsp:include page="./transPageDirPart.jsp"></jsp:include> --%>
-
 
 			</div>
 		</div>
@@ -138,13 +129,15 @@
 	</div>
 	<!-- /#wrapper -->
 
-
-
 	<!-- jQuery -->
 	<script src="../../bootstrap/js/jquery.js"></script>
+	
+	
+	<!-- teller scripts -->
+	<script src="./tel_ex/telInit.js"></script>
+	<script src="./tel_ex/tel.js"></script>
 
-	<!-- director scripts -->
-	<script src="./man_ex/manInit.js"></script>
+
 
 	<!-- flot charts -->
 	<script language="javascript" type="text/javascript"
@@ -159,6 +152,7 @@
 
 	<!-- jquery-ui -->
 	<script src="../../jquery-ui/jquery-ui.min.js"></script>
+
 
 </body>
 </html>

@@ -35,16 +35,16 @@ function onMessage(evt) {
 	var head = jsobj.head;
 
 	switch (head) {
-	case 'newEmployee':
-		newEmpRes(jsobj);
+	case 'clientAccountsReply':
+		clientAccounts(jsobj);
 		break;
-	case 'empList':
-		empInfoHandler(jsobj);
+	case 'accountStatusReply':
+		accountStatus(jsobj);
 		break;
-	case 'deleteEmployee':
-		deleteEmpRes(jsobj);
+	case 'accountCoownersReply':
+		accountCoowners(jsobj);
 		break;
-	case 'alterEmployee':
+	/*case 'alterEmployee':
 		alterEmpRes(jsobj);
 		break;
 	case 'dirTransaction':
@@ -54,7 +54,7 @@ function onMessage(evt) {
 //		alert("BALANCEEEEE"+jsobj.balist)
 //		console.log(jsobj.balist);
 		balanceHandler(jsobj);
-		break;
+		break;*/
 	case 'error':
 		errorRes(jsobj);
 		break;

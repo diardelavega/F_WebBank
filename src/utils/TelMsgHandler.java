@@ -1,5 +1,6 @@
 package utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,23 +15,23 @@ import functions.TellerFunctions;
 
 public class TelMsgHandler {
 	private static final Logger logger = LoggerFactory
-			.getLogger(DirMsgWsHandler.class);
-	private Gson gson = new GsonBuilder().serializeNulls().create();
+			.getLogger(TelMsgHandler.class);
+//	private Gson gson = new GsonBuilder().serializeNulls().create();
 
 	public String switchit(String msg) {
 		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
 		String head = jobj.get("head").getAsString();
 		TellerFunctions tf = new TellerFunctions();
-//		JsonObject jo = new JsonObject();
+		// JsonObject jo = new JsonObject();
 
 		switch (head) {
-		case "accStats":
+		case "accountStatus":
 			return accountStatus(tf, jobj);
 			// break;
-		case "accCoo":
+		case "accountCoowners":
 			return accountCoowners(tf, jobj);
 			// break;
-		case "cliAcc":
+		case "clientAccounts":
 			return clientAccounts(tf, jobj);
 			// break;
 			// case "delete":
@@ -53,12 +54,16 @@ public class TelMsgHandler {
 
 	private String clientAccounts(TellerFunctions tf, JsonObject jobj) {
 		JsonObject jo = new JsonObject();
-		if (jobj.has("persId")) {
-			String personalId = jobj.get("persId").getAsString();
-			jo.addProperty("head", "clientAccs");
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		if (jobj.has("personalId")) {
+			String personalId = jobj.get("personalId").getAsString();
+			jo.addProperty("head", "clientAccountsReply");
 			List<String> ids = tf.getClientAccounts(personalId);
-			jo.add("accList", gson.toJsonTree(ids));
-
+			if (ids == null || ids.size() == 0) {
+				jo.addProperty("msg", "this customer has no accounts");
+			} else {
+				jo.add("accList", gson.toJsonTree(ids));
+			}
 		} else {
 			jo.addProperty("head", "error");
 			jo.addProperty("msg", "personal Id was not provided");
@@ -69,19 +74,28 @@ public class TelMsgHandler {
 
 	private String accountStatus(TellerFunctions tf, JsonObject jobj) {
 		JsonObject jo = new JsonObject();
-		if (jobj.has("accStats")) {
-			String accId = jobj.get("accStats").getAsString();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		if (jobj.has("accuntNr")) {
+			String accId = jobj.get("accuntNr").getAsString();
 			Account acc = tf.getAccount(accId);
+//			logger.info("------------:ON ACCOUNT STATUS");
+//			acc.print();
+			
+			jo.addProperty("head", "accountStatusReply");
 			if (acc == null) {
-				jo.addProperty("head", "accStatusReply");
 				jo.addProperty("msg", "the account doesn't exist");
 			} else {
-				jo.addProperty("head", "accStatusReply");
 				jo.add("Account", gson.toJsonTree(acc));
+//				jo.addProperty("ac1",acc.getAccountId().toString());
+//				jo.addProperty("ac2",acc.getAccStatus().toString());
+//				jo.addProperty("ac3",acc.getAccType());
+//				jo.addProperty("ac4",acc.getBalance());
+//				jo.add("acc5", gson.toJsonTree(acc.getOpenDate()));
+				
 			}
 		} else {
 			jo.addProperty("head", "error");
-			jo.addProperty("msg", "the account nr was not provided");
+			jo.addProperty("msg", "the accuntNr dwas not provided");
 		}
 		String jsonResp = gson.toJson(jo);
 		return jsonResp;
@@ -89,15 +103,16 @@ public class TelMsgHandler {
 
 	private String accountCoowners(TellerFunctions tf, JsonObject jobj) {
 		JsonObject jo = new JsonObject();
-		if (jobj.has("accCoo")) {
-			String accountId = jobj.get("accCoo").getAsString();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		if (jobj.has("accuntNr")) {
+			String accountId = jobj.get("accuntNr").getAsString();
 			List<String> coowners = tf.getAccountClients(accountId);
 			if (coowners == null || coowners.size() == 0) {
-				jo.addProperty("head", "accCoownersReply");
+				jo.addProperty("head", "accountCoownersReply");
 				jo.addProperty("msg", "the Account has no owners");
 			} else {
-				jo.addProperty("head", "accCoownersReply");
-				jo.add("Account", gson.toJsonTree(coowners));
+				jo.addProperty("head", "accountCoownersReply");
+				jo.add("ownList", gson.toJsonTree(coowners));
 			}
 		} else {
 			jo.addProperty("head", "error");

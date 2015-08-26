@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import utils.DirMsgWsHandler;
 import utils.TelMsgHandler;
 
-@ServerEndpoint("/tell")
+@ServerEndpoint("/tel")
 public class TellerWS {
 
 	Logger logger = LoggerFactory.getLogger(ManagerWS.class);

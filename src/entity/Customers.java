@@ -5,6 +5,7 @@
  */
 package entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "customers")
-public class Customers {
+public class Customers implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@Column(name = "personalId")
 	private String personalId;
@@ -49,7 +54,7 @@ public class Customers {
 //	private List<Account> accounts = new ArrayList<Account>();
 
 	 @ManyToMany(mappedBy = "customers")
-	 private List<Account> accounts = new ArrayList<>();
+	 private transient List<Account> accounts = new ArrayList<>();
 
 	/*
 	 * @OneToMany(cascade = CascadeType.ALL, mappedBy="customers" ) private
