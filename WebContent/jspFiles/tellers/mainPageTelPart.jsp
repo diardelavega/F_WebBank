@@ -38,18 +38,29 @@ body {
 		<tbody>
 			<tr>
 				<td>
-					<div class="container">
+					<div class="container-fluid">
+					<h3>Actions:</h3>
+					<div style="background-color:rgb(220,220,220); width: 100%">
 						<ul class="nav nav-pills ">
-							<li><a data-toggle="pill" href="#accs" onclick="telAccountStatus();" ><strong>Account's
+							<li><a data-toggle="pill" href="#accs"
+								onclick="telAccountStatus();"><strong>Account's
 										Status</strong></a></li>
-							<li><a data-toggle="pill" href="#a_coo" onclick="telAccountCoo();"><strong>Account's
+							<li><a data-toggle="pill" href="#a_coo"
+								onclick="telAccountCoo();"><strong>Account's
 										Co-owners</strong></a></li>
-							<li><a data-toggle="pill" href="#cli_a" onclick="telClientAccounts();"><strong>Client's
+							<li><a data-toggle="pill" href="#cli_a"
+								onclick="telClientAccounts();"><strong>Client's
 										Accounts</strong></a></li>
+							<li><a data-toggle="pill" href="#regCli"
+								onclick="telRegisterClient();"><strong>Register
+										Client</strong></a></li>
 						</ul>
-						<div class="tab-content">
-							<div id="accs" class="tab-pane fade in active">
-								<h3>HOME</h3>
+						</div>
+						<br>
+						<div class="tab-content" >
+							<div id="accs" class="tab-pane fade ">
+								<h3>Account's Status :</h3>
+								<!-- table with the response Account Status -->
 								<table>
 									<thead>
 										<tr>
@@ -70,15 +81,65 @@ body {
 									aliqua.</p>
 							</div>
 							<div id="a_coo" class="tab-pane fade">
-								<h3>Menu 1</h3>
+								<h3>Account's Co-owners:</h3>
 								<p>Ut enim ad minim veniam, quis nostrud exercitation
 									ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 							</div>
 							<div id="cli_a" class="tab-pane fade">
-								<h3>Menu 2</h3>
+								<h3>Client's Accounts</h3>
 								<p>Sed ut perspiciatis unde omnis iste natus error sit
 									voluptatem accusantium doloremque laudantium, totam rem
 									aperiam.</p>
+							</div>
+							<div id="regCli" class="tab-pane fade">
+								<h3>Register Client:</h3>
+								
+								<!-- client registration Form -->
+								<table class="normal"
+									style="margin: 30px; margin-left: 10px; padding: 10px;">
+									<tr>
+										<td><label> F. Name &nbsp;</label></td>
+										<td><input type="text" name="fname1"></td>
+										<td><div id=extrabutton>
+												<button id="clearbut" onclick="clear1();">
+													<span class="glyphicon glyphicon-erase"></span>
+												</button>
+											</div></td>
+									</tr>
+									<tr>
+										<td><label> L. Name &nbsp;</label></td>
+										<td><input type="text" name="lname1"></td>
+									</tr>
+									<tr>
+										<td><label> BirthDate&nbsp;</label></td>
+										<td><input type="text" name="bdate" class="datePicker"></td>
+									</tr>
+									<tr>
+										<td><label> Address&nbsp;</label></td>
+										<td><input type="text" name="address1"></td>
+									</tr>
+									<tr>
+										<td><label> phone Nr.&nbsp;</label></td>
+										<td><input type="text" name="phone"></td>
+									</tr>
+									<tr>
+										<td><label> E-mail&nbsp;</label></td>
+										<td><input id="email" type="text" name="email1"></td>
+									</tr>
+									<tr>
+										<td><label> Password&nbsp;</label></td>
+										<td><input type="text" name="psw1"></td>
+									</tr>
+									<tr id="trid1" style="visibility: collapse">
+										<td><label> Emp. Id &nbsp;</label></td>
+										<td><input type="text" name="id1"></td>
+									</tr>
+									<tr>
+										<td colspan="2" align="center"><input id="newbut"
+											onclick="newEmployee();" type="button" value="SAVE"></td>
+									</tr>
+								</table>
+
 							</div>
 						</div>
 					</div>

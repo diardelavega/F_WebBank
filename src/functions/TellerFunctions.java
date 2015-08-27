@@ -135,7 +135,7 @@ public class TellerFunctions extends EmployeeFunctions {
 			if (amount >= 1000) {// alert the manager to confirm
 				Coordinator cord = new Coordinator();
 				OCRequest req = new OCRequest(this, null,
-						StaticVars.PLUS_1K_DEP, accNr,null,amount, note);
+						StaticVars.PLUS_1K_DEP, accNr, null, amount, note);
 				cord.addOCR(req);
 			} else {
 				long trNr = tq.deposite(accNr, amount);
@@ -185,48 +185,61 @@ public class TellerFunctions extends EmployeeFunctions {
 		// proceed to action;
 
 		TellerQuery tq = new TellerQuery();
-		if (tq.checkTransferRegularity(personalId, accFrom, accTo, amount, 't')){
+		if (tq.checkTransferRegularity(personalId, accFrom, accTo, amount, 't')) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();
 				Coordinator cord = new Coordinator();
 				ocrAl.add(personalId);
 				OCRequest req = new OCRequest(this, ocrAl,
-						StaticVars.PLUS_1K_WITH, accFrom,accTo,amount,null);
+						StaticVars.PLUS_1K_WITH, accFrom, accTo, amount, null);
 				cord.addOCR(req);
 			} else {
-		
-		long trNr = tq.transfer(personalId, accFrom, accTo, amount, 't');
-		if (trNr > 0) {
-			EmployeeAction ea = new EmployeeAction(StaticVars.TRANSFER, note,
-					empId, trNr);
-			ea.setCustomerId(personalId);
-			ea.setAmount(amount);
-			ea.setAccountId(accFrom);
-			super.transfer(ea);
-		}}}
+
+				long trNr = tq
+						.transfer(personalId, accFrom, accTo, amount, 't');
+				if (trNr > 0) {
+					EmployeeAction ea = new EmployeeAction(StaticVars.TRANSFER,
+							note, empId, trNr);
+					ea.setCustomerId(personalId);
+					ea.setAmount(amount);
+					ea.setAccountId(accFrom);
+					super.transfer(ea);
+				}
+			}
+		}
 	}
 
-	public List<String> getAccountClients(String accountId) {
+	public List<Object> getAccountClients(String accountId) {
 		GeneralFunctions gf = new GeneralFunctions();
-//		for (String c : gf.accountsClients(accountId)) {
-//			gf.getCustomer(c).print();
-//		}
-		return gf.accountsClients(accountId);
+		List<String> accIds = gf.accountsClients(accountId);
+
+		List<Object> custs = null;
+		if (accIds.size() != 0) {
+			custs = new ArrayList<>();
+			TellerQuery tq = new TellerQuery();
+			for (String c : accIds) {
+				Object[] a = tq.getCustomerDetails(c);
+				custs.add(a);
+			}
+		}
+		return custs;
 	}
 
-	public List<String> getClientAccounts(String personalId) {
+	public List<Account> getClientAccounts(String personalId) {
 		GeneralFunctions gf = new GeneralFunctions();
-//		for (String s : gf.accountsClients(personalId)) {
-//			gf.getAccount(s).print();
-//		}
-		return gf.accountsClients(personalId);
+		List<Account>acl=new ArrayList<>();
+		List<String> cids = gf.clientsAccounts(personalId);
+		 for (String s :cids ) {
+		 acl.add(gf.getAccount(s));
+		 }
+		return acl;
 	}
 
-	public Account getAccount(String accId){
-		TellerQuery tq = new TellerQuery ();
+	public Account getAccount(String accId) {
+		TellerQuery tq = new TellerQuery();
 		return tq.getAccount(accId);
-	} 
-	
+	}
+
 	public int getEmpId() {
 		return empId;
 	}

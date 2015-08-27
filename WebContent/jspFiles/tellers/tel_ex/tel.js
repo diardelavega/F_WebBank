@@ -25,29 +25,40 @@ function telClientAccounts() {
 	doSend(JSON.stringify(req));
 }
 
+function registerClient() {
+
+}
+
 /* AFTER RESPONSE FUNCTION */
 function clientAccounts(jsobj) {
 	if (jsobj.hasOwnProperty("accList")) {
 		var accs = jsobj.accList;
 		for (var i = 0; i < accs.length; i++) {
-			console.log(acc[i])
+			console.log(accs[i])
 		}
 	}
 }
 
 function accountStatus(jsobj) {
-//	if (jsobj.hasOwnProperty("Account")) {
+	if (jsobj.hasOwnProperty("Account")) {
 		var acc = jsobj.Account;
+		var tr = $("#telAccountStatus  tr");
+		tr.empty();
+		for ( var key in acc) {
+			var td = document.createElement('td');
+			var t = document.createTextNode(acc[key]); // Create a text node
+			td.appendChild(t);
+			tr.append(td);
+			console.log(acc[key])
+		}
 		console.log(acc);
-		console.log(jsobj.acc1);
-		console.log(jsobj.acc2);
-		console.log(jsobj.acc3);
-		console.log(jsobj.acc4);
-		console.log(jsobj.acc5);
-//	} else if (jsobj.hasOwnProperty("msg")) {
-//		console.log(jsobj.msg)
-//	}
+	}
 }
+function clearAccountStatus(){
+	var tr = $("#telAccountStatus  tr");
+	tr.empty();
+}
+
 
 function accountCoowners(jsobj) {
 	if (jsobj.hasOwnProperty("ownList")) {

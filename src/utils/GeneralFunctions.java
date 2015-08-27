@@ -50,8 +50,6 @@ public class GeneralFunctions {
 		// s.beginTransaction().commit();
 		// s.close();
 		Customers c = (Customers) s.get(Customers.class, personalId);
-		if (c == null)
-			return null;
 		return c;
 	}
 
@@ -85,6 +83,7 @@ public class GeneralFunctions {
 				.createQuery(
 						"SELECT personalId FROM CustomersAccount WHERE accountId = :accNr")
 				.setParameter("accNr", accNr).list();
+		System.out.println("------------------------->"+clientIds.size());
 		// s.close();
 //		if (clientIds == null)
 //			return null;
@@ -98,8 +97,6 @@ public class GeneralFunctions {
 						"SELECT accountId FROM CustomersAccount WHERE personalId=:personalId")
 				.setParameter("personalId", personalId).list();
 		// s.close();
-		if (accounts == null)
-			return null;
 		return accounts;
 	}
 

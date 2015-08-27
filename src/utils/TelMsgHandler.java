@@ -58,7 +58,8 @@ public class TelMsgHandler {
 		if (jobj.has("personalId")) {
 			String personalId = jobj.get("personalId").getAsString();
 			jo.addProperty("head", "clientAccountsReply");
-			List<String> ids = tf.getClientAccounts(personalId);
+			
+			List<Account> ids = tf.getClientAccounts(personalId);
 			if (ids == null || ids.size() == 0) {
 				jo.addProperty("msg", "this customer has no accounts");
 			} else {
@@ -106,7 +107,7 @@ public class TelMsgHandler {
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		if (jobj.has("accuntNr")) {
 			String accountId = jobj.get("accuntNr").getAsString();
-			List<String> coowners = tf.getAccountClients(accountId);
+			List<Object> coowners = tf.getAccountClients(accountId);
 			if (coowners == null || coowners.size() == 0) {
 				jo.addProperty("head", "accountCoownersReply");
 				jo.addProperty("msg", "the Account has no owners");

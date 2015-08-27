@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
@@ -285,6 +286,15 @@ public class TellerQuery {
 			s = DBHandler.getSessionFactory().openSession();
 		}
 	}
+
+	public Object[] getCustomerDetails(String clientId) {
+		Query q = s
+				.createQuery(
+						"SELECT personalId,fname,lname,bdata,address,eMail FROM Customers where personalId like :pId ")
+				.setParameter("pId", clientId);
+		return (Object[]) q.list().get(0);
+	}
+	
 
 	public Account getAccount(String accId) {
 		GeneralFunctions gf = new GeneralFunctions();
