@@ -41,11 +41,11 @@ public class ManagerQuery {
 		List<Object[]> ol = q.list();
 		// logger.info("List Size is : {}", ol.size());
 
-//		for (Object[] row : ol) {
-//			System.out.println(row[0]);
-//			System.out.println(row[1]);
-//			System.out.println(row[2]);
-//		}
+		// for (Object[] row : ol) {
+		// System.out.println(row[0]);
+		// System.out.println(row[1]);
+		// System.out.println(row[2]);
+		// }
 		return ol;
 	}
 
@@ -68,11 +68,11 @@ public class ManagerQuery {
 		List<Object[]> ol = q.list();
 		// logger.info("List Size is : {}", ol.size());
 
-//		for (Object[] row : ol) {
-//			System.out.println(row[0]);
-//			System.out.println(row[1]);
-//			System.out.println(row[2]);
-//		}
+		// for (Object[] row : ol) {
+		// System.out.println(row[0]);
+		// System.out.println(row[1]);
+		// System.out.println(row[2]);
+		// }
 		return ol;
 	}
 
@@ -84,13 +84,13 @@ public class ManagerQuery {
 				.setParameter("toDate", dateTo);
 		List<Transaction> tl = q.list();
 
-//		for (Transaction t : tl) {
-//			System.out.println("trNr :"+t.getTransactionNr());
-//			System.out.println("trAcc :"+t.getAcction());
-//			System.out.println("trAmm :"+t.getAmount());
-//			System.out.println("trAcc1 :"+t.getAccount1());
-//		}
-//		logger.info("------------> Transaction SERVED SUCAZZ");
+		// for (Transaction t : tl) {
+		// System.out.println("trNr :"+t.getTransactionNr());
+		// System.out.println("trAcc :"+t.getAcction());
+		// System.out.println("trAmm :"+t.getAmount());
+		// System.out.println("trAcc1 :"+t.getAccount1());
+		// }
+		// logger.info("------------> Transaction SERVED SUCAZZ");
 		return tl;
 	}
 
@@ -105,15 +105,42 @@ public class ManagerQuery {
 				.setParameter("d1", date).setParameter("d2", d2);
 		List<Transaction> tl = q.list();
 
-//		for (Transaction t : tl) {
-//			System.out.println("trNr :"+t.getTransactionNr());
-//			System.out.println("trAcc :"+t.getAcction());
-//			System.out.println("trAmm :"+t.getAmount());
-//			System.out.println("trAcc1 :"+t.getAccount1());
-//			System.out.println("account2 :"+t.getAccount2());
-//			
-//		}
-//		logger.info("------------> Transaction SERVED SUCAZZ");
+		// logger.info("------------> Transaction SERVED SUCAZZ");
+		return tl;
+	}
+
+	public List<Transaction> getAccountInvolvedTrans(String accNr) {
+		Query q = s
+				.createQuery(
+						"FROM Transaction WHERE account1 = :acc1 or account2 = :acc2")
+				.setParameter("acc1", accNr).setParameter("acc2", accNr);
+		List<Transaction> tl = q.list();
+		return tl;
+	}
+
+	public List<Transaction> getClientInvolvedTransactionsPart(String persId) {
+		Query q = s.createQuery("FROM Transaction WHERE clientId = :id")
+				.setParameter("id", persId);
+		List<Transaction> tl = q.list();
+		return tl;
+	}
+
+	public List<Transaction> getClientInvolvedTransactionsAll(
+			List<String> persId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM Transaction WHERE ");
+		for (int i = 0; i < persId.size(); i++) {
+			sb.append(" clientId = :id" + i);
+			if (i < persId.size() - 1) {
+				sb.append(" or ");
+			}
+		}
+		logger.info("--------------->" + sb.toString());
+		Query q = s.createQuery(sb.toString());
+		for (int i = 0; i < persId.size(); i++) {
+			q.setParameter("id" + i, persId.get(i));
+		}
+		List<Transaction> tl = q.list();
 		return tl;
 	}
 

@@ -13,8 +13,8 @@ import fileLog.FileHandler;
 
 public class EmployeeFunctions {
 	private Logger logger = LoggerFactory.getLogger(EmployeeFunctions.class);
-	private Session s = DBHandler.getSessionFactory().openSession();
-	private String wsSession; 
+//	private Session s ;//= DBHandler.getSessionFactory().openSession();
+	private javax.websocket.Session wsSession; 
 
 	protected void requestOpenAcc(EmployeeAction ea) {
 		dbStore(ea);
@@ -58,11 +58,11 @@ public class EmployeeFunctions {
 		dbStore(ea);
 	}
 
-	public String getWsSession() {
+	public javax.websocket.Session getWsSession() {
 		return wsSession;
 	}
 
-	public void setWsSession(String wsSession) {
+	public void setWsSession(javax.websocket.Session wsSession) {
 		this.wsSession = wsSession;
 	}
 
@@ -86,18 +86,20 @@ public class EmployeeFunctions {
 		logger.info("Suppose something was Done");
 	}
 
-	protected void upSession() {
-		if (!s.isConnected() || !s.isOpen()) {
-			s = DBHandler.getSessionFactory().openSession();
-		}
-	}
-
-	protected void closeSession() {
-		try {
-			s.flush();
-			s.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	protected void upSession() {
+//		if (!s.isConnected() || !s.isOpen()) {
+//			s = DBHandler.getSessionFactory().openSession();
+//		}
+//	}
+//
+//	protected void closeSession() {
+//		try {
+//			s.flush();
+//			s.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+	
+	
 }

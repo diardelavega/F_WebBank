@@ -23,12 +23,18 @@
 	rel="stylesheet">
 
 <!-- flot charts -->
-<link href="../../flot_f/examples.css" rel="stylesheet" type="text/css">
+<!-- <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css"> -->
+<style>
+body {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 12px;
+}
+</style>
 
 <title>Teller's Page</title>
 </head>
-<body>
-
+<body onload="divhide(); capitalize();">
+	<input type="hidden" id="telEmpId" value=$(sessionScope.empId)>
 	<div id="wrapper">
 		<!-- Navigation -->
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -121,6 +127,8 @@
 			<div class="container-fluid">
 
 				<jsp:include page="./mainPageTelPart.jsp"></jsp:include>
+				<jsp:include page="./transPageTelPart.jsp"></jsp:include>
+				<jsp:include page="./ocPageTelPart.jsp"></jsp:include>
 
 			</div>
 		</div>
@@ -131,8 +139,8 @@
 
 	<!-- jQuery -->
 	<script src="../../bootstrap/js/jquery.js"></script>
-	
-	
+
+
 	<!-- teller scripts -->
 	<script src="./tel_ex/telInit.js"></script>
 	<script src="./tel_ex/tel.js"></script>
@@ -140,12 +148,12 @@
 
 
 	<!-- flot charts -->
-	<script language="javascript" type="text/javascript"
+	<!-- <script language="javascript" type="text/javascript"
 		src="../../flot_f/jquery.flot.min.js"></script>
 	<script language="javascript" type="text/javascript"
 		src="../../flot_f/jquery.flot.pie.min.js"></script>
 	<script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.categories.min.js"></script>
+		src="../../flot_f/jquery.flot.categories.min.js"></script> -->
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../../bootstrap/js/bootstrap.min.js"></script>

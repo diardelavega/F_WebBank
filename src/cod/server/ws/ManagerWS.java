@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import utils.DirMsgWsHandler;
+import utils.ManMsgHandler;
 
 @ServerEndpoint("/man")
 public class ManagerWS {
@@ -35,7 +36,7 @@ public class ManagerWS {
 	public void recMsg(String msg, Session ses) throws IOException {
 		// System.out.println("received msg from: " + ses.getId());
 		System.out.println("ON MANAGER :received msg seas : " + msg);
-		String webResponse = DirMsgWsHandler.switchit(msg);
+		String webResponse =ManMsgHandler.switchit(msg);
 
 		sendMsg(webResponse, ses);
 	}

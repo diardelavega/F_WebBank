@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import javax.websocket.Session;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,7 @@ import system.AccountsManagment;
 import system.Coordinator;
 import system.ManagerQuery;
 import utils.GeneralFunctions;
+import utils.ManMsgHandler;
 import comon.OCRequest;
 import comon.StaticVars;
 import entity.EmployeeAction;
@@ -25,9 +28,12 @@ public class ManagerFunctions extends EmployeeFunctions {
 
 	private Coordinator lists = new Coordinator();
 	private OCRequest req;
-	// private List<String> clientsPersonalIds;
 	private int empId;
+	private Session wsSession;
+
 	private AccountsManagment accm = new AccountsManagment();
+
+	// private List<String> clientsPersonalIds;
 
 	public ManagerFunctions(int empId) {
 		super();
@@ -39,24 +45,19 @@ public class ManagerFunctions extends EmployeeFunctions {
 		this.empId = 000;
 	}
 
-	public void confirmOpen(String response,String note) {
+	public void confirmOpen(String response, String note) {
 
-		//the coordinator should delete OCR
+		// the coordinator should delete OCR
 		String accNr = "";
 		String msgResponse = "";
 		if (response.equals(StaticVars.ACCEPT)) {
 			accNr = accm.openAccount(req.getAccType(), req.getClientIdsList());
 			logger.info("ACCOUNT {}. is oppen", accNr);
-			req.getTellersFunction().alert(StaticVars.OPEN,// alert the teller
-															// of response
+
+			lists.getTellerFunc(req.getTellerId()).alert(StaticVars.OPEN,
 					StaticVars.REQ_APPROVE, accNr, note);
 			req.setStatusComplete();
 			lists.deleteOCR(req);
-			/*
-			 * alternative method*** change OCR to completed & the Coordinator
-			 * (Lists) will alert the TellerFunction Object on the appropriate
-			 * index of the appropriate list
-			 */
 			// ----------------------------
 			EmployeeAction ea = new EmployeeAction(accNr, StaticVars.CNF_OPEN,
 					"", empId);
@@ -64,48 +65,58 @@ public class ManagerFunctions extends EmployeeFunctions {
 			// ----------------------------
 		} else {
 			logger.info("OPEN ACCOUNT REQEST WAS DENNIED");
-			req.getTellersFunction().alert(StaticVars.OPEN,
-					StaticVars.REQ_DENIED, null,note);
+			lists.getTellerFunc(req.getTellerId()).alert(StaticVars.OPEN,
+					StaticVars.REQ_DENIED, null, note);
 		}
 	}
 
-	public void confirmClose(String response,String note ) {
+	public void confirmClose(String response, String note) {
 		if (response.equals(StaticVars.ACCEPT)) {
 			accm.closeAccount(req.getAccFromNr());
 			req.setStatusComplete();
 			lists.deleteOCR(req);
-			logger.info("CLOSE ACCOUNT {}. REQEST WAS APPROVED", req.getAccFromNr());
+			logger.info("CLOSE ACCOUNT {}. REQEST WAS APPROVED",
+					req.getAccFromNr());
 			// ----------------------------
 			EmployeeAction ea = new EmployeeAction(req.getAccFromNr(),
 					StaticVars.CNF_CLOSE, "", empId);
 			super.confirmCloseAcc(ea);
 			// ----------------------------
-			req.getTellersFunction().alert(StaticVars.CLOSE,
-					StaticVars.REQ_APPROVE, req.getAccFromNr(),note);
+			lists.getTellerFunc(req.getTellerId()).alert(StaticVars.CLOSE,
+					StaticVars.REQ_APPROVE, req.getAccFromNr(), note);
 		} else {
-			logger.info("CLOSE ACCOUNT {}. REQEST WAS DENNIED", req.getAccFromNr());
-			req.getTellersFunction().alert(StaticVars.CLOSE,
-					StaticVars.REQ_DENIED, null,note);
+			logger.info("CLOSE ACCOUNT {}. REQEST WAS DENNIED",
+					req.getAccFromNr());
+			lists.getTellerFunc(req.getTellerId()).alert(StaticVars.CLOSE,
+					StaticVars.REQ_DENIED, null, note);
 		}
 	}
 
-	public void returnRequest(){
-		if(req!=null){
+	public void returnRequest() {
+		if (req != null) {
 			req.unPin();
 			req.setStatusInComplete();
 		}
 	}
-	
+
 	public void alert() {
 		// to be summoned in every ocr addition
 		System.out.println("A NEW REQUEST ARIVED");
-
+		// TODO send an alert msg to the client side manager
 		// AI choice
-		artificialChoise();
+		// artificialChoise();
 	}
 
 	public void getOCR() {
-		req = lists.getNextOCR();
+		req = lists.getNextOCR(empId);
+		req.lastManCons = empId;
+		// TODO send OCR data
+
+	}
+
+	public void getForceOCR() {
+		req = lists.getForceNextOCR();
+
 	}
 
 	public void checkClients() {
@@ -147,8 +158,8 @@ public class ManagerFunctions extends EmployeeFunctions {
 			} else {
 				response = StaticVars.DENIE;
 			}
-			
-			switch(req.getReqType() ){
+
+			switch (req.getReqType()) {
 			case StaticVars.OPEN:
 				confirmOpen(response, response);
 				break;
@@ -174,13 +185,59 @@ public class ManagerFunctions extends EmployeeFunctions {
 			} else if (req.getReqType() == (StaticVars.CLOSE)) {
 				confirmClose(response, req.getNote());
 			} else {
-				req.getTellersFunction().alert(null, "UNDEFINED ERROR OCOURED",
-						null,"");
+				lists.getTellerFunc(req.getTellerId()).alert(null,
+						"UNDEFINED ERROR OCOURED", null, "");
 			}
 		}
 
 	}
 
+	/* MANAGER client side possible requests */
+
+	public List<Transaction> clientInvolvedTransactionsParts(List<String> ids) {
+		// for every client id find the transactions in witch they were
+		// involved. for every set of client transactions send a response to the
+		// Manager client side
+		ManagerQuery mq = new ManagerQuery();
+		ManMsgHandler mmh = new ManMsgHandler();
+		String clientId;
+		List<Transaction> trList = null;
+		for (int i = 0; i < ids.size(); i++) {
+			clientId = ids.get(i);
+			trList = mq.getClientInvolvedTransactionsPart(clientId);
+			mmh.transReplyClientPart(i, trList, wsSession);
+		}
+		return trList;
+	}
+
+	public List<Transaction> clientInvolvedTransactionsAll(List<String> ids) {
+		// for every client id find the transactions in witch they were
+		// involved and send them all togather
+		ManagerQuery mq = new ManagerQuery();
+		ManMsgHandler mmh = new ManMsgHandler();
+		List<Transaction> trList = mq.getClientInvolvedTransactionsAll(ids);
+		mmh.transReplyClientAll(trList, wsSession);
+		return trList;
+	}
+
+	public List<Transaction> accountInvolvedTransactions(String accNr) {
+		// return the transactions where the account is involved
+		ManagerQuery mq = new ManagerQuery();
+		ManMsgHandler mmh = new ManMsgHandler();
+		List<Transaction> trList = mq.getAccountInvolvedTrans(accNr);
+		mmh.transReplyAccount(trList, wsSession);
+		return trList;
+	}
+
+	public List<Transaction> getTransaction(Date t1, Date t2) {
+		ManagerQuery mq = new ManagerQuery();
+		if (t2 == null) {
+			return mq.getTransaction(t1);
+		} else {
+			return mq.getTransaction(t1, t2);
+		}
+	}
+	
 	public List<Object[]> getBalance(Date t1, Date t2) {
 		ManagerQuery mq = new ManagerQuery();
 
@@ -191,13 +248,24 @@ public class ManagerFunctions extends EmployeeFunctions {
 		}
 	}
 
-	public List<Transaction> getTransaction(Date t1, Date t2) {
-		ManagerQuery mq = new ManagerQuery();
-		if (t2 == null) {
-			return mq.getTransaction(t1);
-		} else {
-			return mq.getTransaction(t1, t2);
-		}
+	/* END */
+	public int getEmpId() {
+		return empId;
+	}
+
+	public void setEmpId(int empId) {
+		this.empId = empId;
+	}
+
+	public Session getWsSession() {
+		return wsSession;
+	}
+
+	public void setWsSession(Session wsSession) {
+		this.wsSession = wsSession;
+	}
+
+	public void sendCS() {
 
 	}
 

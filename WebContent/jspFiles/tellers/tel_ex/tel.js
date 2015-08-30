@@ -26,7 +26,12 @@ function telClientAccounts() {
 }
 
 function registerClient() {
+	var reg = {
+		head : "register",
+		empId : $("#telEmpId").val()
+	}
 
+	doSend(reg);
 }
 
 /* AFTER RESPONSE FUNCTION */
@@ -54,11 +59,10 @@ function accountStatus(jsobj) {
 		console.log(acc);
 	}
 }
-function clearAccountStatus(){
+function clearAccountStatus() {
 	var tr = $("#telAccountStatus  tr");
 	tr.empty();
 }
-
 
 function accountCoowners(jsobj) {
 	if (jsobj.hasOwnProperty("ownList")) {

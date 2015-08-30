@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.websocket.Session;
 
 import comon.StaticVars;
 import system.DirectorQuery;
@@ -18,6 +19,7 @@ import fileLog.FileHandler;
 public class DirectorFunctions extends EmployeeFunctions {
 
 	private int empId;
+	private Session wsSession;
 
 	public DirectorFunctions(int empId) {
 		super();
@@ -106,17 +108,22 @@ public class DirectorFunctions extends EmployeeFunctions {
 		this.empId = empId;
 	}
 
-	public List<Object[]> getBalance(Date t1,Date t2){
-		ManagerFunctions mf= new ManagerFunctions ();
+	public Session getWsSession() {
+		return wsSession;
+	}
+
+	public void setWsSession(Session wsSession) {
+		this.wsSession = wsSession;
+	}
+
+	public List<Object[]> getBalance(Date t1, Date t2) {
+		ManagerFunctions mf = new ManagerFunctions();
 		return mf.getBalance(t1, t2);
 	}
-	
-	public List<Transaction> getTransactions(Date t1,Date t2){
-		ManagerFunctions mf= new ManagerFunctions ();
+
+	public List<Transaction> getTransactions(Date t1, Date t2) {
+		ManagerFunctions mf = new ManagerFunctions();
 		return mf.getTransaction(t1, t2);
 	}
-	
-	
-	
-	
+
 }

@@ -6,9 +6,9 @@ import functions.TellerFunctions;
 
 public class OCRequest {
 	private String note;
-	private TellerFunctions tellersFunction;
+	private int tellerId;
 	private List<String> clientIdsList;
-	private String reqType; // open ||close
+	private String reqType; // open ||close || p_1k(dep, with, transf) || p_6Acc
 	private char accType;
 	private String response;// accepted || denied
 	private boolean pin = false;
@@ -17,47 +17,49 @@ public class OCRequest {
 	private double amount;
 	private boolean status = false;// true -complete, false-incomplete
 
+	public int lastManCons;
+
 	public OCRequest() {
 	}
 
 	// open acc OCR
-	public OCRequest(TellerFunctions tf, List<String> persIds, String reqType,
+	public OCRequest(int telEmpId, List<String> persIds, String reqType,
 			AccountType type) {
 		super();
-		this.tellersFunction = tf;
+		this.tellerId = telEmpId;
 		this.clientIdsList = persIds;
 		this.reqType = reqType;
 		this.accType = type.value;
 	}
 
-	public OCRequest(TellerFunctions tf, List<String> persIds, String reqType,
+	public OCRequest(int telEmpId, List<String> persIds, String reqType,
 			String accNr) {
 		super();
-		this.tellersFunction = tf;
+		this.tellerId = telEmpId;
 		this.clientIdsList = persIds;
 		this.reqType = reqType;
 		this.accFromNr = accNr;
 	}
 
-	public OCRequest(TellerFunctions tf, List<String> persIds, String reqType,
-			String accNr1, String accNr2,double amount, String note2) {
+	public OCRequest(int telEmpId, List<String> persIds, String reqType,
+			String accNr1, String accNr2, double amount, String note2) {
 
-		this.tellersFunction = tf;
+		this.tellerId = telEmpId;
 		this.clientIdsList = persIds;
 		this.reqType = reqType;
 		this.accFromNr = accNr2;
 		this.accFromNr = accNr1;
 		this.accToNr = accNr2;
-		this.amount=amount;
+		this.amount = amount;
 		this.note = note2;
 	}
 
-	public TellerFunctions getTellersFunction() {
-		return tellersFunction;
+	public int getTellerId() {
+		return tellerId;
 	}
 
-	public void setTellersFunction(TellerFunctions tellersFunction) {
-		this.tellersFunction = tellersFunction;
+	public void setTellerId(int tellerId) {
+		this.tellerId = tellerId;
 	}
 
 	public List<String> getClientIdsList() {
@@ -110,6 +112,14 @@ public class OCRequest {
 
 	public void setAccToNr(String accToNr) {
 		this.accToNr = accToNr;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 
 	public void setStatus(boolean status) {

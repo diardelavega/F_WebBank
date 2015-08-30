@@ -12,6 +12,9 @@ import javax.websocket.server.ServerEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import utils.DirMsgWsHandler;
 import utils.TelMsgHandler;
 
@@ -36,10 +39,20 @@ public class TellerWS {
 
 	@OnMessage
 	public void recMsg(String msg, Session ses) throws IOException {
-		// System.out.println("received msg from: " + ses.getId());
 		System.out.println("ON TELLER :received msg seas : " + msg);
-		TelMsgHandler tmh=new TelMsgHandler ();
-		String webResponse = tmh.switchit(msg);
+		
+		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
+		String head = jobj.get("head").getAsString();
+		TelMsgHandler tmh = new TelMsgHandler();
+		String webResponse;
+		
+		if (head.equalsIgnoreCase("register")) {
+			int empId = jobj.get("empId").getAsInt();
+			webResponse = tmh.register(msg, empId, ses);
+		} else {
+			webResponse = tmh.switchit(msg, jobj, head);
+		}
+
 		sendMsg(webResponse, ses);
 	}
 

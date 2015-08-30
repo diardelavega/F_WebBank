@@ -103,25 +103,25 @@ public class Run {
 		// fh.init();
 		// fh.filePlacementControl();
 
-//		 ManagerFunctions mf1 = new ManagerFunctions(5);
-//		 Coordinator list = new Coordinator();
-//		 list.addMenager(mf1);
-//		 TellerFunctions tf = new TellerFunctions(1);
-//		 List<String> sl = new ArrayList<>();
-//		 sl.add("1234567890");
-//		 sl.add("1234567800");
-//		 sl.add("1111111112");
-//		 tf.openAccount(sl, AccountType.BASIC_CHECKING);
+		// ManagerFunctions mf1 = new ManagerFunctions(5);
+		// Coordinator list = new Coordinator();
+		// list.addMenager(mf1);
+		// TellerFunctions tf = new TellerFunctions(1);
+		// List<String> sl = new ArrayList<>();
+		// sl.add("1234567890");
+		// sl.add("1234567800");
+		// sl.add("1111111112");
+		// tf.openAccount(sl, AccountType.BASIC_CHECKING);
 		// tf.closeAccount(sl, "72418514LUCGU34");
 
-//		 GeneralFunctions gf = new GeneralFunctions();
-//		 gf.accountsCountCheck(sl);
-		 
+		// GeneralFunctions gf = new GeneralFunctions();
+		// gf.accountsCountCheck(sl);
+
 		/* Transactions */
-//		 TellerFunctions tf = new TellerFunctions ();
-//		 tf.deposite("42218529RQQGP13", 150,"Mario Rista LUVs u");
-//		 tf.deposite("13105279LUKHI54", 300,"Mario Rista LUVs u 2");
-//		 tf.withdraw("1111111112", "42218529RQQGP13", 100,"Sa Sa Sa");
+		// TellerFunctions tf = new TellerFunctions ();
+		// tf.deposite("42218529RQQGP13", 150,"Mario Rista LUVs u");
+		// tf.deposite("13105279LUKHI54", 300,"Mario Rista LUVs u 2");
+		// tf.withdraw("1111111112", "42218529RQQGP13", 100,"Sa Sa Sa");
 		// tf.transfer("1111111111", "42218529RQQGP13", "70913919GVVTP98",
 		// 10.5,"AAAAA");
 
@@ -140,38 +140,47 @@ public class Run {
 		// // System.out.println(format(gc));
 		// s2 = format(gc);
 
-//		Date d1 = new Date();
-//		Date d2 = new Date();
-//		d1.setDate(18);
-//		d1.setMonth(7);
-//		System.out.println("d1 : " + d1);
-//
-//		java.sql.Date sq1 = new java.sql.Date(d1.getTime());
-//		java.sql.Date sq2 = new java.sql.Date(d2.getTime());
-//		System.out.println("sq1 : " + sq1);
-//		//
-//
-//		Query q = ses
-//				.createQuery(
-//						"FROM Transaction WHERE trData > :d1 and trData <:d2 ")
-//				.setParameter("d1", sq1).setParameter("d2", d2);
-//		// List<Transaction> tl =q.getNamedParameters();
-//		// q.list();
-//		Iterator a = q.iterate();
-//
-//		while (a.hasNext()) {
-//			Transaction b = (Transaction) a.next();
-////			for (String c : b.) {
-//				System.out
-//						.println("--------***********------------" + b.getAccount2());
-////			}
-//		}
+		// Date d1 = new Date();
+		// Date d2 = new Date();
+		// d1.setDate(18);
+		// d1.setMonth(7);
+		// System.out.println("d1 : " + d1);
+		//
+		// java.sql.Date sq1 = new java.sql.Date(d1.getTime());
+		// java.sql.Date sq2 = new java.sql.Date(d2.getTime());
+		// System.out.println("sq1 : " + sq1);
+		// //
+		//
+		// Query q = ses
+		// .createQuery(
+		// "FROM Transaction WHERE trData > :d1 and trData <:d2 ")
+		// .setParameter("d1", sq1).setParameter("d2", d2);
+		// // List<Transaction> tl =q.getNamedParameters();
+		// // q.list();
+		// Iterator a = q.iterate();
+		//
+		// while (a.hasNext()) {
+		// Transaction b = (Transaction) a.next();
+		// // for (String c : b.) {
+		// System.out
+		// .println("--------***********------------" + b.getAccount2());
+		// // }
+		// }
+		ManagerFunctions mf1 = new ManagerFunctions(32);
+		List<String> sl = new ArrayList<>();
+		sl.add("1111111111");
+		sl.add("1111111112");
+		List<Transaction> ret = mf1.clientInvolvedTransactionsAll(sl);
+		for (Transaction t : ret) {
+			System.out.println(t.getTransactionNr() + " " + t.getTrDate() + " "
+					+ t.getAccount1() + " " + t.getAccount2() + " "
+					+ t.getAcction() + " " + t.getAmount());
+		}
 
-
-//		 ManagerQuery mq = new ManagerQuery();
+		// ManagerQuery mq = new ManagerQuery();
 		// mq.getBalance(sq1,sq2);
 		// mq.getBalance(sq1);
-//		 mq.getTransaction(sq1);
+		// mq.getTransaction(sq1);
 
 		// JsonObject jo = new JsonObject ();
 		// jo.addProperty("head", "balance");

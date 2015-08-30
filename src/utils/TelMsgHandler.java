@@ -3,6 +3,8 @@ package utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.websocket.Session;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +20,9 @@ public class TelMsgHandler {
 			.getLogger(TelMsgHandler.class);
 //	private Gson gson = new GsonBuilder().serializeNulls().create();
 
-	public String switchit(String msg) {
-		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
-		String head = jobj.get("head").getAsString();
+	public String switchit(String msg,JsonObject jobj,String head) {
+//		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
+//		String head = jobj.get("head").getAsString();
 		TellerFunctions tf = new TellerFunctions();
 		// JsonObject jo = new JsonObject();
 
@@ -121,6 +123,12 @@ public class TelMsgHandler {
 		}
 		String jsonResp = gson.toJson(jo);
 		return jsonResp;
+	}
+
+	public String register(String msg, int empId, Session ses) {
+		// TODO search in  Coordinator tellers list and match the empId
+		// store web sockets sessionId and hold it on stand by
+		return null;
 	}
 
 }

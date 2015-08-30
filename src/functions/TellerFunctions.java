@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.websocket.Session;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +30,7 @@ import entity.Transaction;
 public class TellerFunctions extends EmployeeFunctions {
 	Logger logger = LoggerFactory.getLogger(TellerFunctions.class);
 	private int empId;
+	private Session wsSession;
 
 	public TellerFunctions(int empId) {
 		super();
@@ -83,10 +86,10 @@ public class TellerFunctions extends EmployeeFunctions {
 				Coordinator list = new Coordinator();
 				OCRequest req;
 				if (gf.accountsCountCheck(personalIds).size() == 0) {
-					req = new OCRequest(this, personalIds, StaticVars.OPEN,
+					req = new OCRequest(empId, personalIds, StaticVars.OPEN,
 							accType);
 				} else {// accounts count check
-					req = new OCRequest(this, personalIds,
+					req = new OCRequest(empId, personalIds,
 							StaticVars.PLUS_6_ACC, accType);
 				}
 				list.addOCR(req);
@@ -110,7 +113,7 @@ public class TellerFunctions extends EmployeeFunctions {
 				gf.getCustomer(s).print();
 			}
 		} else {
-			OCRequest req = new OCRequest(this, personalIds, StaticVars.CLOSE,
+			OCRequest req = new OCRequest(empId, personalIds, StaticVars.CLOSE,
 					accNr);
 			list.addOCR(req);
 		}
@@ -134,7 +137,7 @@ public class TellerFunctions extends EmployeeFunctions {
 		if (tq.checkDepositeRegularity(accNr, amount)) {
 			if (amount >= 1000) {// alert the manager to confirm
 				Coordinator cord = new Coordinator();
-				OCRequest req = new OCRequest(this, null,
+				OCRequest req = new OCRequest(empId, null,
 						StaticVars.PLUS_1K_DEP, accNr, null, amount, note);
 				cord.addOCR(req);
 			} else {
@@ -159,7 +162,7 @@ public class TellerFunctions extends EmployeeFunctions {
 				ArrayList<String> ocrAl = new ArrayList<>();
 				Coordinator cord = new Coordinator();
 				ocrAl.add(personalId);
-				OCRequest req = new OCRequest(this, ocrAl,
+				OCRequest req = new OCRequest(empId, ocrAl,
 						StaticVars.PLUS_1K_WITH, accNr);
 				cord.addOCR(req);
 			} else {
@@ -190,7 +193,7 @@ public class TellerFunctions extends EmployeeFunctions {
 				ArrayList<String> ocrAl = new ArrayList<>();
 				Coordinator cord = new Coordinator();
 				ocrAl.add(personalId);
-				OCRequest req = new OCRequest(this, ocrAl,
+				OCRequest req = new OCRequest(empId, ocrAl,
 						StaticVars.PLUS_1K_WITH, accFrom, accTo, amount, null);
 				cord.addOCR(req);
 			} else {
@@ -227,11 +230,11 @@ public class TellerFunctions extends EmployeeFunctions {
 
 	public List<Account> getClientAccounts(String personalId) {
 		GeneralFunctions gf = new GeneralFunctions();
-		List<Account>acl=new ArrayList<>();
+		List<Account> acl = new ArrayList<>();
 		List<String> cids = gf.clientsAccounts(personalId);
-		 for (String s :cids ) {
-		 acl.add(gf.getAccount(s));
-		 }
+		for (String s : cids) {
+			acl.add(gf.getAccount(s));
+		}
 		return acl;
 	}
 
@@ -242,6 +245,14 @@ public class TellerFunctions extends EmployeeFunctions {
 
 	public int getEmpId() {
 		return empId;
+	}
+
+	public Session getWsSession() {
+		return wsSession;
+	}
+
+	public void setWsSession(Session wsSession) {
+		this.wsSession = wsSession;
 	}
 
 	public void setEmpId(int empId) {
