@@ -28,10 +28,12 @@ function doClose() {
 
 function onMessage(evt) {
 //	 alert(evt.data);
-//	 console.log("received: " + evt.data);
+	// console.log("received: " + evt.data);
 	var jsobj = JSON.parse(evt.data);
 
+//	console.log(jsobj);
 	console.log(jsobj.head);
+	
 	var head = jsobj.head;
 
 	switch (head) {
@@ -44,17 +46,16 @@ function onMessage(evt) {
 	case 'accountCoownersReply':
 		accountCoowners(jsobj);
 		break;
-	/*case 'alterEmployee':
-		alterEmpRes(jsobj);
+	case 'searchReply':
+		searchReply(jsobj);
 		break;
-	case 'dirTransaction':
-		transactionHandler(jsobj);
-		break;
-	case 'dirBalance':
-//		alert("BALANCEEEEE"+jsobj.balist)
-//		console.log(jsobj.balist);
-		balanceHandler(jsobj);
-		break;*/
+
+	/*
+	 * case 'alterEmployee': alterEmpRes(jsobj); break; case 'dirTransaction':
+	 * transactionHandler(jsobj); break; case 'dirBalance': //
+	 * alert("BALANCEEEEE"+jsobj.balist) // console.log(jsobj.balist);
+	 * balanceHandler(jsobj); break;
+	 */
 	case 'error':
 		errorRes(jsobj);
 		break;
@@ -69,9 +70,9 @@ function hideShow(chosen) {
 	$('.hidable').each(function(index) {
 		if ($(this).attr("id") === chosen) {
 			$(this).show();
-//			$(this).attr("style", "visibility: visible");
+			// $(this).attr("style", "visibility: visible");
 		} else {
-//			$(this).attr("style", "visibility: collapse");
+			// $(this).attr("style", "visibility: collapse");
 			$(this).hide();
 		}
 	});
@@ -80,9 +81,6 @@ function divhide() {
 	hideShow('mainTel');
 	// $('.hidable').attr("style", "visibility: visible");
 }
-
-
-
 
 function capitalize() {
 	// setTimeout(function() {

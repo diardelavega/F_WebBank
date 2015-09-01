@@ -30,7 +30,7 @@ function clientAccounts(jsobj) {
 	console.log(jsobj);
 }
 
-function accountStatus(jsobj) {
+function ManAccountStatus(jsobj) {
 	console.log(jsobj);
 }
 function clearAccountStatus(jsobj) {

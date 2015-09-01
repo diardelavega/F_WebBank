@@ -294,10 +294,79 @@ public class TellerQuery {
 				.setParameter("pId", clientId);
 		return (Object[]) q.list().get(0);
 	}
-	
 
 	public Account getAccount(String accId) {
 		GeneralFunctions gf = new GeneralFunctions();
 		return gf.getAccount(accId);
 	}
+
+	public List<Customers> getAllClients(String fname, String lname, String address,
+			String phone, String eMail, String password) {
+
+		String condition = empQueryCondition(fname, lname, address, phone,
+				eMail, password);
+		if (condition != null) {
+			condition = " WHERE " + condition;
+		} else {
+			condition = "";
+		}
+
+		logger.info("----------> condition = {} ", condition);
+
+		upSession();
+		Query q = s.createQuery("FROM Customers " + condition);
+		List<Customers> custList = q.list();
+		s.close();
+		return custList ;
+	}
+
+	private String empQueryCondition(String fname, String lname,
+			String address, String phone, String eMail, String password) {
+		boolean flag = false;
+		String condition = " ";
+		if (!fname.equals("")) {
+			condition += "fname like '" + fname + "%' ";
+			flag = true;
+		}
+		if (!lname.equals("")) {
+			if (flag) {
+				condition += " AND ";
+			}
+			condition += "lname like '" + lname + "%' ";
+			flag = true;
+		}
+		if (!address.equals("")) {
+			if (flag) {
+				condition += " AND ";
+			}
+			condition += "address like '" + address + "%' ";
+			flag = true;
+		}
+		if (!phone.equals("")) {
+			if (flag) {
+				condition += " AND ";
+			}
+			condition += "possition like '" + phone + "%' ";
+			flag = true;
+		}
+		if (!eMail.equals("")) {
+			if (flag) {
+				condition += " AND ";
+			}
+			condition += "eMail like '" + eMail + "%' ";
+			flag = true;
+		}
+		if (!password.equals("")) {
+			if (flag) {
+				condition += " AND ";
+			}
+			condition += "password like '" + password + "%' ";
+		}
+		if (flag) {
+			return condition;
+		} else {
+			return null;
+		}
+	}
+
 }

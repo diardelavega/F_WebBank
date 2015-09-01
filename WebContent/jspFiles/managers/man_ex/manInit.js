@@ -78,3 +78,30 @@ function onMessage(evt) {
 function onError(evt) {
 	alert(evt.data);
 }
+
+function hideShow(chosen) {
+	$('.hidable').each(function(index) {
+		if ($(this).attr("id") === chosen) {
+			$(this).show();
+//			$(this).attr("style", "visibility: visible");
+		} else {
+//			$(this).attr("style", "visibility: collapse");
+			$(this).hide();
+		}
+	});
+}
+function divhide() {
+	hideShow('mainMan');
+	// $('.hidable').attr("style", "visibility: visible");
+}
+
+
+
+
+function capitalize() {
+	// setTimeout(function() {
+	$("input[type=text]").keyup(function() {
+		$(this).val($(this).val().toUpperCase());
+	});
+	// }, 3000)
+}

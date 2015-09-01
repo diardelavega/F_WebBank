@@ -46,6 +46,7 @@ body {
 								<li class="active"><a data-toggle="tab" href="#dep"><strong>DEPOSITE</strong></a></li>
 								<li><a data-toggle="tab" href="#transf"><strong>TRANSFERS</strong></a></li>
 								<li><a data-toggle="tab" href="#with"><strong>WITHDRAW</strong></a></li>
+									<li><a data-toggle="tab" href="#manInfo"><strong>INFO</strong></a></li>
 							</ul>
 						<!-- </div> -->
 						<hr>
@@ -146,7 +147,9 @@ body {
 
 
 							</div>
-
+							<div id="manInfo" class="tab-pane fade">
+							<h1>maby it souldn't be here ??</h1>
+							</div>
 
 						</div>
 					</div>

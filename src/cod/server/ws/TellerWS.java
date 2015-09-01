@@ -48,7 +48,7 @@ public class TellerWS {
 		
 		if (head.equalsIgnoreCase("register")) {
 			int empId = jobj.get("empId").getAsInt();
-			webResponse = tmh.register(msg, empId, ses);
+			webResponse = tmh.coordRegister(msg, empId, ses);
 		} else {
 			webResponse = tmh.switchit(msg, jobj, head);
 		}

@@ -25,6 +25,7 @@ public class ManMsgHandler {
 			.getLogger(DirMsgWsHandler.class);
 	private static Gson gson = new GsonBuilder().serializeNulls().create();
 	JsonObject jo = new JsonObject();
+	ManagerWS mws = new ManagerWS(); 
 
 	public static String switchit(String msg) {
 		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
@@ -83,6 +84,7 @@ public class ManMsgHandler {
 	public void newAlert() {
 		jo.addProperty("head", "newRequest");
 		String jsonResp = gson.toJson(jo);
+//		mws.sendMsg(jsonResp, ses);
 	}
 
 	public void convertOCRToMsg(OCRequest req) {

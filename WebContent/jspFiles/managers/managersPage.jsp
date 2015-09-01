@@ -17,16 +17,16 @@
 <link href="../../bootstrap/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
 
-<link href="../../jquery-ui/jquery-ui.min.css" rel="stylesheet">
+<!-- <link href="../../jquery-ui/jquery-ui.min.css" rel="stylesheet">
 <link href="../../jquery-ui/jquery-ui.theme.min.css" rel="stylesheet">
 <link href="../../jquery-ui/jquery-ui.structure.min.css"
-	rel="stylesheet">
+	rel="stylesheet"> -->
 
 <!-- flot charts -->
 <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css">
 <title>Manager</title>
 </head>
-<body>
+<body onload="divhide();">
 	<%-- <h1>${sessionScope.name}</h1> --%>
 
 	<div id="wrapper">
@@ -121,13 +121,10 @@
 		<div id="page-content-wrapper" style="background-color: azure">
 			<div class="container-fluid">
 
-				<!-- import director main details -->
-				<%-- <jsp:include page="./mainPageDirPart.jsp"></jsp:include>
+				<!-- import manager main details -->
+				<jsp:include page="./mainPageManPart.jsp"></jsp:include>
 				<!-- import employee details -->
-				<jsp:include page="./empPageDirPart.jsp"></jsp:include>
-				<!-- import employee details -->
-				<jsp:include page="./balancePageDirPart.jsp"></jsp:include>
-				<jsp:include page="./transPageDirPart.jsp"></jsp:include> --%>
+				<jsp:include page="./reqPartManPage.jsp"></jsp:include>
 
 
 			</div>
@@ -141,8 +138,9 @@
 	<!-- jQuery -->
 	<script src="../../bootstrap/js/jquery.js"></script>
 
-	<!-- director scripts -->
+	<!-- manager scripts -->
 	<script src="./man_ex/manInit.js"></script>
+	<script src="./man_ex/man.js"></script>
 
 	<!-- flot charts -->
 	<script language="javascript" type="text/javascript"

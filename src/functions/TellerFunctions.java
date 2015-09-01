@@ -18,6 +18,7 @@ import comon.OCRequest;
 import comon.Response;
 import comon.StaticVars;
 import entity.Account;
+import entity.Customers;
 import entity.EmployeeAction;
 import entity.Transaction;
 
@@ -91,6 +92,9 @@ public class TellerFunctions extends EmployeeFunctions {
 				} else {// accounts count check
 					req = new OCRequest(empId, personalIds,
 							StaticVars.PLUS_6_ACC, accType);
+					logger.info("{} requires man confirmation",
+							StaticVars.PLUS_6_ACC);
+					// TODO send a alert msg to teller cs.
 				}
 				list.addOCR(req);
 			} else {// registration check
@@ -104,9 +108,10 @@ public class TellerFunctions extends EmployeeFunctions {
 		Coordinator list = new Coordinator();
 		TellerQuery tq = new TellerQuery();
 		List<String> remaining = tq.clientAccountCompatibility(personalIds,
-				accNr);
+				accNr);// remaining clients whose id was not submitted
 		GeneralFunctions gf;
 		if (remaining != null) {
+			// TODO alert msg to teller
 			System.out.println("Required confirmation from the following :");
 			gf = new GeneralFunctions();
 			for (String s : remaining) {
@@ -212,6 +217,7 @@ public class TellerFunctions extends EmployeeFunctions {
 		}
 	}
 
+	/* teller main page functions */
 	public List<Object> getAccountClients(String accountId) {
 		GeneralFunctions gf = new GeneralFunctions();
 		List<String> accIds = gf.accountsClients(accountId);
@@ -243,9 +249,9 @@ public class TellerFunctions extends EmployeeFunctions {
 		return tq.getAccount(accId);
 	}
 
-	public int getEmpId() {
-		return empId;
-	}
+	// TODO confirm client registration
+
+	/* end main page functions */
 
 	public Session getWsSession() {
 		return wsSession;
@@ -255,8 +261,24 @@ public class TellerFunctions extends EmployeeFunctions {
 		this.wsSession = wsSession;
 	}
 
+	public int getEmpId() {
+		return empId;
+	}
+
+	public Customers getCustomer(String persId) {
+		GeneralFunctions gf = new GeneralFunctions();
+		return gf.getCustomer(persId);
+	}
+
 	public void setEmpId(int empId) {
 		this.empId = empId;
+	}
+
+	public List<Customers> getClients(String fname, String lname,
+			String address, String phone, String eMail, String password) {
+		TellerQuery tq = new TellerQuery();
+
+		return tq.getAllClients(fname, lname, address, phone, eMail, password);
 	}
 
 }

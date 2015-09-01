@@ -13,40 +13,32 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import entity.Account;
+import entity.Customers;
 import functions.TellerFunctions;
 
 public class TelMsgHandler {
 	private static final Logger logger = LoggerFactory
 			.getLogger(TelMsgHandler.class);
-//	private Gson gson = new GsonBuilder().serializeNulls().create();
 
-	public String switchit(String msg,JsonObject jobj,String head) {
-//		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
-//		String head = jobj.get("head").getAsString();
+	// private Gson gson = new GsonBuilder().serializeNulls().create();
+	// ---------client to server side
+	public String switchit(String msg, JsonObject jobj, String head) {
+		// JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
+		// String head = jobj.get("head").getAsString();
 		TellerFunctions tf = new TellerFunctions();
 		// JsonObject jo = new JsonObject();
 
 		switch (head) {
+		// case "coordinate":
+		// return coordRegister(tf, jobj);
 		case "accountStatus":
 			return accountStatus(tf, jobj);
-			// break;
 		case "accountCoowners":
 			return accountCoowners(tf, jobj);
-			// break;
 		case "clientAccounts":
 			return clientAccounts(tf, jobj);
-			// break;
-			// case "delete":
-			// return deleteEmployee(df, jobj);
-			// // break;
-			// case "balance":
-			// return getBalance(df, jobj);
-			// // break;
-			// case "transaction":
-			// return getTransactions(df, jobj);
-			// // break;
-			// case "empAct":
-			// break;
+		case "search":
+			return clientSearch(tf, jobj);
 		default:
 			logger.info("invalid switch criterias");
 		}
@@ -60,7 +52,7 @@ public class TelMsgHandler {
 		if (jobj.has("personalId")) {
 			String personalId = jobj.get("personalId").getAsString();
 			jo.addProperty("head", "clientAccountsReply");
-			
+
 			List<Account> ids = tf.getClientAccounts(personalId);
 			if (ids == null || ids.size() == 0) {
 				jo.addProperty("msg", "this customer has no accounts");
@@ -81,20 +73,12 @@ public class TelMsgHandler {
 		if (jobj.has("accuntNr")) {
 			String accId = jobj.get("accuntNr").getAsString();
 			Account acc = tf.getAccount(accId);
-//			logger.info("------------:ON ACCOUNT STATUS");
-//			acc.print();
-			
+
 			jo.addProperty("head", "accountStatusReply");
 			if (acc == null) {
 				jo.addProperty("msg", "the account doesn't exist");
 			} else {
 				jo.add("Account", gson.toJsonTree(acc));
-//				jo.addProperty("ac1",acc.getAccountId().toString());
-//				jo.addProperty("ac2",acc.getAccStatus().toString());
-//				jo.addProperty("ac3",acc.getAccType());
-//				jo.addProperty("ac4",acc.getBalance());
-//				jo.add("acc5", gson.toJsonTree(acc.getOpenDate()));
-				
 			}
 		} else {
 			jo.addProperty("head", "error");
@@ -125,10 +109,59 @@ public class TelMsgHandler {
 		return jsonResp;
 	}
 
-	public String register(String msg, int empId, Session ses) {
-		// TODO search in  Coordinator tellers list and match the empId
+	public String coordRegister(String msg, int empId, Session ses) {
+		// TODO search in Coordinator tellers list and match the empId
 		// store web sockets sessionId and hold it on stand by
 		return null;
 	}
 
+	private String clientSearch(TellerFunctions tf, JsonObject jobj) {
+		// get the client search criteria and return a list of customers
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+
+		List<Customers> customers = new ArrayList<>();
+		String jsonEmps;
+		String persId = null;
+		try {
+			persId = jobj.get("id").getAsString();
+			if (!persId.equals("")) {
+				customers.add(tf.getCustomer(persId));
+				logger.info("----------> jobj id = {} ", jobj.get("id"));
+			} else {
+				logger.info("into variable search");
+				logger.info("DATA: fname={}  lname={},  email={}",
+						jobj.get("fname").getAsString(), jobj.get("lname")
+								.getAsString(), jobj.get("eMail").getAsString());
+
+				String fname = jobj.get("fname").getAsString();
+				String lname = jobj.get("lname").getAsString();
+				String address = jobj.get("address").getAsString();
+				String phone = jobj.get("phone").getAsString();
+				String eMail = jobj.get("eMail").getAsString();
+				String password = jobj.get("password").getAsString();
+
+				customers = tf.getClients(fname, lname, address, phone, eMail,
+						password);
+			}
+
+		} catch (Exception e) {
+			jo.addProperty("head", "error");
+			jo.addProperty("msg", "client personal id not provided");
+			jsonEmps = gson.toJson(jo);
+			logger.info("JSON FORM jsonEmps ={}", jsonEmps);
+			return jsonEmps;
+		}
+
+		jo.addProperty("head", "searchReply");
+		if (customers.size() > 0) {
+			jo.add("customerList", gson.toJsonTree(customers));
+		} else {
+			jo.addProperty("msg", "no results from the search");
+		}
+		jsonEmps = gson.toJson(jo);
+		logger.info("JSON FORM jsonEmps ={}", jsonEmps);
+		return jsonEmps;
+
+	}
 }

@@ -194,9 +194,14 @@ public class DirMsgWsHandler {
 			if (jsonId != null && !jsonId.equals("")) {
 				id = jobj.get("id").getAsInt();
 			}
+			logger.info(" int id = {} ", id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("incorect id passage from jsomObj");
+			jo.addProperty("head", "error");
+			jo.addProperty("msg", "empId not provided");
+
+			return jsonEmps;
 		}
 
 		if (id == -1) {
@@ -214,43 +219,35 @@ public class DirMsgWsHandler {
 
 			emps = df.getEmployees(fname, lname, address, possition, eMail,
 					password);
-
-			jo.addProperty("head", "empList");
-			jo.add("employees", gson.toJsonTree(emps));
-			jsonEmps = gson.toJson(jo);
-			logger.info("JSON FORM jsonEmps ={}", jsonEmps);
-
-		} else if (id != -1) {
+		} else {
 			emps.add(df.getEmplyee(id));
-			// emps.add(df.getEmplyee(5));
-			// emps.add(df.getEmplyee(8));
-			// emps.add(df.getEmplyee(2));
-			jo.addProperty("head", "empList");
-			jo.add("employees", gson.toJsonTree(emps));
-			jsonEmps = gson.toJson(jo);
-			logger.info(jsonEmps);
 		}
+		jo.addProperty("head", "empList");
+		jo.add("employees", gson.toJsonTree(emps));
+		jsonEmps = gson.toJson(jo);
+		logger.info("JSON FORM jsonEmps ={}", jsonEmps);
 		return jsonEmps;
+
 	}
 
 	private static String getBalance(DirectorFunctions df, JsonObject jobj) {
 
-		DateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.GERMANY);
+		DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMANY);
 
 		Date fromDate = null, toDate = null;
 		try {
 
 			java.util.Date d1 = format.parse(jobj.get("fdate").getAsString());
-//			System.out.println("d1-------:" + d1);
+			// System.out.println("d1-------:" + d1);
 			fromDate = new java.sql.Date(d1.getTime());
-//			System.out.println("-------:" + fromDate);
+			// System.out.println("-------:" + fromDate);
 
 			if (jobj.has("tdate")) {
 				java.util.Date d2 = format.parse(jobj.get("tdate")
 						.getAsString());
-//				System.out.println("d2-------:" + d2);
+				// System.out.println("d2-------:" + d2);
 				toDate = new java.sql.Date(d2.getTime());
-//				System.out.println("-------:" + toDate);
+				// System.out.println("-------:" + toDate);
 			}
 
 		} catch (Exception e) {
@@ -263,14 +260,14 @@ public class DirMsgWsHandler {
 		jo.addProperty("head", "dirBalance");
 		jo.add("balist", gson.toJsonTree(list));
 		String jsonResp = gson.toJson(jo);
-		logger.info("jsonResp :"+jsonResp);
+		logger.info("jsonResp :" + jsonResp);
 		// TODO check values
 		return jsonResp;
 
 	}
 
 	private static String getTransactions(DirectorFunctions df, JsonObject jobj) {
-		DateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.GERMANY);
+		DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMANY);
 		Date fromDate = null, toDate = null;
 		try {
 			java.util.Date d1 = format.parse(jobj.get("fdate").getAsString());
@@ -287,14 +284,12 @@ public class DirMsgWsHandler {
 		JsonObject jo = new JsonObject();
 		List<Transaction> trl = df.getTransactions(fromDate, toDate);
 		jo.addProperty("head", "dirTransaction");
-		
+
 		jo.add("translist", gson.toJsonTree(trl));
 		String jsonResp = gson.toJson(jo);
 		// TODO check values
-		logger.info("--------------- >>>>>>>>>>"+jsonResp);
+		logger.info("--------------- >>>>>>>>>>" + jsonResp);
 		return jsonResp;
 	}
 
-	
-	
 }

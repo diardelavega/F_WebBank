@@ -9,7 +9,10 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.GeneralFunctions;
 import db.DBHandler;
+import entity.Account;
+import entity.Customers;
 import entity.Transaction;
 
 public class ManagerQuery {
@@ -144,6 +147,18 @@ public class ManagerQuery {
 		return tl;
 	}
 
+	
+	public Account getAccount(String accId) {
+		GeneralFunctions gf = new GeneralFunctions();
+		return gf.getAccount(accId);
+	}
+
+	public  Customers getCustomer(String persId){
+		GeneralFunctions gf = new GeneralFunctions();
+		return gf.getCustomer(persId);
+	}
+	
+	
 	public void upSession() {
 		if (!s.isConnected() || !s.isOpen()) {
 			s = DBHandler.getSessionFactory().openSession();

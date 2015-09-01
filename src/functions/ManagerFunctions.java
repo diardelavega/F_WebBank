@@ -3,6 +3,7 @@ package functions;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -15,10 +16,13 @@ import org.slf4j.LoggerFactory;
 import system.AccountsManagment;
 import system.Coordinator;
 import system.ManagerQuery;
+import system.TellerQuery;
 import utils.GeneralFunctions;
 import utils.ManMsgHandler;
 import comon.OCRequest;
 import comon.StaticVars;
+import entity.Account;
+import entity.Customers;
 import entity.EmployeeAction;
 import entity.Transaction;
 
@@ -237,7 +241,7 @@ public class ManagerFunctions extends EmployeeFunctions {
 			return mq.getTransaction(t1, t2);
 		}
 	}
-	
+
 	public List<Object[]> getBalance(Date t1, Date t2) {
 		ManagerQuery mq = new ManagerQuery();
 
@@ -246,6 +250,38 @@ public class ManagerFunctions extends EmployeeFunctions {
 		} else {
 			return mq.getBalance(t1, t2);
 		}
+	}
+
+	// -------------------------
+
+	public List<Customers> getAccountClients(String accountId) {
+		GeneralFunctions gf = new GeneralFunctions();
+		List<String> accIds = gf.accountsClients(accountId);
+
+		List<Customers> custs = null;
+		if (accIds.size() != 0) {
+			custs = new ArrayList<>();
+			for (String c : accIds) {
+				Customers a = gf.getCustomer(c);
+				custs.add(a);
+			}
+		}
+		return custs;
+	}
+
+	public List<Account> getClientAccounts(String personalId) {
+		GeneralFunctions gf = new GeneralFunctions();
+		List<Account> acl = new ArrayList<>();
+		List<String> cids = gf.clientsAccounts(personalId);
+		for (String s : cids) {
+			acl.add(gf.getAccount(s));
+		}
+		return acl;
+	}
+
+	public Account getAccountStatus(String accId) {
+		ManagerQuery tq = new ManagerQuery();
+		return tq.getAccount(accId);
 	}
 
 	/* END */
