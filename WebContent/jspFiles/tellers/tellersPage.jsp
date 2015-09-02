@@ -33,7 +33,7 @@ body {
 
 <title>Teller's Page</title>
 </head>
-<body onload="divhide(); capitalize();">
+<body onload="divhide(); capitalize(); severClientTupeling();">
 	<input type="hidden" id="telEmpId" value=$(sessionScope.empId)>
 	<div id="wrapper">
 		<!-- Navigation -->

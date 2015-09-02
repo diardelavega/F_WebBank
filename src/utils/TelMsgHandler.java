@@ -1,5 +1,6 @@
 package utils;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import javax.websocket.Session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import system.Coordinator;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,32 +25,57 @@ public class TelMsgHandler {
 
 	// private Gson gson = new GsonBuilder().serializeNulls().create();
 	// ---------client to server side
-	public String switchit(String msg, JsonObject jobj, String head) {
+	private TellerFunctions tf = null;// new TellerFunctions();
+
+	public String switchit(String msg, JsonObject jobj, String head)
+			throws ParseException {
 		// JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
 		// String head = jobj.get("head").getAsString();
-		TellerFunctions tf = new TellerFunctions();
+
 		// JsonObject jo = new JsonObject();
 
 		switch (head) {
 		case "newClientReg":
-			return newClientReg(tf, jobj);
+			return newClientReg( jobj);
 		case "alterClient":
-			return alterClient(tf, jobj);
+			return alterClient( jobj);
+		case "deleteClient":
+			return deleteClient( jobj);
 		case "accountStatus":
-			return accountStatus(tf, jobj);
+			return accountStatus( jobj);
 		case "accountCoowners":
-			return accountCoowners(tf, jobj);
+			return accountCoowners( jobj);
 		case "clientAccounts":
-			return clientAccounts(tf, jobj);
+			return clientAccounts( jobj);
 		case "search":
-			return clientSearch(tf, jobj);
+			return clientSearch( jobj);
 		default:
 			logger.info("invalid switch criterias");
 		}
 		return null;
 	}
 
-	private String alterClient(TellerFunctions tf, JsonObject jobj) {
+
+	private String deleteClient(JsonObject jobj) {
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+
+		String persId = jobj.get("id").getAsString();
+		String report = tf.deleteCustomer(persId);
+		if (report == null) {
+			jo.addProperty("head", "error");
+			jo.addProperty("msg",
+					"Some error ocoured and the deletion was not completed");
+		} else {
+			jo.addProperty("head", "deleteClientReply");
+			jo.addProperty("response", report);
+		}
+		String jsonResp = gson.toJson(jo);
+		return jsonResp;
+	}
+	
+
+	private String alterClient(JsonObject jobj) {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		try {
@@ -65,7 +93,7 @@ public class TelMsgHandler {
 			if (report == null) {
 				jo.addProperty("head", "error");
 				jo.addProperty("msg",
-						"Some error ocoured and the registration was not completed");
+						"Some error ocoured and the alteration was not completed");
 			} else {
 				if (report.equals("")) {
 					jo.addProperty("head", "alterClientReply");
@@ -84,9 +112,11 @@ public class TelMsgHandler {
 		return jsonResp;
 	}
 
-	private String newClientReg(TellerFunctions tf, JsonObject jobj) {
+	private String newClientReg(JsonObject jobj)
+			throws ParseException {
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
 
-//		String persId = jobj.get("id").getAsString();
 		String fname = jobj.get("fname").getAsString();
 		String lname = jobj.get("lname").getAsString();
 		String address = jobj.get("address").getAsString();
@@ -95,12 +125,26 @@ public class TelMsgHandler {
 		String password = jobj.get("password").getAsString();
 		String bdate = jobj.get("bdate").getAsString();
 
-		String report = tf.register(fname, lname, eMail, bdate, address, phone, password);
-		
-		return null;
+		String report = tf.register(fname, lname, eMail, bdate, address, phone,
+				password);
+		if (report == null) {
+			jo.addProperty("head", "error");
+			jo.addProperty("msg",
+					"Some error ocoured and the registration was not completed");
+		} else {
+			if (report.equals("")) {
+				jo.addProperty("head", "registerClientReply");
+				jo.addProperty("response", "alteration completed");
+			} else {
+				jo.addProperty("head", "registerClientReply");
+				jo.addProperty("response", report);
+			}
+		}
+		String jsonResp = gson.toJson(jo);
+		return jsonResp;
 	}
 
-	private String clientAccounts(TellerFunctions tf, JsonObject jobj) {
+	private String clientAccounts(JsonObject jobj) {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		if (jobj.has("personalId")) {
@@ -121,7 +165,7 @@ public class TelMsgHandler {
 		return jsonResp;
 	}
 
-	private String accountStatus(TellerFunctions tf, JsonObject jobj) {
+	private String accountStatus(JsonObject jobj) {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		if (jobj.has("accuntNr")) {
@@ -142,7 +186,7 @@ public class TelMsgHandler {
 		return jsonResp;
 	}
 
-	private String accountCoowners(TellerFunctions tf, JsonObject jobj) {
+	private String accountCoowners(JsonObject jobj) {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		if (jobj.has("accuntNr")) {
@@ -163,13 +207,7 @@ public class TelMsgHandler {
 		return jsonResp;
 	}
 
-	public String coordRegister(String msg, int empId, Session ses) {
-		// TODO search in Coordinator tellers list and match the empId
-		// store web sockets sessionId and hold it on stand by
-		return null;
-	}
-
-	private String clientSearch(TellerFunctions tf, JsonObject jobj) {
+	private String clientSearch(JsonObject jobj) {
 		// get the client search criteria and return a list of customers
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
@@ -218,4 +256,26 @@ public class TelMsgHandler {
 		return jsonEmps;
 
 	}
+
+	public void coordRegister(int empId, Session ses) {
+		/*
+		 * get the tellerFunctions from the Coordinator list store web sockets
+		 * sessionId and hold it on stand by
+		 */
+
+		logger.info("in coord EMP id is--- []",empId);
+		Coordinator co = new Coordinator();
+		tf = co.getTellerFunc(empId);
+		tf.setWsSession(ses);
+	}
+
+	public TellerFunctions getTf() {
+		return tf;
+	}
+
+	public void setTf(TellerFunctions tf) {
+		this.tf = tf;
+	}
+	
+	
 }

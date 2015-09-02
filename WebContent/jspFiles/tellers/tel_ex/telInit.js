@@ -49,9 +49,17 @@ function onMessage(evt) {
 	case 'searchReply':
 		searchReply(jsobj);
 		break;
+	case 'registerClientReply':
+		registerClientReply(jsobj);
+		break;
 	case 'alterClientReply':
 		alterClientReply(jsobj);
 		break;
+	case 'deleteClientReply':
+		deleteClientReply(jsobj);
+		break;
+		
+		
 	case 'error':
 		errorRes(jsobj);
 		break;

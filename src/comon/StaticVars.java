@@ -28,7 +28,12 @@ public class StaticVars {
 	public static final String PLUS_1K_DEP = "PLUS_1K_DEPOSIE";
 	public static final String PLUS_1K_WITH = "PLUS_1K_WITHDRAW";
 	
-	public static final String REGISTER = "REGISTER_USER";
+	public static final String REG_USR = "REGISTER_USER";
+	public static final String ALTER_USR = "ALTER_USER";
+	public static final String DEL_USR = "DELETE_USER";
+	
+	public static final String DONE = "DONE";
+	
 	public static final String UNREG_USR = "UNREGISTERED_USER";
 
 	public static final long ERROR = -1;

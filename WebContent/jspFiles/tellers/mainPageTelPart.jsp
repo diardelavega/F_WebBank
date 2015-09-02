@@ -126,7 +126,7 @@ body {
 							</div>
 							<div id="infoCli" class="tab-pane fade">
 								<!-- big table -->
-								<table align="center" border="0" style="margin-left: 115pt">
+								<table align="center" border="0" style="margin-left: 85pt">
 									<tbody>
 										<tr>
 											<td>

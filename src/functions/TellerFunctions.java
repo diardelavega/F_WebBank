@@ -270,22 +270,30 @@ public class TellerFunctions extends EmployeeFunctions {
 
 	// TODO client personal data details
 
-	public void deleteCustomer() {
+	public String deleteCustomer(String persId) {
+		TellerQuery tq = new TellerQuery();
+		String response=tq.deleteCustomer(persId);
+		if (response != null) {
+			EmployeeAction ea = new EmployeeAction(null, StaticVars.REG_USR,
+					empId);
+			super.registerClient(ea);
+		}
+		return response;
 	}
 
 	public String register(String fname, String lname, String eMail,
-			String bDate, String address, String phone, String psw)
+			String bdate, String address, String phone, String psw)
 			throws ParseException {
-		GeneralFunctions gf = new GeneralFunctions();
-		gf.valName(fname);
-		gf.valName(lname);
-		gf.valAddress(address);
-		gf.valEMail(eMail);
-		gf.valPhone(phone);
-		gf.valPsw(psw);
 
 		TellerQuery tq = new TellerQuery();
-
+		String response = tq.registerCustomer(fname, lname, eMail, bdate,
+				address, phone, psw);
+		if (response != null) {
+			EmployeeAction ea = new EmployeeAction(null, StaticVars.REG_USR,
+					empId);
+			super.registerClient(ea);
+		}
+		return response;
 	}
 
 	public String alter(String persId, String fname, String lname,
@@ -296,8 +304,8 @@ public class TellerFunctions extends EmployeeFunctions {
 		String response = tq.alter(persId, fname, lname, eMail, bdate, address,
 				phone, password);
 		if (response != null) {
-			EmployeeAction ea = new EmployeeAction(persId, StaticVars.REGISTER,
-					empId);
+			EmployeeAction ea = new EmployeeAction(persId,
+					StaticVars.ALTER_USR, empId);
 			super.registerClient(ea);
 		}
 		return response;

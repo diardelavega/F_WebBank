@@ -374,8 +374,48 @@ public class TellerQuery {
 
 	// --------------------reg alter delete
 
-	public void registerCustomer() {
+	public String registerCustomer(String fname, String lname, String eMail,
+			String bdate, String address, String phone, String password) {
+		StringBuilder sb = new StringBuilder();
+		GeneralFunctions gf = new GeneralFunctions();
+		sb.append(gf.valName(fname));
+		sb.append(gf.valName(lname));
+		sb.append(gf.valAddress(address));
+		sb.append(gf.valEMail(eMail));
+		sb.append(gf.valDubleMail(eMail));
+		sb.append(gf.valPhone(phone));
+		sb.append(gf.valPsw(password));
+		if (sb.length() == 0) {
+			Timestamp tdate;
+			try {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				Date parsedDate = dateFormat.parse(bdate);
+				tdate = new java.sql.Timestamp(parsedDate.getTime());
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+				return null;
+			}
 
+			Customers c = new Customers();
+			c.setFname(fname);
+			c.setLname(lname);
+			c.setAddress(address);
+			c.setBdata(tdate);
+			c.seteMail(eMail);
+			c.setPhone(phone);
+			c.setPassword(password);
+
+			upSession();
+			try {
+				s.beginTransaction();
+				s.save(c);
+				s.getTransaction().commit();
+			} catch (Exception e) {
+				s.getTransaction().rollback();
+			}
+			s.close();
+		}
+		return sb.toString();
 	}
 
 	public String alter(String persId, String fname, String lname,
@@ -394,7 +434,7 @@ public class TellerQuery {
 		if (sb.length() == 0) {
 			Timestamp tdate;
 			try {
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy");
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				Date parsedDate = dateFormat.parse(bdate);
 				tdate = new java.sql.Timestamp(parsedDate.getTime());
 			} catch (ParseException e1) {
@@ -402,18 +442,17 @@ public class TellerQuery {
 				return null;
 			}
 
+			Customers c = gf.getCustomer(persId);
+			c.setFname(fname);
+			c.setLname(lname);
+			c.setAddress(address);
+			c.setBdata(tdate);
+			c.seteMail(eMail);
+			c.setPhone(phone);
+			c.setPassword(password);
+
 			upSession();
-			
-				Customers c = gf.getCustomer(persId);
-				c.setFname(fname);
-				c.setLname(lname);
-				c.setAddress(address);
-				c.setBdata(tdate);
-				c.seteMail(eMail);
-				c.setPhone(phone);
-				c.setPassword(password);
-				
-				try {
+			try {
 				s.beginTransaction();
 				s.update(c);
 				s.flush();
@@ -421,8 +460,27 @@ public class TellerQuery {
 			} catch (Exception e) {
 				s.getTransaction().rollback();
 			}
+			s.close();
 		}
 		return sb.toString();
 	}
 
+	public String deleteCustomer(String persId) {
+		GeneralFunctions gf = new GeneralFunctions();
+		Customers c = gf.getCustomer(persId);
+		if(c==null)
+			return StaticVars.UNREG_USR;
+		
+		upSession();
+		try {
+			s.beginTransaction();
+			s.delete(c);
+			s.getTransaction().commit();
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			return null;
+		}
+		s.close();
+		return StaticVars.DONE;
+	}
 }

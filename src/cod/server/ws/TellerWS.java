@@ -1,6 +1,7 @@
 package cod.server.ws;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -38,22 +39,24 @@ public class TellerWS {
 	}
 
 	@OnMessage
-	public void recMsg(String msg, Session ses) throws IOException {
+	public void recMsg(String msg, Session ses) throws IOException,
+			ParseException {
 		System.out.println("ON TELLER :received msg seas : " + msg);
-		
+
 		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
 		String head = jobj.get("head").getAsString();
 		TelMsgHandler tmh = new TelMsgHandler();
 		String webResponse;
-		
-		if (head.equalsIgnoreCase("register")) {
+
+		logger.info("HEAD  is {}",head);
+		if (head.equalsIgnoreCase("coordinate")) {
 			int empId = jobj.get("empId").getAsInt();
-			webResponse = tmh.coordRegister(msg, empId, ses);
+			tmh.coordRegister(empId, ses);
 		} else {
 			webResponse = tmh.switchit(msg, jobj, head);
+			sendMsg(webResponse, ses);
 		}
 
-		sendMsg(webResponse, ses);
 	}
 
 	public void sendMsg(String msg, Session ses) throws IOException {

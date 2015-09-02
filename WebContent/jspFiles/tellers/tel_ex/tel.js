@@ -6,39 +6,13 @@ $(function() {
 	});
 });
 
-function telAccountStatus() {
-	var accNr = $("#telAccountNr").val();
-	var req = {
-		head : "accountStatus",
-		accuntNr : accNr
-	};
-	doSend(JSON.stringify(req));
-}
-
-function telAccountCoo() {
-	var accNr = $("#telAccountNr").val();
-	var req = {
-		head : "accountCoowners",
-		accuntNr : accNr
-	};
-	doSend(JSON.stringify(req));
-}
-
-function telClientAccounts() {
-	var persId = $("#telPersonalId").val();
-	var req = {
-		head : "clientAccounts",
-		personalId : persId
-	};
-	doSend(JSON.stringify(req));
-}
-
 function severClientTupeling() {
+	alert("TUPELING");
 	var reg = {
 		head : "coordinate",
 		empId : $("#telEmpId").val()
 	}
-	doSend(reg);
+	doSend(JSON.stringify(reg));
 }
 
 function clear1() {
@@ -53,6 +27,43 @@ function clear1() {
 	$('[name=id]').val("");
 }
 
+
+
+function telAccountStatus() {
+	var accNr = $("#telAccountNr").val();
+	var req = {
+		head : "accountStatus",
+		accuntNr : accNr
+	};
+	doSend(JSON.stringify(req));
+}
+function telAccountCoo() {
+	var accNr = $("#telAccountNr").val();
+	var req = {
+		head : "accountCoowners",
+		accuntNr : accNr
+	};
+	doSend(JSON.stringify(req));
+}
+function telClientAccounts() {
+	var persId = $("#telPersonalId").val();
+	var req = {
+		head : "clientAccounts",
+		personalId : persId
+	};
+	doSend(JSON.stringify(req));
+}
+
+
+
+
+function deleteClient() {
+	clientData = {
+		head : 'deleteClient',
+		id : $('[name=id]').val()
+	}
+	doSend(JSON.stringify(clientData));
+}
 function newClientReg() {
 	clientData = {
 		head : 'newClientReg',
@@ -84,6 +95,17 @@ function alterClient() {
 	doSend(JSON.stringify(clientData));
 }
 
+//-----------TRANSACTIONS
+function deposite(){}
+
+function withdraw(){}
+
+function transfer(){}
+
+//-----------END OFTRANSACTIONS
+
+
+
 function clientIdDataSearch() {
 	var persId = $("#telPersonalId").val();
 	if (persId != '') {
@@ -113,13 +135,30 @@ function clientFormDataSearch() {
 
 /* AFTER RESPONSE FUNCTION */
 
-function alterClientReply(jobj){
+function registerClientReply(jobj) {
 	if (jsobj.hasOwnProperty("response")) {
 		alertDisplay(jobj.response);
+	} else {
+		alertDisplay(jobj.msg);
 	}
 }
-//---------------
 
+function alterClientReply(jobj) {
+	if (jsobj.hasOwnProperty("response")) {
+		alertDisplay(jobj.response);
+	} else {
+		alertDisplay(jobj.msg);
+	}
+}
+
+function deleteClientReply(jobj) {
+	if (jsobj.hasOwnProperty("response")) {
+		alertDisplay(jobj.response);
+	} else {
+		alertDisplay(jobj.msg);
+	}
+}
+// ---------------
 
 function searchReply(jsobj) {
 	console.log(jsobj);
@@ -278,11 +317,12 @@ function accCoownHeader() {
 	trh.append(th);
 }
 
-function errorRes(jsobj){
-	var alerter=$('#mainMsgAlert');
-//	alerter.addClass("alerter");
-	$(alerter).addClass("alert alert-warning");
-	alerter.innerHTML=jsobj.msg;
+function errorRes(jsobj) {
+	// var alerter = $('#mainMsgAlert');
+	// alerter.addClass("alerter");
+	// $(alerter).addClass("alert alert-warning");
+	// alerter.innerHTML = jsobj.msg;
+	alertDisplay(jsobj.msg);
 }
 
 /* END AFTER RESPONSE FUNCTION */
@@ -292,8 +332,8 @@ function onPersId(event) {
 	$("#telPersonalId").val(txt);
 }
 
-function alertDisplay(msg){
-	var alerter=$('#mainMsgAlert');
+function alertDisplay(msg) {
+	var alerter = $('#mainMsgAlert');
 	alerter.classList.add("alert alert-info");
-	alerter.innerHTML=msg;
+	alerter.innerHTML = msg;
 }
