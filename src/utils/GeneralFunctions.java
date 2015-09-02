@@ -228,8 +228,6 @@ public class GeneralFunctions {
 				}
 			}
 		}
-		if (isCustomerEmail(mail))
-			error = " e-mail already registered! ";
 		return error;
 	}
 	

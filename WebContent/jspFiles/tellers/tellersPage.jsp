@@ -32,9 +32,14 @@ body {
 </style>
 
 <title>Teller's Page</title>
+<%
+	HttpSession ses = request.getSession();
+%>
 </head>
-<body onload="divhide(); capitalize(); severClientTupeling();">
-	<input type="hidden" id="telEmpId" value=$(sessionScope.empId)>
+<body onload="divhide(); capitalize(); ">
+	<input type="hidden" id="telEmpId"
+		value="<%=ses.getAttribute("primeKey")%>">
+	<!-- $(sessionScope.empId) -->
 	<div id="wrapper">
 		<!-- Navigation -->
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -47,8 +52,10 @@ body {
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Teller</a>
+				<a class="navbar-brand" href="#" onclick="severClientTupeling();">Teller
+				</a>
 			</div>
+
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<!--  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
@@ -144,6 +151,8 @@ body {
 	<!-- teller scripts -->
 	<script src="./tel_ex/telInit.js"></script>
 	<script src="./tel_ex/tel.js"></script>
+	<script src="./tel_ex/main.js"></script>
+	<script src="./tel_ex/transactions.js"></script>
 
 
 

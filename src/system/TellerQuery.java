@@ -114,11 +114,11 @@ public class TellerQuery {
 
 	public long deposite(String accNr, double amount) {
 
-		long idTra = 0;
+		long idTra = StaticVars.ERROR;
 		Account acc = (Account) s.get(Account.class, accNr);
 		if (acc == null) {
 			logger.warn("ACCOUNT DOES NOT EXIST");
-			return StaticVars.ERROR;
+			idTra=StaticVars.DOES_NOT_EXISTS;
 		} else {
 			Timestamp tstamp = new java.sql.Timestamp(Calendar.getInstance()
 					.getTime().getTime());
@@ -146,10 +146,8 @@ public class TellerQuery {
 				e.printStackTrace();
 			}
 			s.close();
-
-			return idTra;
 		}
-
+		return idTra;
 	}
 
 	public long withdraw(String personalId, String accNr, double amount) {
@@ -219,67 +217,70 @@ public class TellerQuery {
 		return StaticVars.ERROR;
 	}
 
-	public boolean checkTransferRegularity(String personalId, String accFrom,
+	public String checkTransferRegularity(String personalId, String accFrom,
 			String accTo, double amount, char method) {
-		boolean regular = false;
+		String regular = null;
 		GeneralFunctions gf = new GeneralFunctions();
 
 		if (!gf.existsAccount(accFrom)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accFrom);
+			regular="ACCOUNT_FROM DOES NOT EXIST";
 			return regular;
 		} else if (!gf.existsAccount(accTo)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accTo);
+			regular="ACCOUNT_TO DOES NOT EXIST";
 			return regular;
 		} else {
 			List<String> dbClients = gf.accountsClients(accFrom);
 			if (!dbClients.contains(personalId)) {
 				logger.warn("NOT THIS ACCOUNT : {}. OWNER", accFrom);
+				regular="NOT ACCOUNTS OWNER";
 				return regular;
 			}
 			upSession();
 			Account fromAcc = (Account) s.get(Account.class, accFrom);
 			if (fromAcc.getBalance() < amount) {
 				logger.info("UNSUFICIENT FOUNDS IN YOUR ACCOUNT");
+				regular="UNSUFICIENT FOUNDS IN YOUR ACCOUNT";
 				return regular;
 			}
 		}
-		regular = true;
 		return regular;
 	}
 
-	public boolean checkWithdrawRegularity(String personalId, String accNr,
+	public String checkWithdrawRegularity(String personalId, String accNr,
 			double amount) {
-		boolean regular = false;
+		String regular = null;
 		GeneralFunctions gf = new GeneralFunctions();
 
 		if (!gf.existsAccount(accNr)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accNr);
+			regular="ACCOUNT DOES NOT EXIST";
 			return regular;
 		} else {
 			List<String> dbClients = gf.accountsClients(accNr);
 			if (!dbClients.contains(personalId)) {
 				logger.warn("NOT THIS ACCOUNT : {}. OWNER", accNr);
+				regular="NOT ACCOUNTS OWNER";
 				return regular;
 			}
 			upSession();
 			Account acc = (Account) s.get(Account.class, accNr);
 			if (acc.getBalance() < amount) {
 				logger.info("UNSUFICIENT FOUNDS IN YOUR ACCOUNT");
+				regular="UNSUFICIENT FOUNDS IN YOUR ACCOUNT";
 				return regular;
 			}
 		}
-		regular = true;
 		return regular;
 	}
 
-	public boolean checkDepositeRegularity(String accNr, double amount) {
-		boolean regular = false;
-
+	public String checkDepositeRegularity(String accNr, double amount) {
+		String regular = null;
 		Account acc = (Account) s.get(Account.class, accNr);
 		if (acc == null) {
 			logger.warn("ACCOUNT DOES NOT EXIST");
-		} else {
-			regular = true;
+			regular="ACCOUNT DOES NOT EXIST";
 		}
 		return regular;
 	}
@@ -468,9 +469,9 @@ public class TellerQuery {
 	public String deleteCustomer(String persId) {
 		GeneralFunctions gf = new GeneralFunctions();
 		Customers c = gf.getCustomer(persId);
-		if(c==null)
+		if (c == null)
 			return StaticVars.UNREG_USR;
-		
+
 		upSession();
 		try {
 			s.beginTransaction();

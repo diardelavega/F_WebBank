@@ -128,7 +128,7 @@ public class TellerFunctions extends EmployeeFunctions {
 	public void deposite(String accNr, double amount, String note) {
 		TellerQuery tq = new TellerQuery();
 
-		if (tq.checkDepositeRegularity(accNr, amount)) {
+		if (tq.checkDepositeRegularity(accNr, amount) == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				Coordinator cord = new Coordinator();
 				OCRequest req = new OCRequest(empId, null,
@@ -144,6 +144,8 @@ public class TellerFunctions extends EmployeeFunctions {
 					super.deposite(ea);
 				}
 			}
+		} else {
+			// TODO return error msg
 		}
 
 	}
@@ -151,7 +153,7 @@ public class TellerFunctions extends EmployeeFunctions {
 	public void withdraw(String personalId, String accNr, double amount,
 			String note) {
 		TellerQuery tq = new TellerQuery();
-		if (tq.checkWithdrawRegularity(personalId, accNr, amount)) {
+		if (tq.checkWithdrawRegularity(personalId, accNr, amount)==null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();
 				Coordinator cord = new Coordinator();
@@ -171,6 +173,8 @@ public class TellerFunctions extends EmployeeFunctions {
 					super.withdraw(ea);
 				}
 			}
+		} else {
+			// TODO return error msg
 		}
 	}
 
@@ -182,7 +186,7 @@ public class TellerFunctions extends EmployeeFunctions {
 		// proceed to action;
 
 		TellerQuery tq = new TellerQuery();
-		if (tq.checkTransferRegularity(personalId, accFrom, accTo, amount, 't')) {
+		if (tq.checkTransferRegularity(personalId, accFrom, accTo, amount, 't')==null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();
 				Coordinator cord = new Coordinator();
@@ -191,7 +195,6 @@ public class TellerFunctions extends EmployeeFunctions {
 						StaticVars.PLUS_1K_WITH, accFrom, accTo, amount, null);
 				cord.addOCR(req);
 			} else {
-
 				long trNr = tq
 						.transfer(personalId, accFrom, accTo, amount, 't');
 				if (trNr > 0) {
@@ -203,6 +206,8 @@ public class TellerFunctions extends EmployeeFunctions {
 					super.transfer(ea);
 				}
 			}
+		} else {
+			// TODO return error msg
 		}
 	}
 
@@ -272,8 +277,8 @@ public class TellerFunctions extends EmployeeFunctions {
 
 	public String deleteCustomer(String persId) {
 		TellerQuery tq = new TellerQuery();
-		String response=tq.deleteCustomer(persId);
-		if (response != null) {
+		String response = tq.deleteCustomer(persId);
+		if (response != StaticVars.UNREG_USR) {
 			EmployeeAction ea = new EmployeeAction(null, StaticVars.REG_USR,
 					empId);
 			super.registerClient(ea);
@@ -288,7 +293,7 @@ public class TellerFunctions extends EmployeeFunctions {
 		TellerQuery tq = new TellerQuery();
 		String response = tq.registerCustomer(fname, lname, eMail, bdate,
 				address, phone, psw);
-		if (response != null) {
+		if (response != null && response.length() == 0) {
 			EmployeeAction ea = new EmployeeAction(null, StaticVars.REG_USR,
 					empId);
 			super.registerClient(ea);
@@ -303,7 +308,7 @@ public class TellerFunctions extends EmployeeFunctions {
 		TellerQuery tq = new TellerQuery();
 		String response = tq.alter(persId, fname, lname, eMail, bdate, address,
 				phone, password);
-		if (response != null) {
+		if (response != null && response.length() == 0) {
 			EmployeeAction ea = new EmployeeAction(persId,
 					StaticVars.ALTER_USR, empId);
 			super.registerClient(ea);

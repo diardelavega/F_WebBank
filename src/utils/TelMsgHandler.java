@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import comon.StaticVars;
 import entity.Account;
 import entity.Customers;
 import functions.TellerFunctions;
@@ -25,7 +26,7 @@ public class TelMsgHandler {
 
 	// private Gson gson = new GsonBuilder().serializeNulls().create();
 	// ---------client to server side
-	private TellerFunctions tf = null;// new TellerFunctions();
+	private TellerFunctions tf = new TellerFunctions();
 
 	public String switchit(String msg, JsonObject jobj, String head)
 			throws ParseException {
@@ -36,25 +37,52 @@ public class TelMsgHandler {
 
 		switch (head) {
 		case "newClientReg":
-			return newClientReg( jobj);
+			return newClientReg(jobj);
 		case "alterClient":
-			return alterClient( jobj);
+			return alterClient(jobj);
 		case "deleteClient":
-			return deleteClient( jobj);
+			return deleteClient(jobj);
 		case "accountStatus":
-			return accountStatus( jobj);
+			return accountStatus(jobj);
 		case "accountCoowners":
-			return accountCoowners( jobj);
+			return accountCoowners(jobj);
 		case "clientAccounts":
-			return clientAccounts( jobj);
+			return clientAccounts(jobj);
 		case "search":
-			return clientSearch( jobj);
+			return clientSearch(jobj);
+		case "deposite":
+			return deposite(jobj);
+		case "withdraw":
+			return withdraw(jobj);
+		case "transfer":
+			return transfer(jobj);
 		default:
 			logger.info("invalid switch criterias");
 		}
 		return null;
 	}
 
+	private String transfer(JsonObject jobj) {
+
+		return null;
+	}
+
+	private String withdraw(JsonObject jobj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String deposite(JsonObject jobj) {
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		
+		String account = jobj.get("accNr").getAsString();
+		double amount = jobj.get("amount").getAsDouble();
+		String note = jobj.get("note").getAsString();
+		
+		tf.deposite(account, amount, note);
+		return null;
+	}
 
 	private String deleteClient(JsonObject jobj) {
 		JsonObject jo = new JsonObject();
@@ -62,10 +90,10 @@ public class TelMsgHandler {
 
 		String persId = jobj.get("id").getAsString();
 		String report = tf.deleteCustomer(persId);
-		if (report == null) {
+		if (report == StaticVars.UNREG_USR) {
 			jo.addProperty("head", "error");
 			jo.addProperty("msg",
-					"Some error ocoured and the deletion was not completed");
+					"could not findclient, deletion was not completed");
 		} else {
 			jo.addProperty("head", "deleteClientReply");
 			jo.addProperty("response", report);
@@ -73,7 +101,6 @@ public class TelMsgHandler {
 		String jsonResp = gson.toJson(jo);
 		return jsonResp;
 	}
-	
 
 	private String alterClient(JsonObject jobj) {
 		JsonObject jo = new JsonObject();
@@ -112,8 +139,7 @@ public class TelMsgHandler {
 		return jsonResp;
 	}
 
-	private String newClientReg(JsonObject jobj)
-			throws ParseException {
+	private String newClientReg(JsonObject jobj) throws ParseException {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 
@@ -263,7 +289,7 @@ public class TelMsgHandler {
 		 * sessionId and hold it on stand by
 		 */
 
-		logger.info("in coord EMP id is--- []",empId);
+		logger.info("in coord EMP id is--- []", empId);
 		Coordinator co = new Coordinator();
 		tf = co.getTellerFunc(empId);
 		tf.setWsSession(ses);
@@ -276,6 +302,5 @@ public class TelMsgHandler {
 	public void setTf(TellerFunctions tf) {
 		this.tf = tf;
 	}
-	
-	
+
 }

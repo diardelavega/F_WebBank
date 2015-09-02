@@ -48,9 +48,15 @@ public class TellerWS {
 		TelMsgHandler tmh = new TelMsgHandler();
 		String webResponse;
 
-		logger.info("HEAD  is {}",head);
+		logger.info("HEAD  is {}", head);
 		if (head.equalsIgnoreCase("coordinate")) {
-			int empId = jobj.get("empId").getAsInt();
+			int empId = 0;
+			try {
+				empId = jobj.get("empId").getAsInt();
+				logger.info("EmpId  is {}", empId);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			tmh.coordRegister(empId, ses);
 		} else {
 			webResponse = tmh.switchit(msg, jobj, head);

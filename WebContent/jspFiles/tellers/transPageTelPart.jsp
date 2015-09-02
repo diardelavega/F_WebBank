@@ -27,7 +27,6 @@
 	padding-right: 5em;
 	margin: 5px;
 } */
-
 body {
 	font-family: Verdana, Arial, sans-serif;
 	font-size: 12px;
@@ -40,16 +39,13 @@ body {
 				<td>
 					<div class="container-fluid">
 						<h3>Transactions:</h3>
-						<!-- <div
-							style="background-color: rgb(220, 220, 220); width: 100%; position: static;"> -->
-							<ul class="nav nav-tabs ">
-								<li class="active"><a data-toggle="tab" href="#dep"><strong>DEPOSITE</strong></a></li>
-								<li><a data-toggle="tab" href="#transf"><strong>TRANSFERS</strong></a></li>
-								<li><a data-toggle="tab" href="#with"><strong>WITHDRAW</strong></a></li>
-									<li><a data-toggle="tab" href="#manInfo"><strong>INFO</strong></a></li>
-							</ul>
-						<!-- </div> -->
-						<hr>
+						<ul class="nav nav-tabs ">
+							<li class="active"><a data-toggle="tab" href="#dep"><strong>DEPOSITE</strong></a></li>
+							<li><a data-toggle="tab" href="#transf"><strong>TRANSFERS</strong></a></li>
+							<li><a data-toggle="tab" href="#with"><strong>WITHDRAW</strong></a></li>
+							<li><a data-toggle="tab" href="#manInfo"><strong>INFO</strong></a></li>
+						</ul>
+
 						<div class="tab-content">
 							<div id="dep" class="tab-pane fade in active">
 
@@ -64,13 +60,13 @@ body {
 
 													<center>
 														<label>Note :</label>
-														<textarea rows="4" cols="60"></textarea>
+														<textarea rows="4" cols="60" name="note"></textarea>
 													</center>
 													<br>
 													<center>
-														<button id="telDepOk">OK</button>
+														<button id="telDepOk" onclick="deposite();">OK</button>
 														<span class="space"></span>
-														<button id="telDepClear">Clear</button>
+														<button id="telDepClear" onclick="clearDep();">Clear</button>
 													</center>
 												</div>
 											</td>
@@ -93,15 +89,13 @@ body {
 											<td width="70%">
 												<div class="box-l">
 													<label>Account From :</label><input type="text"
-														name="accNrFrom"> <span class="space"></span> <label>Account
-														To :</label> <input type="text" name="accNrTo"> <br>
+														class="accNr" name="accNrFrom"> <span
+														class="space"></span> <label>Account To :</label> <input
+														type="text" name="accNrTo" class="accNr"> <br>
 													<label>Personal ID :</label><input type="text"
-														name="persId"> <span class="space"></span> <label>Amount
-														:</label> <input type="text" name="amount">
-													<!-- <center>
-														<label>Note :</label>
-														<textarea rows="4" cols="60"></textarea>
-													</center> -->
+														class="persId" name="transfPersId"> <span class="space"></span>
+													<label>Amount :</label> <input type="text" name="transfAmount"
+														class="amount">
 													<br>
 													<center>
 														<button id="telDepOk">OK</button>
@@ -125,15 +119,16 @@ body {
 											<td width="65%">
 												<div class="box-l">
 													<label>Account From :</label><input type="text"
-														name="accNr"> <span class="space"></span> <br>
-													<label>Personal ID :</label><input type="text" name="accNr">
-													<br>
-												<label>Amount :</label> <input type="text" name="amount">
+														class="accNr" name="withAccNr"> <span
+														class="space"></span> <br> <label>Personal ID
+														:</label><input type="text" name="withPersId" class="persId">
+													<br> <label>Amount :</label> <input type="text"
+														class="amount" name="withAmount">
 												</div> <br>
 												<center>
-													<button id="telDepOk">OK</button>
+													<button id="telDepOk" onclick="withdraw();">OK</button>
 													<span class="space"></span>
-													<button id="telDepClear">Clear</button>
+													<button id="telDepClear" onclick="clearWithdraw();">Clear</button>
 												</center>
 											</td>
 											<td width="35%"><div id="telDepResponse" class="box-r"></div>
@@ -148,7 +143,7 @@ body {
 
 							</div>
 							<div id="manInfo" class="tab-pane fade">
-							<h1>maby it souldn't be here ??</h1>
+								<h1>maby it souldn't be here ??</h1>
 							</div>
 
 						</div>

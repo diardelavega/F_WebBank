@@ -15,11 +15,16 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import system.Coordinator;
 import utils.GeneralFunctions;
 import comon.LogIn;
 import db.DBHandler;
 import entity.Customers;
 import entity.Employee;
+import functions.CustomerFunctions;
+import functions.DirectorFunctions;
+import functions.ManagerFunctions;
+import functions.TellerFunctions;
 
 /**
  * Servlet implementation class Log
@@ -76,7 +81,7 @@ public class Log extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		session.setAttribute("validity", null);
 		String destination = "jspFiles/LogIn.jsp";
-//		RequestDispatcher rd;
+		// RequestDispatcher rd;
 
 		if (usr.equals("") || psw.equals("")) {
 			session.setAttribute("validity", "invalid credentials ");
@@ -85,8 +90,10 @@ public class Log extends HttpServlet {
 			if (domain == null) {
 				session.setAttribute("validity", "not_ok");
 			} else {
-				logger.info("------------------------>usr :{} and psw:{}",usr,psw);
-				
+				logger.info("------------------------>usr :{} and psw:{}", usr,
+						psw);
+				Coordinator co = new Coordinator();
+
 				LogIn log = new LogIn();
 				if (domain.equalsIgnoreCase("webank")) {
 					Employee e = log.logInEmp(usr, psw);
@@ -94,24 +101,40 @@ public class Log extends HttpServlet {
 						session = request.getSession(true);
 						session.setAttribute("primeKey", e.getEmpId());
 						session.setAttribute("name", e.getFname());
-						switch(e.getPossition()){
+
+						switch (e.getPossition()) {
 						case "TELLER":
+							// the new entrances to the system are kept in the
+							// coordinator
+							TellerFunctions tf = new TellerFunctions(
+									e.getEmpId());
+							co.addTellerFunc(tf);
 							destination = "jspFiles/tellers/tellersPage.jsp";
 							break;
 						case "MANAGER":
+							ManagerFunctions mf = new ManagerFunctions(
+									e.getEmpId());
+							co.addManagerFunc(mf);
 							destination = "jspFiles/managers/managersPage.jsp";
 							break;
 						case "DIRECTOR":
+							DirectorFunctions df = new DirectorFunctions(
+									e.getEmpId());
+							co.addDirectorFunc(df);
 							destination = "jspFiles/directors/directorsPage.jsp";
 							break;
 						}
-						//destination = "jspFiles/Test.jsp";
+						// destination = "jspFiles/Test.jsp";
 					} else {
 						session.setAttribute("validity", "user not found");
 					}
 				} else {
 					Customers c = log.logInCust(usr, psw);
 					if (c != null) {
+
+						CustomerFunctions cf = new CustomerFunctions(
+								c.getPersonalId());
+						co.addCustomerFunc(cf);
 						session = request.getSession(true);
 						session.setAttribute("primeKey", c.getPersonalId());
 						session.setAttribute("name", c.getFname());
@@ -129,7 +152,7 @@ public class Log extends HttpServlet {
 		// log.closeSession();
 		// rd = request.getRequestDispatcher(destination);
 		// rd.forward(request, response);
-		
+
 		response.sendRedirect(destination);
 	}
 
@@ -138,7 +161,7 @@ public class Log extends HttpServlet {
 		String[] temp;
 		if ((mail.contains("@")) && (mail.contains("."))) {
 			temp = mail.split("[@.]");
-			System.out.println("TEN!!111111---:"+temp[1]);
+			System.out.println("TEN!!111111---:" + temp[1]);
 			return temp[1];
 		}
 		return null;

@@ -1,4 +1,5 @@
 var ws = new WebSocket("ws://localhost:8080/F_WebBank/tel");
+//var empId= $('#telEmpId').val();
 
 function newWs() {
 	if (ws !== undefined && ws.readyState !== ws.CLOSED) {

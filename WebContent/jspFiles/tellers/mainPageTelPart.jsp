@@ -57,13 +57,13 @@ body {
 		</thead>
 		<tbody>
 			<tr>
-				<td><label>Personal Id:&nbsp;</label><input type="text"
+				<td><label>Personal Id:&nbsp;</label><input type="text" class="persId"
 					id="telPersonalId" style="margin-right: 15px"></td>
-				<td><label style="margin-left: 15px">Account Nr.:&nbsp;</label><input
+				<td><label style="margin-left: 15px">Account Nr.:&nbsp;</label><input class="accNr"
 					type="text" id="telAccountNr"></td>
-				<td><div id="mainMsgAlert" >
-				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				</div></td>
+				<td><div id="mainMsgAlert">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					</div></td>
 			</tr>
 		</tbody>
 	</table>
@@ -135,43 +135,45 @@ body {
 													style="margin: 30px; margin-left: 10px; padding: 10px;"
 													id="telClientForm">
 													<tr>
+														<td><label> Id&nbsp;</label></td>
+														<td><input type="text" name="id" class="persId"></td>
+													</tr>
+													<tr>
 														<td><label> F. Name &nbsp;</label></td>
-														<td><input type="text" name="fname1"></td>
+														<td><input type="text" name="fname1" class="name"></td>
 													</tr>
 													<tr>
 														<td><label> L. Name &nbsp;</label></td>
-														<td><input type="text" name="lname1"></td>
+														<td><input type="text" name="lname1" class="name"></td>
 													</tr>
 													<tr>
 														<td><label> BirthDate&nbsp;</label></td>
 														<td><input type="text" name="bdate"
 															class="datePicker"></td>
 													</tr>
-													<tr>
-														<td><label> Address&nbsp;</label></td>
-														<td><input type="text" name="address1"></td>
-													</tr>
+
 												</table>
 											</td>
 											<td>
 												<table>
 													<tbody>
 														<tr>
+															<td><label> Address&nbsp;</label></td>
+															<td><input type="text" name="address1" class="address"></td>
+														</tr>
+														<tr>
 															<td><label> phone Nr.&nbsp;</label></td>
-															<td><input type="text" name="phone"></td>
+															<td><input type="text" name="phone" class="phone"></td>
 														</tr>
 														<tr>
 															<td><label> E-mail&nbsp;</label></td>
-															<td><input id="email" type="text" name="email1"></td>
+															<td><input id="email" type="text" name="email1" class="mail"></td>
 														</tr>
 														<tr>
 															<td><label> Password&nbsp;</label></td>
-															<td><input type="text" name="psw1"></td>
+															<td><input type="text" name="psw1" class="password"></td>
 														</tr>
-														<tr>
-															<td><label> Id&nbsp;</label></td>
-															<td><input type="text" name="id"></td>
-														</tr>
+
 													</tbody>
 												</table>
 											</td>
@@ -185,7 +187,9 @@ body {
 												</button></td>
 											<td><button onclick="newClientReg();">Reg. New</button>
 												<span class="space"></span>
-												<button onclick="alterClient();">Alter</button></td>
+												<button onclick="alterClient();">Alter</button>
+												 <span class="space"></span>
+												<button onclick="deleteClient();">Delete</button></td>
 										</tr>
 									</tbody>
 								</table>

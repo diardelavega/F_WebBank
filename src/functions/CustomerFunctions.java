@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.websocket.Session;
+
 import system.ClientQuery;
 import system.TellerQuery;
 import utils.GeneralFunctions;
@@ -14,6 +16,8 @@ import entity.Customers;
 public class CustomerFunctions {
 
 	private String personalId;
+	private Session session; 
+	
 	
 	public CustomerFunctions() {
 		super();
@@ -83,5 +87,15 @@ public class CustomerFunctions {
 	public void setPersonalId(String personalId) {
 		this.personalId = personalId;
 	}
+
+	public Session getSession() {
+		return session;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
+	}
+	
+	
 	
 }

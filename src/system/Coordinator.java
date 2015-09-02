@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import javax.websocket.Session;
+
 import comon.OCRequest;
 import comon.TupleEntityFuncWS;
 import entity.Employee;
+import functions.CustomerFunctions;
 import functions.DirectorFunctions;
 import functions.EmployeeFunctions;
 import functions.ManagerFunctions;
@@ -28,18 +31,17 @@ public class Coordinator {
 
 	private static List<OCRequest> ocr = new ArrayList<>();
 
-	private static Map<Integer, TupleEntityFuncWS> managers = new HashMap<>();
-	private static Map<Integer, TupleEntityFuncWS> tellers = new HashMap<>();
-	private static Map<Integer, TupleEntityFuncWS> directors = new HashMap<>();
+	private static Map<Integer, ManagerFunctions> managers = new HashMap<>();
+	private static Map<Integer, TellerFunctions> tellers = new HashMap<>();
+	private static Map<Integer, DirectorFunctions> directors = new HashMap<>();
 
-	// private static List<TupleEntityFuncWS> clients = new ArrayList<>();
+	private static Map<String, CustomerFunctions> clients = new HashMap<>();
 
 	public void addTellerFunc(TellerFunctions telf) {
-		TupleEntityFuncWS tef = new TupleEntityFuncWS(telf, null);
-		tellers.put(telf.getEmpId(), tef);
+		tellers.put(telf.getEmpId(), telf);
 	}
 
-	public void addTellSession(int id, String session) {
+	public void addTellSession(int id, Session session) {
 		tellers.get(id).setWsSession(session);
 	}
 
@@ -47,21 +49,20 @@ public class Coordinator {
 		tellers.remove(id);
 	}
 
-	public String getTellerSession(int id) {
+	public Session getTellerSession(int id) {
 		return tellers.get(id).getWsSession();
 	}
 
 	public TellerFunctions getTellerFunc(int id) {
-		return (TellerFunctions) tellers.get(id).getEf();
+		return tellers.get(id);
 	}
 
 	/* MANAGER */
 	public void addManagerFunc(ManagerFunctions telf) {
-		TupleEntityFuncWS tef = new TupleEntityFuncWS(telf, null);
-		managers.put(telf.getEmpId(), tef);
+		managers.put(telf.getEmpId(), telf);
 	}
 
-	public void addManagerSession(int id, String session) {
+	public void addManagerSession(int id, Session session) {
 		managers.get(id).setWsSession(session);
 	}
 
@@ -69,21 +70,20 @@ public class Coordinator {
 		managers.remove(id);
 	}
 
-	public String getManagerSession(int id) {
+	public Session getManagerSession(int id) {
 		return managers.get(id).getWsSession();
 	}
 
 	public ManagerFunctions getManagerFunc(int id) {
-		return (ManagerFunctions) managers.get(id).getEf();
+		return managers.get(id);
 	}
 
 	/* DIRECTOR */
 	public void addDirectorFunc(DirectorFunctions telf) {
-		TupleEntityFuncWS tef = new TupleEntityFuncWS(telf, null);
-		directors.put(telf.getEmpId(), tef);
+		directors.put(telf.getEmpId(), telf);
 	}
 
-	public void addDirectorSession(int id, String session) {
+	public void addDirectorSession(int id, Session session) {
 		directors.get(id).setWsSession(session);
 	}
 
@@ -91,12 +91,33 @@ public class Coordinator {
 		directors.remove(id);
 	}
 
-	public String getDirectorSession(int id) {
+	public Session getDirectorSession(int id) {
 		return directors.get(id).getWsSession();
 	}
 
 	public DirectorFunctions getDirectorFunc(int id) {
-		return (DirectorFunctions) directors.get(id).getEf();
+		return directors.get(id);
+	}
+
+	/* CLIENTS */
+	public void addCustomerFunc(CustomerFunctions cf) {
+		clients.put(cf.getPersonalId(), cf);
+	}
+
+	public CustomerFunctions getCustomerFunctions(String id) {
+		return clients.get(id);
+	}
+
+	public void addCustomerSession(String id, Session session) {
+		clients.get(id).setSession(session);
+	}
+
+	public Session getCustomerSession(String id) {
+		return clients.get(id).getSession();
+	}
+
+	public void deleteCustomer(String persId) {
+		clients.remove(persId);
 	}
 
 	/* OCR */
