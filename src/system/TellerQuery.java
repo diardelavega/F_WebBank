@@ -2,7 +2,10 @@ package system;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -300,8 +303,8 @@ public class TellerQuery {
 		return gf.getAccount(accId);
 	}
 
-	public List<Customers> getAllClients(String fname, String lname, String address,
-			String phone, String eMail, String password) {
+	public List<Customers> getAllClients(String fname, String lname,
+			String address, String phone, String eMail, String password) {
 
 		String condition = empQueryCondition(fname, lname, address, phone,
 				eMail, password);
@@ -317,7 +320,7 @@ public class TellerQuery {
 		Query q = s.createQuery("FROM Customers " + condition);
 		List<Customers> custList = q.list();
 		s.close();
-		return custList ;
+		return custList;
 	}
 
 	private String empQueryCondition(String fname, String lname,
@@ -367,6 +370,59 @@ public class TellerQuery {
 		} else {
 			return null;
 		}
+	}
+
+	// --------------------reg alter delete
+
+	public void registerCustomer() {
+
+	}
+
+	public String alter(String persId, String fname, String lname,
+			String eMail, String bdate, String address, String phone,
+			String password) {
+
+		StringBuilder sb = new StringBuilder();
+		GeneralFunctions gf = new GeneralFunctions();
+		sb.append(gf.valName(fname));
+		sb.append(gf.valName(lname));
+		sb.append(gf.valAddress(address));
+		sb.append(gf.valEMail(eMail));
+		sb.append(gf.valPhone(phone));
+		sb.append(gf.valPsw(password));
+
+		if (sb.length() == 0) {
+			Timestamp tdate;
+			try {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy");
+				Date parsedDate = dateFormat.parse(bdate);
+				tdate = new java.sql.Timestamp(parsedDate.getTime());
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+				return null;
+			}
+
+			upSession();
+			
+				Customers c = gf.getCustomer(persId);
+				c.setFname(fname);
+				c.setLname(lname);
+				c.setAddress(address);
+				c.setBdata(tdate);
+				c.seteMail(eMail);
+				c.setPhone(phone);
+				c.setPassword(password);
+				
+				try {
+				s.beginTransaction();
+				s.update(c);
+				s.flush();
+				s.getTransaction().commit();
+			} catch (Exception e) {
+				s.getTransaction().rollback();
+			}
+		}
+		return sb.toString();
 	}
 
 }

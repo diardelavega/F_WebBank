@@ -83,10 +83,10 @@ public class GeneralFunctions {
 				.createQuery(
 						"SELECT personalId FROM CustomersAccount WHERE accountId = :accNr")
 				.setParameter("accNr", accNr).list();
-		System.out.println("------------------------->"+clientIds.size());
+		System.out.println("------------------------->" + clientIds.size());
 		// s.close();
-//		if (clientIds == null)
-//			return null;
+		// if (clientIds == null)
+		// return null;
 		return clientIds;
 	}
 
@@ -161,10 +161,11 @@ public class GeneralFunctions {
 				.createQuery("SELECT count(*) FROM CustomersAccount WHERE personalId=:pid");
 		long acs;
 		for (String ss : pId) {
-			if ((acs=(long) q.setParameter("pid", ss).list().get(0)) >= 6) {
+			if ((acs = (long) q.setParameter("pid", ss).list().get(0)) >= 6) {
 				unreg.add(ss);
-//				System.out.println("--- "+((long)q.setParameter("pid", ss).list().get(0)));
-//				System.out.println("--- "+(acs));
+				// System.out.println("--- "+((long)q.setParameter("pid",
+				// ss).list().get(0)));
+				// System.out.println("--- "+(acs));
 			}
 		}
 		return unreg;
@@ -210,4 +211,111 @@ public class GeneralFunctions {
 			e.printStackTrace();
 		}
 	}
+
+	public void customerDataValidity(Customers c) {
+		// String
+	}
+
+	public String valEMail(String mail) {
+		String error = "";
+		if (mail.length() > 40) {
+			error = " email too long, max 40 char! ";
+		} else {
+			String tab[] = mail.split("[@.]");
+			for (int i = 0; i < 3; i++) {
+				if (tab[i].equals("") || tab[i] == null) {
+					error = " iregular email! ";
+				}
+			}
+		}
+		if (isCustomerEmail(mail))
+			error = " e-mail already registered! ";
+		return error;
+	}
+	
+	public String valDubleMail(String mail){
+		if (isCustomerEmail(mail))
+		return " e-mail already registered! ";
+		return "";
+	}
+
+	public String valName(String name) {
+		String error = "";
+		if (name.length() > 30) {
+			error = " name too long, max 30 char! ";
+		}
+		return error;
+	}
+
+	public String valPsw(String psw) {
+		String error = "";
+		if (psw.length() > 24) {
+			error = " psw too long, max 24 char! ";
+		}
+		return error;
+	}
+
+	public String valAddress(String address) {
+		String error = "";
+		if (address.length() > 50) {
+			error = " address too long, max 50 char! ";
+		}
+		return error;
+	}
+
+	public String valPhone(String phone) {
+		String error = "";
+		if (phone.length() > 10) {
+			error = " phone too long, max 10 char! ";
+		} else {
+			for (int i = 0; i < phone.length(); i++) {
+				if (!Character.isDigit(phone.charAt(i))) {
+					error = "not valid phone number! ";
+					return error;
+				}
+			}
+		}
+		return error;
+	}
+
+	public String valAmmount(String ammount) {
+		String[] temp = ammount.split(".");
+		String error = "";
+		if (temp[0].length() > 5) {
+			error = " ammount value is too big, max 5 digits! ";
+		} else if (temp[1].length() > 7) {
+			error = " ammount precision is exciding the limit, max 7 digits! ";
+		} else {
+			for (int i = 0; i < temp[0].length(); i++) {
+				if (!Character.isDigit(temp[0].charAt(i))) {
+					error = "not valid ammount entry! ";
+					return error;
+				}
+			}
+			for (int i = 0; i < temp[1].length(); i++) {
+				if (!Character.isDigit(temp[1].charAt(i))) {
+					error = "not valid ammount entry! ";
+					return error;
+				}
+			}
+		}
+		return error;
+	}
+
+	public String valNote(String note) {
+		if (note.length() > 20)
+			return " ammount value is too big, max 5 digits! ";
+		return "";
+	}
+
+	public boolean isCustomerEmail(String mail) {
+		upSession();
+		Query q = s.createQuery(
+				"SELECT eMail FROM Customers WHERE eMail like :em")
+				.setParameter("em", mail);
+		if (q.list().size() != 0)
+			return true;
+		return false;
+	}
+
 }

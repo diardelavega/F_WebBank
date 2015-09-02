@@ -46,10 +46,10 @@ public class Run {
 
 	public static void main(String[] args) throws ParseException, IOException {
 
-		// CustomerFunctions cf = new CustomerFunctions();
+		 CustomerFunctions cf = new CustomerFunctions();
 		//
-		// cf.register("1234567890", "Mario", "Rista", "this@that.com",
-		// "12/01/1990", "under the bridge", "+355...", "123");
+		 cf.register("1234567890", "Mario", "Rista", "this@that.com",
+		 "12/01/1990", "under the bridge", "+355...", "123");
 		//
 		// cf.register("1234567899", "Mariano", "Rista", "this2@that.com",
 		// "12/01/1990", "under the bridge", "+355...", "321");

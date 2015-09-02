@@ -125,17 +125,6 @@ public class TellerFunctions extends EmployeeFunctions {
 
 	}
 
-	public void register(String persId, String fname, String lname,
-			String eMail, String bDate, String address, String Phone, String psw)
-			throws ParseException {
-		CustomerFunctions cf = new CustomerFunctions();
-		cf.dataValidity(persId, fname, lname, eMail, bDate, address, Phone, psw);
-		cf.register(persId, fname, lname, eMail, bDate, address, Phone, psw);
-		EmployeeAction ea = new EmployeeAction(persId, StaticVars.REGISTER,
-				empId);
-		super.registerClient(ea);
-	}
-
 	public void deposite(String accNr, double amount, String note) {
 		TellerQuery tq = new TellerQuery();
 
@@ -249,8 +238,6 @@ public class TellerFunctions extends EmployeeFunctions {
 		return tq.getAccount(accId);
 	}
 
-	// TODO confirm client registration
-
 	/* end main page functions */
 
 	public Session getWsSession() {
@@ -279,6 +266,41 @@ public class TellerFunctions extends EmployeeFunctions {
 		TellerQuery tq = new TellerQuery();
 
 		return tq.getAllClients(fname, lname, address, phone, eMail, password);
+	}
+
+	// TODO client personal data details
+
+	public void deleteCustomer() {
+	}
+
+	public String register(String fname, String lname, String eMail,
+			String bDate, String address, String phone, String psw)
+			throws ParseException {
+		GeneralFunctions gf = new GeneralFunctions();
+		gf.valName(fname);
+		gf.valName(lname);
+		gf.valAddress(address);
+		gf.valEMail(eMail);
+		gf.valPhone(phone);
+		gf.valPsw(psw);
+
+		TellerQuery tq = new TellerQuery();
+
+	}
+
+	public String alter(String persId, String fname, String lname,
+			String eMail, String bdate, String address, String phone,
+			String password) {
+
+		TellerQuery tq = new TellerQuery();
+		String response = tq.alter(persId, fname, lname, eMail, bdate, address,
+				phone, password);
+		if (response != null) {
+			EmployeeAction ea = new EmployeeAction(persId, StaticVars.REGISTER,
+					empId);
+			super.registerClient(ea);
+		}
+		return response;
 	}
 
 }

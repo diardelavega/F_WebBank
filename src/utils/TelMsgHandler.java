@@ -29,8 +29,10 @@ public class TelMsgHandler {
 		// JsonObject jo = new JsonObject();
 
 		switch (head) {
-		// case "coordinate":
-		// return coordRegister(tf, jobj);
+		case "newClientReg":
+			return newClientReg(tf, jobj);
+		case "alterClient":
+			return alterClient(tf, jobj);
 		case "accountStatus":
 			return accountStatus(tf, jobj);
 		case "accountCoowners":
@@ -42,7 +44,59 @@ public class TelMsgHandler {
 		default:
 			logger.info("invalid switch criterias");
 		}
+		return null;
+	}
 
+	private String alterClient(TellerFunctions tf, JsonObject jobj) {
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		try {
+			String persId = jobj.get("id").getAsString();
+			String fname = jobj.get("fname").getAsString();
+			String lname = jobj.get("lname").getAsString();
+			String address = jobj.get("address").getAsString();
+			String phone = jobj.get("phone").getAsString();
+			String eMail = jobj.get("eMail").getAsString();
+			String password = jobj.get("password").getAsString();
+			String bdate = jobj.get("bdate").getAsString();
+
+			String report = tf.alter(persId, fname, lname, eMail, bdate,
+					address, phone, password);
+			if (report == null) {
+				jo.addProperty("head", "error");
+				jo.addProperty("msg",
+						"Some error ocoured and the registration was not completed");
+			} else {
+				if (report.equals("")) {
+					jo.addProperty("head", "alterClientReply");
+					jo.addProperty("response", "alteration completed");
+				} else {
+					jo.addProperty("head", "alterClientReply");
+					jo.addProperty("response", report);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			jo.addProperty("head", "error");
+			jo.addProperty("msg", "could not parse client data");
+		}
+		String jsonResp = gson.toJson(jo);
+		return jsonResp;
+	}
+
+	private String newClientReg(TellerFunctions tf, JsonObject jobj) {
+
+//		String persId = jobj.get("id").getAsString();
+		String fname = jobj.get("fname").getAsString();
+		String lname = jobj.get("lname").getAsString();
+		String address = jobj.get("address").getAsString();
+		String phone = jobj.get("phone").getAsString();
+		String eMail = jobj.get("eMail").getAsString();
+		String password = jobj.get("password").getAsString();
+		String bdate = jobj.get("bdate").getAsString();
+
+		String report = tf.register(fname, lname, eMail, bdate, address, phone, password);
+		
 		return null;
 	}
 

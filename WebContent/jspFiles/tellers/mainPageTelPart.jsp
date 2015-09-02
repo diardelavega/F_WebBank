@@ -8,6 +8,34 @@
 	padding-left: .5em;
 	padding-right: 5em;
 } */
+.scroll {
+	/* width: 650px;
+    height: 300px; */
+	overflow: auto;
+}
+
+th {
+	text-align: center;
+}
+
+.tabSpace {
+	border: 1;
+	border-color: olive;
+}
+
+table {
+	display: table;
+	/* border-collapse: separate; */
+	border-spacing: 2px;
+	border-color: gray;
+	border: 1;
+}
+
+th, td {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
 .space {
 	margin: 9px;
 }
@@ -33,6 +61,9 @@ body {
 					id="telPersonalId" style="margin-right: 15px"></td>
 				<td><label style="margin-left: 15px">Account Nr.:&nbsp;</label><input
 					type="text" id="telAccountNr"></td>
+				<td><div id="mainMsgAlert" >
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				</div></td>
 			</tr>
 		</tbody>
 	</table>
@@ -54,8 +85,9 @@ body {
 								<li><a data-toggle="pill" href="#cli_a"
 									onclick="telClientAccounts();"><strong>Client's
 											Accounts</strong></a></li>
-								<li><a data-toggle="pill" href="#infoCli"><strong>Search
-											Client</strong></a></li>
+								<li><a data-toggle="pill" href="#infoCli"
+									onclick="clientIdDataSearch();"><strong> Client
+											Details</strong></a></li>
 							</ul>
 						</div>
 						<br>
@@ -63,50 +95,41 @@ body {
 							<div id="accs" class="tab-pane fade ">
 								<h3>Account's Status :</h3>
 								<!-- table with the response Account Status -->
-								<table id="telAccountStatus">
+								<table id="telAccountStatus" border="1" bordercolor="olive">
 									<thead>
 										<tr>
 										</tr>
 									</thead>
-									<tbody>
-										<tr></tr>
+									<tbody class="tabSpace">
+										<tr class="tabSpace"></tr>
 									</tbody>
 								</table>
-
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-									sed do eiusmod tempor incididunt ut labore et dolore magna
-									aliqua.</p>
 							</div>
+
 							<div id="a_coo" class="tab-pane fade">
 								<h3>Account's Co-owners:</h3>
 								<div id="telCoowner"></div>
-								<p>Ut enim ad minim veniam, quis nostrud exercitation
-									ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 							</div>
 							<div id="cli_a" class="tab-pane fade">
 								<h3>Client's Accounts</h3>
 								<!-- table with the response Account Status -->
-								<table id="telClientAccounts">
+								<table id="telClientAccounts" border="1" bordercolor="olive">
 									<thead>
 										<tr>
 										</tr>
 									</thead>
 									<tbody>
-										<tr></tr>
+										<tr class="tabSpace">
+										</tr>
 									</tbody>
 								</table>
-								<p>Sed ut perspiciatis unde omnis iste natus error sit
-									voluptatem accusantium doloremque laudantium, totam rem
-									aperiam.</p>
 							</div>
 							<div id="infoCli" class="tab-pane fade">
-								<h3>Get Client:</h3>
-
 								<!-- big table -->
-								<table>
+								<table align="center" border="0" style="margin-left: 115pt">
 									<tbody>
 										<tr>
-											<td width="30%">
+											<td>
 												<!-- client registration Form -->
 												<table class="normal"
 													style="margin: 30px; margin-left: 10px; padding: 10px;"
@@ -114,11 +137,6 @@ body {
 													<tr>
 														<td><label> F. Name &nbsp;</label></td>
 														<td><input type="text" name="fname1"></td>
-														<td><div id=extrabutton>
-																<button id="clearbut" onclick="clear1();">
-																	<span class="glyphicon glyphicon-erase"></span>
-																</button>
-															</div></td>
 													</tr>
 													<tr>
 														<td><label> L. Name &nbsp;</label></td>
@@ -133,47 +151,56 @@ body {
 														<td><label> Address&nbsp;</label></td>
 														<td><input type="text" name="address1"></td>
 													</tr>
-													<tr>
-														<td><label> phone Nr.&nbsp;</label></td>
-														<td><input type="text" name="phone"></td>
-													</tr>
-													<tr>
-														<td><label> E-mail&nbsp;</label></td>
-														<td><input id="email" type="text" name="email1"></td>
-													</tr>
-													<tr>
-														<td><label> Password&nbsp;</label></td>
-														<td><input type="text" name="psw1"></td>
-													</tr>
-													<tr>
-														<td><label> Id&nbsp;</label></td>
-														<td><input type="text" name="id"></td>
-													</tr>
-													<tr>
-														<td colspan="2" align="center"><input id="newbut"
-															onclick="clientFormDataSearch();" type="button"
-															value="search"></td>
-													</tr>
 												</table>
 											</td>
-
-											<td width="70%">
-												<div class="Content">
-													<table id="telClientTableList" border="1"
-														class="table-condensed">
-														<thead>
-															<tr>
-															</tr>
-														</thead>
-														<tbody>
-														</tbody>
-													</table>
-												</div>
-
+											<td>
+												<table>
+													<tbody>
+														<tr>
+															<td><label> phone Nr.&nbsp;</label></td>
+															<td><input type="text" name="phone"></td>
+														</tr>
+														<tr>
+															<td><label> E-mail&nbsp;</label></td>
+															<td><input id="email" type="text" name="email1"></td>
+														</tr>
+														<tr>
+															<td><label> Password&nbsp;</label></td>
+															<td><input type="text" name="psw1"></td>
+														</tr>
+														<tr>
+															<td><label> Id&nbsp;</label></td>
+															<td><input type="text" name="id"></td>
+														</tr>
+													</tbody>
+												</table>
 											</td>
+										</tr>
+										<tr>
+											<td colspan="1" align="center"><input id="newbut"
+												onclick="clientFormDataSearch();" type="button"
+												value="Search"><span class="space"></span>
+												<button id="clearbut" onclick="clear1();">
+													Clear <span class="glyphicon glyphicon-erase"></span>
+												</button></td>
+											<td><button onclick="newClientReg();">Reg. New</button>
+												<span class="space"></span>
+												<button onclick="alterClient();">Alter</button></td>
 										</tr>
 									</tbody>
 								</table>
+								<br>
+								<div class="scroll">
+									<table id="telClientTableList" border="1" bordercolor="olive"
+										class="table-condensed" width="100%">
+										<thead>
+											<tr>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
 
 							</div>
 						</div>

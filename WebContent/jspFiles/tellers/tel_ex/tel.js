@@ -1,3 +1,11 @@
+$(function() {
+	$(".datePicker").datepicker({
+		changeMonth : true,
+		changeYear : true,
+		dateFormat : 'dd/mm/yy',
+	});
+});
+
 function telAccountStatus() {
 	var accNr = $("#telAccountNr").val();
 	var req = {
@@ -25,12 +33,11 @@ function telClientAccounts() {
 	doSend(JSON.stringify(req));
 }
 
-function registerClient() {
+function severClientTupeling() {
 	var reg = {
 		head : "coordinate",
 		empId : $("#telEmpId").val()
 	}
-
 	doSend(reg);
 }
 
@@ -44,6 +51,49 @@ function clear1() {
 	$('[name=email1]').val("");
 	$('[name=psw1]').val("");
 	$('[name=id]').val("");
+}
+
+function newClientReg() {
+	clientData = {
+		head : 'newClientReg',
+		// dirId : ${sessionScope.empId},
+		id : $('[name=id]').val(),
+		fname : $('[name=fname1]').val(),
+		lname : $('[name=lname1]').val(),
+		bdate : $('[name=bdate]').val(),
+		address : $('[name=address1]').val(),
+		phone : $('[name=phone]').val(),
+		eMail : $('[name=email1]').val(),
+		password : $('[name=psw1]').val()
+	}
+	doSend(JSON.stringify(clientData));
+}
+function alterClient() {
+	clientData = {
+		head : 'alterClient',
+		// dirId : ${sessionScope.empId},
+		id : $('[name=id]').val(),
+		fname : $('[name=fname1]').val(),
+		lname : $('[name=lname1]').val(),
+		bdate : $('[name=bdate]').val(),
+		address : $('[name=address1]').val(),
+		phone : $('[name=phone]').val(),
+		eMail : $('[name=email1]').val(),
+		password : $('[name=psw1]').val()
+	}
+	doSend(JSON.stringify(clientData));
+}
+
+function clientIdDataSearch() {
+	var persId = $("#telPersonalId").val();
+	if (persId != '') {
+		clientDataSearch = {
+			head : 'search',
+			// dirId : ${sessionScope.empId},
+			id : persId
+		}
+		doSend(JSON.stringify(clientDataSearch));
+	}
 }
 
 function clientFormDataSearch() {
@@ -63,6 +113,14 @@ function clientFormDataSearch() {
 
 /* AFTER RESPONSE FUNCTION */
 
+function alterClientReply(jobj){
+	if (jsobj.hasOwnProperty("response")) {
+		alertDisplay(jobj.response);
+	}
+}
+//---------------
+
+
 function searchReply(jsobj) {
 	console.log(jsobj);
 	if (jsobj.hasOwnProperty("customerList")) {
@@ -70,6 +128,8 @@ function searchReply(jsobj) {
 		var tableHead = $('#telClientTableList thead');
 		var tablebody = $('#telClientTableList tbody');
 
+		tableHead.empty();
+		tablebody.empty();
 		for (var i = 0; i < custList.length; i++) {
 			var cust = custList[i];
 			var tr = document.createElement('tr');
@@ -80,25 +140,47 @@ function searchReply(jsobj) {
 				// -----------header creation
 				if (i == 0) {
 					var th = document.createElement('th');
+					th.setAttribute("align", "center");
 					var t = document.createTextNode(key);
 					th.appendChild(t);
 					tableHead.append(th);
 				}
 				// -----------body creation
 				var td = document.createElement('td');
-				var t = document.createTextNode(cust[key]); // Create a tex
-				td.appendChild(t);
-				tr.appendChild(td);
-				tablebody.append(tr);
-			}
-		}
+				// var t = document.createTextNode(cust[key]); // Create a tex
+
+				if (key === 'bdata') {
+					var bd = new Date(cust[key]);
+					var t = document.createTextNode(bd.getDate() + "/"
+							+ (bd.getMonth() + 1) + "/" + bd.getFullYear());
+					// .toLocaleDateString('en-GB'));
+				} else {
+					var t = document.createTextNode(cust[key]);
+				}
+
+				if (key === 'personalId') {
+					var a = document.createElement('a');
+					a.onclick = function(event) {
+						onPersId(event);
+					};
+					a.appendChild(t);
+					td.appendChild(a);
+					tr.appendChild(td);
+					tablebody.append(tr);
+				} else {
+					td.appendChild(t);
+					tr.appendChild(td);
+					tablebody.append(tr);
+				}
+			}// for key
+		}// for i
 	} else {
 		alert(jsobj.msg);
 	}
 }
+
 function retriveTrContent(event) {
 	var tds = $(event.target).parent().find('td');
-
 	$('[name=fname1]').val(tds.eq(3).text());
 	$('[name=lname1]').val(tds.eq(4).text());
 	$('[name=bdate]').val(tds.eq(5).text());
@@ -107,10 +189,6 @@ function retriveTrContent(event) {
 	$('[name=email1]').val(tds.eq(2).text());
 	$('[name=psw1]').val(tds.eq(8).text());
 	$('[name=id]').val(tds.eq(0).text());
-
-	// $('#delbut').attr("style", "visibility: visible");
-	// $('#altbut').attr("style", "visibility: visible");
-
 }
 
 function clientAccounts(jsobj) {
@@ -133,7 +211,7 @@ function clientAccounts(jsobj) {
 				}
 				// -----------body creation
 				var td = document.createElement('td');
-				var t = document.createTextNode(acc[key]); // Create a tex
+				var t = document.createTextNode(acc[key]);
 				td.appendChild(t);
 				tr.appendChild(td);
 				tb.append(tr);
@@ -198,7 +276,24 @@ function accCoownHeader() {
 	var t = document.createTextNode(key);
 	th.appendChild(t);
 	trh.append(th);
+}
 
+function errorRes(jsobj){
+	var alerter=$('#mainMsgAlert');
+//	alerter.addClass("alerter");
+	$(alerter).addClass("alert alert-warning");
+	alerter.innerHTML=jsobj.msg;
 }
 
 /* END AFTER RESPONSE FUNCTION */
+
+function onPersId(event) {
+	var txt = $(event.target).text();
+	$("#telPersonalId").val(txt);
+}
+
+function alertDisplay(msg){
+	var alerter=$('#mainMsgAlert');
+	alerter.classList.add("alert alert-info");
+	alerter.innerHTML=msg;
+}
