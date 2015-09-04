@@ -29,6 +29,17 @@ body {
 	font-family: Verdana, Arial, sans-serif;
 	font-size: 12px;
 }
+
+.space {
+	margin: 9px;
+}
+
+/* button{
+width: 35pt;
+
+} */
+
+
 </style>
 
 <title>Teller's Page</title>
@@ -37,6 +48,7 @@ body {
 %>
 </head>
 <body onload="divhide(); capitalize(); ">
+	
 	<input type="hidden" id="telEmpId"
 		value="<%=ses.getAttribute("primeKey")%>">
 	<!-- $(sessionScope.empId) -->
@@ -153,6 +165,7 @@ body {
 	<script src="./tel_ex/tel.js"></script>
 	<script src="./tel_ex/main.js"></script>
 	<script src="./tel_ex/transactions.js"></script>
+	<script src="./tel_ex/oc.js"></script>
 
 
 

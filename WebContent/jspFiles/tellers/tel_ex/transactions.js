@@ -49,13 +49,13 @@ function clearTransfer() {
 }
 /* AFTER RESPONSE */
 
-function depositeRes(jsobj) {
+function depositeReply(jsobj) {
 	clonsole.log(jsobj.msg);
 }
-function withdrawRes(jsobj) {
+function withdrawReply(jsobj) {
 	clonsole.log(jsobj.msg);
 }
-function transferRes(jsobj) {
+function transferReply(jsobj) {
 	clonsole.log(jsobj.msg);
 }
 

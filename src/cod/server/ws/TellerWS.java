@@ -60,7 +60,8 @@ public class TellerWS {
 			tmh.coordRegister(empId, ses);
 		} else {
 			webResponse = tmh.switchit(msg, jobj, head);
-			sendMsg(webResponse, ses);
+			if (webResponse != null)
+				sendMsg(webResponse, ses);
 		}
 
 	}

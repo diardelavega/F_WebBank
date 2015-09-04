@@ -24,12 +24,12 @@ public class OCRequest {
 
 	// open acc OCR
 	public OCRequest(int telEmpId, List<String> persIds, String reqType,
-			AccountType type) {
+			char type) {
 		super();
 		this.tellerId = telEmpId;
 		this.clientIdsList = persIds;
 		this.reqType = reqType;
-		this.accType = type.value;
+		this.accType = type;
 	}
 
 	public OCRequest(int telEmpId, List<String> persIds, String reqType,

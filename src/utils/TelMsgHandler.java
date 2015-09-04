@@ -56,31 +56,129 @@ public class TelMsgHandler {
 			return withdraw(jobj);
 		case "transfer":
 			return transfer(jobj);
+		case "closeAccount":
+			return closeAccount(jobj);
+		case "openAccount":
+			return openAccount(jobj);
 		default:
 			logger.info("invalid switch criterias");
 		}
 		return null;
 	}
 
-	private String transfer(JsonObject jobj) {
+	private String openAccount(JsonObject jobj) {
+		ArrayList<String> pidList = new ArrayList<String>();
+		if (jobj.get("pId1").getAsString().length() != 0) {
+			pidList.add(jobj.get("pId1").getAsString());
+		}
+		if (jobj.get("pId2").getAsString().length() != 0) {
+			pidList.add(jobj.get("pId2").getAsString());
+		}
+		if (jobj.get("pId3").getAsString().length() != 0) {
+			pidList.add(jobj.get("pId3").getAsString());
+		}
+		if (jobj.get("pId4").getAsString().length() != 0) {
+			pidList.add(jobj.get("pId4").getAsString());
+		}
+		char accType = jobj.get("accType").getAsCharacter();
 
+		List<String> problemIds = tf.openAccount(pidList, accType);
+		if (problemIds != null) {
+			JsonObject jo = new JsonObject();
+			Gson gson = new GsonBuilder().serializeNulls().create();
+			jo.addProperty("head", "openAccReply");
+			jo.add("problematicId", gson.toJsonTree(problemIds));
+			return gson.toJson(jo);
+		}
+		return null;
+	}
+
+	private String closeAccount(JsonObject jobj) {
+		String accNr = jobj.get("accNr").getAsString();
+		String resp = tf.accCloseAccCheck(accNr);
+		if (resp != null) {
+			JsonObject jo = new JsonObject();
+			Gson gson = new GsonBuilder().serializeNulls().create();
+			jo.addProperty("head", "closeAccReply");
+			jo.addProperty("msg", resp);
+			return gson.toJson(jo);
+		}
+
+		ArrayList<String> pidList = new ArrayList<String>();
+		if (jobj.get("pId1").getAsString().length() != 0) {
+			pidList.add(jobj.get("pId1").getAsString());
+		}
+		if (jobj.get("pId2").getAsString().length() != 0) {
+			pidList.add(jobj.get("pId2").getAsString());
+		}
+		if (jobj.get("pId3").getAsString().length() != 0) {
+			pidList.add(jobj.get("pId3").getAsString());
+		}
+		if (jobj.get("pId4").getAsString().length() != 0) {
+			pidList.add(jobj.get("pId4").getAsString());
+		}
+		List<String> probList = tf.closeAccount(pidList, accNr);
+		if (probList != null) {
+			JsonObject jo = new JsonObject();
+			Gson gson = new GsonBuilder().serializeNulls().create();
+			jo.addProperty("head", "closeAccReply");
+			jo.add("problematicId", gson.toJsonTree(probList));
+			return gson.toJson(jo);
+		}
+		return null;
+	}
+
+	private String transfer(JsonObject jobj) {
+		String accountFrom = jobj.get("accFrom").getAsString();
+		String accountTo = jobj.get("accTo").getAsString();
+		double amount = jobj.get("amount").getAsDouble();
+		String persId = jobj.get("persId").getAsString();
+
+		String resp = tf.transfer(persId, accountFrom, accountTo, amount);
+		if (resp != null) {
+			JsonObject jo = new JsonObject();
+			Gson gson = new GsonBuilder().serializeNulls().create();
+			jo.addProperty("head", "transferReply");
+			jo.addProperty("msg", resp);
+			return (gson.toJson(jo));
+		}
 		return null;
 	}
 
 	private String withdraw(JsonObject jobj) {
-		// TODO Auto-generated method stub
+		String account = jobj.get("accNr").getAsString();
+		double amount = jobj.get("amount").getAsDouble();
+		String persId = jobj.get("persId").getAsString();
+
+		String resp = tf.withdraw(persId, account, amount);
+		if (resp != null) {
+			// some irregularity was found
+			// TODO return the response
+			JsonObject jo = new JsonObject();
+			Gson gson = new GsonBuilder().serializeNulls().create();
+			jo.addProperty("head", "withdrawReply");
+			jo.addProperty("msg", resp);
+			return (gson.toJson(jo));
+		}
 		return null;
 	}
 
 	private String deposite(JsonObject jobj) {
-		JsonObject jo = new JsonObject();
-		Gson gson = new GsonBuilder().serializeNulls().create();
-		
+
 		String account = jobj.get("accNr").getAsString();
 		double amount = jobj.get("amount").getAsDouble();
 		String note = jobj.get("note").getAsString();
-		
-		tf.deposite(account, amount, note);
+
+		String resp = tf.deposite(account, amount, note);
+		if (resp != null) {
+			// some irregularity was found
+			// TODO return the response
+			JsonObject jo = new JsonObject();
+			Gson gson = new GsonBuilder().serializeNulls().create();
+			jo.addProperty("head", "depositeReply");
+			jo.addProperty("msg", resp);
+			return (gson.toJson(jo));
+		}
 		return null;
 	}
 

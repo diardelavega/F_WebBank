@@ -77,58 +77,77 @@ public class TellerFunctions extends EmployeeFunctions {
 		super.requestOpenAcc(ea);
 	}
 
-	public void openAccount(List<String> personalIds, AccountType accType) {
-
-		if (personalIds.size() > 4) {
-			System.out.println("TOO MANY CO-OWNERS");
-		} else {
-			GeneralFunctions gf = new GeneralFunctions();
-			if (gf.registrationCheck(personalIds).size() == 0) {
-				Coordinator list = new Coordinator();
-				OCRequest req;
-				if (gf.accountsCountCheck(personalIds).size() == 0) {
-					req = new OCRequest(empId, personalIds, StaticVars.OPEN,
-							accType);
-				} else {// accounts count check
-					req = new OCRequest(empId, personalIds,
-							StaticVars.PLUS_6_ACC, accType);
-					logger.info("{} requires man confirmation",
-							StaticVars.PLUS_6_ACC);
-					// TODO send a alert msg to teller cs.
-				}
-				list.addOCR(req);
-			} else {// registration check
-				alert(StaticVars.OPEN, StaticVars.UNREG_USR, null,
-						"unregistere users");
+	public List<String> openAccount(List<String> personalIds, char accType) {
+//??? increase and decreas accs Ne in db
+		GeneralFunctions gf = new GeneralFunctions();
+		List<String> problematicClients = gf.registrationCheck(personalIds);
+		if (problematicClients.size() == 0) {
+			Coordinator list = new Coordinator();
+			OCRequest req;
+			if (gf.accountsCountCheck(personalIds).size() == 0) {
+				req = new OCRequest(empId, personalIds, StaticVars.OPEN,
+						accType);
+			} else {// accounts count check
+				req = new OCRequest(empId, personalIds, StaticVars.PLUS_6_ACC,
+						accType);
+				logger.info("{} requires man confirmation",
+						StaticVars.PLUS_6_ACC);
 			}
+			list.addOCR(req);
+		} else {// registration check
+			alert(StaticVars.OPEN, StaticVars.UNREG_USR, null,
+					"unregistere users");
+			return problematicClients;
 		}
+		return null;
 	}
 
-	public void closeAccount(List<String> personalIds, String accNr) {
+	public String accCloseAccCheck(String accNr) {
+		// TODO check if accountExist and is empty
+		GeneralFunctions gf = new GeneralFunctions();
+		Account acc = gf.getAccount(accNr);
+		if (acc == null) {
+			logger.info("ACCOUNT {} was not founr in db", accNr);
+			return "ACCOUNT DOES NOT EXISTS";
+		} else {
+			if (acc.getBalance() > 0.5) {
+				// if acc is empty or not
+				logger.info("Account {} could not be closed");
+				return "ACCOUNTi IS NOT EMPTY, WITHDRAW REMAINING CREDIT";
+			}
+		}
+		return null;
+	}
+
+	public List<String> closeAccount(List<String> personalIds, String accNr) {
+		// check if all client id are registered
+		GeneralFunctions gf = new GeneralFunctions();
+		List<String> problematicClients = gf.registrationCheck(personalIds);
+		if (problematicClients.size() != 0) {
+			logger.info("SOME CO-OWNERS SUBMITED RESULT NOT REGISTERED");
+			return problematicClients;
+		}
 		Coordinator list = new Coordinator();
 		TellerQuery tq = new TellerQuery();
-		List<String> remaining = tq.clientAccountCompatibility(personalIds,
-				accNr);// remaining clients whose id was not submitted
-		GeneralFunctions gf;
-		if (remaining != null) {
-			// TODO alert msg to teller
-			System.out.println("Required confirmation from the following :");
-			gf = new GeneralFunctions();
-			for (String s : remaining) {
-				gf.getCustomer(s).print();
-			}
+		// check if there are acc owners whose id was not submitted
+		problematicClients = tq.clientAccountCompatibility(personalIds, accNr);
+		if (problematicClients.size() > 0) {
+			logger.info("REQUIRED CONFIRMATION FROM OTHER CO-OWNERS");
+			return problematicClients;
 		} else {
 			OCRequest req = new OCRequest(empId, personalIds, StaticVars.CLOSE,
 					accNr);
 			list.addOCR(req);
 		}
+		return null;
 
 	}
 
-	public void deposite(String accNr, double amount, String note) {
+	/* transaction functions */
+	public String deposite(String accNr, double amount, String note) {
 		TellerQuery tq = new TellerQuery();
-
-		if (tq.checkDepositeRegularity(accNr, amount) == null) {
+		String regCheck = tq.checkDepositeRegularity(accNr, amount);
+		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				Coordinator cord = new Coordinator();
 				OCRequest req = new OCRequest(empId, null,
@@ -144,16 +163,15 @@ public class TellerFunctions extends EmployeeFunctions {
 					super.deposite(ea);
 				}
 			}
-		} else {
-			// TODO return error msg
 		}
+		return regCheck;
 
 	}
 
-	public void withdraw(String personalId, String accNr, double amount,
-			String note) {
+	public String withdraw(String personalId, String accNr, double amount) {
 		TellerQuery tq = new TellerQuery();
-		if (tq.checkWithdrawRegularity(personalId, accNr, amount)==null) {
+		String regCheck = tq.checkWithdrawRegularity(personalId, accNr, amount);
+		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();
 				Coordinator cord = new Coordinator();
@@ -162,31 +180,32 @@ public class TellerFunctions extends EmployeeFunctions {
 						StaticVars.PLUS_1K_WITH, accNr);
 				cord.addOCR(req);
 			} else {
-
 				long trNr = tq.withdraw(personalId, accNr, amount);
 				if (trNr > 0) {
 					EmployeeAction ea = new EmployeeAction(StaticVars.WITHDRAW,
-							note, empId, trNr);
+							"", empId, trNr);
 					ea.setCustomerId(personalId);
 					ea.setAmount(amount);
 					ea.setAccountId(accNr);
 					super.withdraw(ea);
 				}
 			}
-		} else {
-			// TODO return error msg
 		}
+		return regCheck;
 	}
 
-	public void transfer(String personalId, String accFrom, String accTo,
-			double amount, String note) {
+	public String transfer(String personalId, String accFrom, String accTo,
+			double amount) {
 		// TODO check if amount >=1000; if yes
 		// check transaction regularity; if yes
 		// ask manager for permission; if confirmed
 		// proceed to action;
 
 		TellerQuery tq = new TellerQuery();
-		if (tq.checkTransferRegularity(personalId, accFrom, accTo, amount, 't')==null) {
+
+		String regCheck = tq.checkTransferRegularity(personalId, accFrom,
+				accTo, amount, 't');
+		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();
 				Coordinator cord = new Coordinator();
@@ -199,16 +218,15 @@ public class TellerFunctions extends EmployeeFunctions {
 						.transfer(personalId, accFrom, accTo, amount, 't');
 				if (trNr > 0) {
 					EmployeeAction ea = new EmployeeAction(StaticVars.TRANSFER,
-							note, empId, trNr);
+							"", empId, trNr);
 					ea.setCustomerId(personalId);
 					ea.setAmount(amount);
 					ea.setAccountId(accFrom);
 					super.transfer(ea);
 				}
 			}
-		} else {
-			// TODO return error msg
 		}
+		return regCheck;
 	}
 
 	/* teller main page functions */
@@ -244,7 +262,6 @@ public class TellerFunctions extends EmployeeFunctions {
 	}
 
 	/* end main page functions */
-
 	public Session getWsSession() {
 		return wsSession;
 	}

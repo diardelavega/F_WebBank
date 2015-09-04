@@ -146,6 +146,12 @@ public class GeneralFunctions {
 		List<String> unreg = new ArrayList<String>();
 		Query q = s
 				.createQuery("SELECT personalId FROM Customers WHERE personalId=:pid");
+		// ( :pid1 or :pid2 or :pid3 or :pid4")
+		// .setParameter("pid1", pId.get(0))
+		// .setParameter("pid2", pId.get(1))
+		// .setParameter("pid3", pId.get(2))
+		// .setParameter("pid4", pId.get(3));
+
 		for (String ss : pId) {
 			if (q.setParameter("pid", ss).list().size() == 0) {
 				unreg.add(ss);
@@ -156,19 +162,20 @@ public class GeneralFunctions {
 
 	public List<String> accountsCountCheck(List<String> pId) {
 		upSession();
-		List<String> unreg = new ArrayList<String>();
+		List<String> pluss6AccLst = new ArrayList<String>();
 		Query q = s
 				.createQuery("SELECT count(*) FROM CustomersAccount WHERE personalId=:pid");
 		long acs;
 		for (String ss : pId) {
-			if ((acs = (long) q.setParameter("pid", ss).list().get(0)) >= 6) {
-				unreg.add(ss);
+			acs = (long) q.setParameter("pid", ss).list().get(0);
+			if (acs >= 6) {
+				pluss6AccLst.add(ss);
 				// System.out.println("--- "+((long)q.setParameter("pid",
 				// ss).list().get(0)));
 				// System.out.println("--- "+(acs));
 			}
 		}
-		return unreg;
+		return pluss6AccLst;
 	}
 
 	public void registrationCheck(String pId) {
@@ -230,10 +237,10 @@ public class GeneralFunctions {
 		}
 		return error;
 	}
-	
-	public String valDubleMail(String mail){
+
+	public String valDubleMail(String mail) {
 		if (isCustomerEmail(mail))
-		return " e-mail already registered! ";
+			return " e-mail already registered! ";
 		return "";
 	}
 

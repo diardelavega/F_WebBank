@@ -1,5 +1,5 @@
 var ws = new WebSocket("ws://localhost:8080/F_WebBank/tel");
-//var empId= $('#telEmpId').val();
+// var empId= $('#telEmpId').val();
 
 function newWs() {
 	if (ws !== undefined && ws.readyState !== ws.CLOSED) {
@@ -28,13 +28,13 @@ function doClose() {
 }
 
 function onMessage(evt) {
-//	 alert(evt.data);
+	// alert(evt.data);
 	// console.log("received: " + evt.data);
 	var jsobj = JSON.parse(evt.data);
 
-//	console.log(jsobj);
+	// console.log(jsobj);
 	console.log(jsobj.head);
-	
+
 	var head = jsobj.head;
 
 	switch (head) {
@@ -59,8 +59,16 @@ function onMessage(evt) {
 	case 'deleteClientReply':
 		deleteClientReply(jsobj);
 		break;
-		
-		
+	case 'depositeReply':
+		depositeReply(jsobj);
+		break;
+	case 'withdrawReply':
+		withdrawReply(jsobj);
+		break;
+	case 'transferReply':
+		transferReply(jsobj);
+		break;
+
 	case 'error':
 		errorRes(jsobj);
 		break;

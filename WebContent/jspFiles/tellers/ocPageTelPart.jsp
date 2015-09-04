@@ -25,11 +25,11 @@ body {
 						<ul class="nav nav-tabs ">
 							<li class="active"><a data-toggle="tab" href="#open"><strong>OPEN</strong></a></li>
 							<li><a data-toggle="tab" href="#close"><strong>CLOSE</strong></a></li>
-							<li><a data-toggle="tab" href="#reg"><strong>REGISTER</strong></a></li>
+							<!-- <li><a data-toggle="tab" href="#reg"><strong>REGISTER</strong></a></li>
 							<li><a data-toggle="tab" href="#p_1k">+1000
 										TRANSACTION</a></li>
 							<li><a data-toggle="tab" href="#p_six">+6
-										ACCOUNT OPEN</a></li>
+										ACCOUNT OPEN</a></li> -->
 						</ul>
 						<!-- </div> -->
 						<br>
@@ -39,25 +39,32 @@ body {
 									style="margin: 30px; margin-left: 10px; padding: 10px;">
 									<tbody>
 										<tr>
-											<td width="65%" >
+											<td width="65%">
 												<!--small inner table  --> <!-- <table>
 											<tbody>
 											<tr><td><label>Personal Id</label><input type="text" name="telOpenId"> </td></tr>
 											</tbody>
-											</table> --> <!--small inner table  --> <label>Personal
-													Id 1 :</label><input type="text" name="telOpenId1"><br>
-												<label>Personal Id 2 :</label><input type="text"
-												name="telOpenId2"><br> <label>Personal
-													Id 3 :</label><input type="text" name="telOpenId3"><br>
-												<label>Personal Id 4 :</label><input type="text"
-												name="telOpenId4"><br>
-												<div style="overflow: auto; width: 50%;">
+											</table> --> <!--small inner table  -->
+												<div id="ocPersIdFields">
+													<label>Personal Id 1 :</label><input type="text"
+														name="telOpenId1"><br> <label>Personal
+														Id 2 :</label><input type="text" name="telOpenId2"><br>
+													<label>Personal Id 3 :</label><input type="text"
+														name="telOpenId3"><br> <label>Personal
+														Id 4 :</label><input type="text" name="telOpenId4">
+													<!-- <span
+														class=space></span><a href="#"><span class="glyphicon glyphicon-plus"
+														onclick="addPersIdField();"></span></a> -->
+													<br>
+												</div>
+												<div style="overflow: auto; width: 50%; margin-top: 10px;">
 													<center>
-														<button>OK</button>
+														<button onclick="openAccount();">OK</button>
 														&emsp;
-														<button>Clear</button>
+														<button onclick="clearOpenAcc();">Clear</button>
 													</center>
 												</div>
+
 											</td>
 											<td width="35%"><div id="telOpenResponse" class="box-r"></div>
 
@@ -75,85 +82,32 @@ body {
 									style="margin: 30px; margin-left: 10px; padding: 10px;">
 									<tbody>
 										<tr>
-											<td width="32%">
-												<label>Personal Id 1 :</label><input type="text" name="telCloseId"><br>
-												<label>Personal Id 2 :</label><input type="text" name="telCloseId"><br>
-												<label>Personal Id 3 :</label><input type="text" name="telCloseId"><br>
-												<label>Personal Id 4 :</label><input type="text" name="telCloseId"><br>
+											<td width="32%"><label>Personal Id 1 :</label><input
+												type="text" name="telCloseId1"><br> <label>Personal
+													Id 2 :</label><input type="text" name="telCloseId2"><br>
+												<label>Personal Id 3 :</label><input type="text"
+												name="telCloseId3"><br> <label>Personal
+													Id 4 :</label><input type="text" name="telCloseId4"><br>
 											</td>
-											<td width="32%" >
-											<label>Account Nr. :</label><input type="text" name="telCloseAcc"><br>
-											</td>
-											<td ><div id="telCloseResponse" class="box-r"></div>
+											<td width="32%"><label>Account Nr. :</label><input
+												type="text" name="telCloseAcc"><br></td>
+											<td><div id="telCloseResponse" class="box-r"></div>
 												<p>Ut enim ad minim veniam, quis nostrud exercitation
 													ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></td>
 										</tr>
-										<tr><td colspan="2">
-										<div style="overflow: auto; width: 100%;">
+										<tr>
+											<td colspan="2">
+												<div style="overflow: auto; width: 100%;">
 													<center>
-														<button>OK</button>
+														<button onclick="tellCloseAcc();">OK</button>
 														&emsp;
-														<button>Clear</button>
+														<button onclick="tellClearClose();">Clear</button>
 													</center>
 												</div>
-										</td></tr>
+											</td>
+										</tr>
 									</tbody>
 								</table>
-
-							</div>
-							<div id="reg" class="tab-pane fade">
-								<!-- client registration Form -->
-								<table class="normal"
-									style="margin: 30px; margin-left: 10px; padding: 10px;">
-									<tr>
-										<td><label> Personal Id &nbsp;</label></td>
-										<td><input type="text" name="telRegPersId"></td>
-										<td><div id=extrabutton>
-												<button id="clearbut" onclick="clear1();">
-													<span class="glyphicon glyphicon-erase"></span>
-												</button>
-											</div></td>
-									</tr>
-									<tr>
-										<td><label> F. Name &nbsp;</label></td>
-										<td><input type="text" name="telRegFname"></td>
-									</tr>
-									<tr>
-										<td><label> L. Name &nbsp;</label></td>
-										<td><input type="text" name="telRegLname"></td>
-									</tr>
-									<tr>
-										<td><label> BirthDate&nbsp;</label></td>
-										<td><input type="text" name="telRegBdate" class="datePicker"></td>
-									</tr>
-									<tr>
-										<td><label> Address&nbsp;</label></td>
-										<td><input type="text" name="telRegAddress"></td>
-									</tr>
-									<tr>
-										<td><label> phone Nr.&nbsp;</label></td>
-										<td><input type="text" name="telRegPhone"></td>
-									</tr>
-									<tr>
-										<td><label> E-mail&nbsp;</label></td>
-										<td><input id="email" type="text" name="telRegEmail"></td>
-									</tr>
-									<tr>
-										<td><label> Password&nbsp;</label></td>
-										<td><input type="text" name="telRegPsw"></td>
-									</tr>
-									<tr>
-										<td colspan="2" align="center"><input id="newCust"
-											onclick="newEmployee();" type="button" value="SAVE"></td>
-									</tr>
-								</table>
-							</div>
-
-							<div id="p_1k" class="tab-pane fade">
-								<h1>+ 1K MONEY TRANSACTION</h1>
-							</div>
-							<div id="p_six" class="tab-pane fade">
-								<h1>+ ^ ACCOUNTS OPEN</h1>
 							</div>
 						</div>
 					</div>

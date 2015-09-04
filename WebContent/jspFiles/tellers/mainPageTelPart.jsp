@@ -183,7 +183,7 @@ body {
 												onclick="clientFormDataSearch();" type="button"
 												value="Search"><span class="space"></span>
 												<button id="clearbut" onclick="clear1();">
-													Clear <span class="glyphicon glyphicon-erase"></span>
+												Clear <span class="glyphicon glyphicon-erase"></span>
 												</button></td>
 											<td><button onclick="newClientReg();">Reg. New</button>
 												<span class="space"></span>
