@@ -25,9 +25,13 @@
 <!-- flot charts -->
 <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css">
 <title>Manager</title>
+<%
+	HttpSession ses = request.getSession();
+%>
 </head>
-<body onload="divhide();">
-	<%-- <h1>${sessionScope.name}</h1> --%>
+<body onload="divhide(); capitalize();">
+	<input type="hidden" id="manEmpId"
+		value="<%=ses.getAttribute("primeKey")%>">
 
 	<div id="wrapper">
 
@@ -141,14 +145,15 @@
 	<!-- manager scripts -->
 	<script src="./man_ex/manInit.js"></script>
 	<script src="./man_ex/man.js"></script>
+	<script src="./man_ex/request.js"></script>
 
 	<!-- flot charts -->
-	<script language="javascript" type="text/javascript"
+	<!-- <script language="javascript" type="text/javascript"
 		src="../../flot_f/jquery.flot.min.js"></script>
 	<script language="javascript" type="text/javascript"
 		src="../../flot_f/jquery.flot.pie.min.js"></script>
 	<script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.categories.min.js"></script>
+		src="../../flot_f/jquery.flot.categories.min.js"></script> -->
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../../bootstrap/js/bootstrap.min.js"></script>

@@ -18,7 +18,7 @@ import utils.ManMsgHandler;
 @ServerEndpoint("/man")
 public class ManagerWS {
 	Logger logger = LoggerFactory.getLogger(ManagerWS.class);
-	
+
 	@OnOpen
 	public void open(Session ses) {
 		System.out.println("ON MANAGER :ses opened");
@@ -28,7 +28,8 @@ public class ManagerWS {
 
 	@OnClose
 	public void close(Session ses) {
-		System.out.println("ON MANAGER :ses with id :" + ses.getId() + " is closed");
+		System.out.println("ON MANAGER :ses with id :" + ses.getId()
+				+ " is closed");
 		// sessions.remove(ses);
 	}
 
@@ -36,14 +37,16 @@ public class ManagerWS {
 	public void recMsg(String msg, Session ses) throws IOException {
 		// System.out.println("received msg from: " + ses.getId());
 		System.out.println("ON MANAGER :received msg seas : " + msg);
-		String webResponse =ManMsgHandler.switchit(msg);
+		ManMsgHandler mmh = new ManMsgHandler();
+		String webResponse = mmh.switchit(msg);
 
 		sendMsg(webResponse, ses);
 	}
 
 	public void sendMsg(String msg, Session ses) throws IOException {
 		System.out.println(msg);
-		ses.getBasicRemote().sendText(msg);
+		if (msg != null)
+			ses.getBasicRemote().sendText(msg);
 	}
 
 	@OnError

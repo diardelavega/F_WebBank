@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,14 +27,16 @@ public class EmployeeAction {
 	private String actionType;
 	private String note; // a random note for the transaction
 	// @Column(name = "clieantId")
-	private String customerId;
+	private List<String> customerId;
 	// @Column(name = "accountId")
-	private String accountId;
+	private String accountId1;
+	private String accountId2;
 	private int empId;
 	private long trNr;
 
 	private double amount;
-	//private String account;
+
+	// private String account;
 
 	public EmployeeAction() {
 	}
@@ -44,8 +47,8 @@ public class EmployeeAction {
 		this.note = note;
 		this.empId = empId;
 		this.trNr = trNr;
-//		this.accountId = "-";
-//		this.customerId = "-";
+		// this.accountId = "-";
+		// this.customerId = "-";
 	}
 
 	public EmployeeAction(String accountId, String actionType, String note,
@@ -55,11 +58,11 @@ public class EmployeeAction {
 		this.note = note;
 		this.empId = empId;
 		// this.trNr = (Long) null;
-		this.accountId = accountId;
+		this.accountId1 = accountId;
 		// this.customerId = null;
 	}
 
-	public EmployeeAction(String persId, String action, int empId2) {
+	public EmployeeAction(List<String> persId, String action, int empId2) {
 		this.customerId = persId;
 		this.actionType = action;
 		this.empId = empId2;
@@ -105,20 +108,28 @@ public class EmployeeAction {
 		this.trNr = trNr;
 	}
 
-	public String getCustomerId() {
+	public List<String> getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(String customerId) {
+	public void setCustomerId(List<String> customerId) {
 		this.customerId = customerId;
 	}
 
-	public String getAccountId() {
-		return accountId;
+	public String getAccountId1() {
+		return accountId1;
 	}
 
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
+	public void setAccountId1(String accountId) {
+		this.accountId1 = accountId;
+	}
+
+	public String getAccountId2() {
+		return accountId2;
+	}
+
+	public void setAccountId2(String accountId) {
+		this.accountId2 = accountId;
 	}
 
 	public double getAmount() {
@@ -129,13 +140,11 @@ public class EmployeeAction {
 		this.amount = amount;
 	}
 
-	/*public String getAccount() {
-		return account;
-	}
-
-	public void setAccount(String account) {
-		this.account = account;
-	}*/
+	/*
+	 * public String getAccount() { return account; }
+	 * 
+	 * public void setAccount(String account) { this.account = account; }
+	 */
 
 	public String prinatable() {
 		String delimeter = ", ";
@@ -146,10 +155,12 @@ public class EmployeeAction {
 		sb.append(delimeter);
 		sb.append(actionType);
 		sb.append(delimeter);
-		sb.append(accountId);
+		sb.append(accountId1);
 		sb.append(delimeter);
-		sb.append(customerId);
-		sb.append(delimeter);
+		for (String s : customerId) {
+			sb.append(s);
+			sb.append(delimeter);
+		}
 		sb.append(amount);
 		sb.append(delimeter);
 		sb.append(trNr);

@@ -15,6 +15,7 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import comon.OCRequest;
 import comon.StaticVars;
 import utils.GeneralFunctions;
 import utils.PushClientSide;
@@ -22,6 +23,7 @@ import db.DBHandler;
 import entity.Account;
 import entity.Customers;
 import entity.EmployeeAction;
+import functions.EmployeeFunctions;
 
 public class TellerQuery {
 	Logger logger = LoggerFactory.getLogger(TellerQuery.class);
@@ -118,7 +120,7 @@ public class TellerQuery {
 		Account acc = (Account) s.get(Account.class, accNr);
 		if (acc == null) {
 			logger.warn("ACCOUNT DOES NOT EXIST");
-			idTra=StaticVars.DOES_NOT_EXISTS;
+			idTra = StaticVars.DOES_NOT_EXISTS;
 		} else {
 			Timestamp tstamp = new java.sql.Timestamp(Calendar.getInstance()
 					.getTime().getTime());
@@ -224,24 +226,24 @@ public class TellerQuery {
 
 		if (!gf.existsAccount(accFrom)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accFrom);
-			regular="ACCOUNT_FROM DOES NOT EXIST";
+			regular = "ACCOUNT_FROM DOES NOT EXIST";
 			return regular;
 		} else if (!gf.existsAccount(accTo)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accTo);
-			regular="ACCOUNT_TO DOES NOT EXIST";
+			regular = "ACCOUNT_TO DOES NOT EXIST";
 			return regular;
 		} else {
 			List<String> dbClients = gf.accountsClients(accFrom);
 			if (!dbClients.contains(personalId)) {
 				logger.warn("NOT THIS ACCOUNT : {}. OWNER", accFrom);
-				regular="NOT ACCOUNTS OWNER";
+				regular = "NOT ACCOUNTS OWNER";
 				return regular;
 			}
 			upSession();
 			Account fromAcc = (Account) s.get(Account.class, accFrom);
 			if (fromAcc.getBalance() < amount) {
 				logger.info("UNSUFICIENT FOUNDS IN YOUR ACCOUNT");
-				regular="UNSUFICIENT FOUNDS IN YOUR ACCOUNT";
+				regular = "UNSUFICIENT FOUNDS IN YOUR ACCOUNT";
 				return regular;
 			}
 		}
@@ -255,20 +257,20 @@ public class TellerQuery {
 
 		if (!gf.existsAccount(accNr)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accNr);
-			regular="ACCOUNT DOES NOT EXIST";
+			regular = "ACCOUNT DOES NOT EXIST";
 			return regular;
 		} else {
 			List<String> dbClients = gf.accountsClients(accNr);
 			if (!dbClients.contains(personalId)) {
 				logger.warn("NOT THIS ACCOUNT : {}. OWNER", accNr);
-				regular="NOT ACCOUNTS OWNER";
+				regular = "NOT ACCOUNTS OWNER";
 				return regular;
 			}
 			upSession();
 			Account acc = (Account) s.get(Account.class, accNr);
 			if (acc.getBalance() < amount) {
 				logger.info("UNSUFICIENT FOUNDS IN YOUR ACCOUNT");
-				regular="UNSUFICIENT FOUNDS IN YOUR ACCOUNT";
+				regular = "UNSUFICIENT FOUNDS IN YOUR ACCOUNT";
 				return regular;
 			}
 		}
@@ -280,7 +282,7 @@ public class TellerQuery {
 		Account acc = (Account) s.get(Account.class, accNr);
 		if (acc == null) {
 			logger.warn("ACCOUNT DOES NOT EXIST");
-			regular="ACCOUNT DOES NOT EXIST";
+			regular = "ACCOUNT DOES NOT EXIST";
 		}
 		return regular;
 	}
@@ -484,4 +486,75 @@ public class TellerQuery {
 		s.close();
 		return StaticVars.DONE;
 	}
+
+	// ------------------------------ open close
+
+	public void logEmployeeAction(OCRequest req) {
+
+		// if (req.getResponse().equals(StaticVars.REQ_APPROVE)) {
+		// EmployeeAction ea = new EmployeeAction();
+		// EmployeeFunctions ef = new EmployeeFunctions();
+		// ea.setEmpId(req.getTellerId());
+		// ea.setActionType(req.getReqType());
+		// if (req.getReqType().equals(StaticVars.OPEN)) {
+		// AccountsManagment am = new AccountsManagment();
+		// // open account and +1 to the customers accounts number they
+		// // poses
+		// String accNr = am.openAccount(req.getAccType(),
+		// req.getClientIdsList());
+		// ea.setAccountId1(accNr);
+		// ea.setCustomerId(req.getClientIdsList());
+		// ef.requestOpenAcc(ea);
+		// }
+		// if (req.getReqType().equals(StaticVars.CLOSE)) {
+		// AccountsManagment am = new AccountsManagment();
+		// // close account and decrease accounts number customers poses
+		// am.closeAccount(req.getAccFromNr());
+		// ea.setAccountId1(req.getAccFromNr());
+		// ea.setCustomerId(req.getClientIdsList());
+		// super.requestCloseAcc(ea);
+		// }
+		// if (req.getReqType().equals(StaticVars.PLUS_1K_DEP)) {
+		// TellerQuery tq = new TellerQuery();
+		// long trnr = tq.deposite(req.getAccFromNr(), req.getAmount());
+		// ea.setAccountId1(req.getAccFromNr());
+		// ea.setCustomerId(req.getClientIdsList());
+		// ea.setTrNr(trnr);
+		// ea.setAmount(req.getAmount());
+		// super.deposite(ea);
+		// }
+		// if (req.getReqType().equals(StaticVars.PLUS_1K_WITH)) {
+		// TellerQuery tq = new TellerQuery();
+		// long trnr = tq.withdraw(req.getClientIdsList().get(0),
+		// req.getAccFromNr(), req.getAmount());
+		// ea.setAccountId1(req.getAccFromNr());
+		// ea.setCustomerId(req.getClientIdsList());
+		// ea.setTrNr(trnr);
+		// ea.setAmount(req.getAmount());
+		// super.withdraw(ea);
+		// }
+		// if (req.getReqType().equals(StaticVars.PLUS_1K_TRANS)) {
+		// TellerQuery tq = new TellerQuery();
+		// long trnr = tq.transfer(req.getClientIdsList().get(0),
+		// req.getAccFromNr(), req.getAccToNr(), req.getAmount(),
+		// 't');
+		// ea.setAccountId1(req.getAccFromNr());
+		// ea.setAccountId2(req.getAccToNr());
+		// ea.setCustomerId(req.getClientIdsList());
+		// ea.setTrNr(trnr);
+		// ea.setAmount(req.getAmount());
+		// super.transfer(ea);
+		// }
+		// if (req.getReqType().equals(StaticVars.PLUS_6_ACC)) {
+		// AccountsManagment am = new AccountsManagment();
+		// String accNr = am.openAccount(req.getAccType(),
+		// req.getClientIdsList());
+		// ea.setAccountId1(accNr);
+		// ea.setCustomerId(req.getClientIdsList());
+		// super.requestOpenAcc(ea);
+		// }
+		// }
+
+	}
+
 }

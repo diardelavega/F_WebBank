@@ -38,8 +38,6 @@ body {
 width: 35pt;
 
 } */
-
-
 </style>
 
 <title>Teller's Page</title>
@@ -48,7 +46,7 @@ width: 35pt;
 %>
 </head>
 <body onload="divhide(); capitalize(); ">
-	
+
 	<input type="hidden" id="telEmpId"
 		value="<%=ses.getAttribute("primeKey")%>">
 	<!-- $(sessionScope.empId) -->
@@ -148,6 +146,7 @@ width: 35pt;
 				<jsp:include page="./mainPageTelPart.jsp"></jsp:include>
 				<jsp:include page="./transPageTelPart.jsp"></jsp:include>
 				<jsp:include page="./ocPageTelPart.jsp"></jsp:include>
+				<jsp:include page="./replyAlert.jsp"></jsp:include>
 
 			</div>
 		</div>

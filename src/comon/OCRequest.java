@@ -5,19 +5,32 @@ import java.util.List;
 import functions.TellerFunctions;
 
 public class OCRequest {
+	private int lastManagerToConsiderIt;
 	private String note;
-	private int tellerId;
 	private List<String> clientIdsList;
 	private String reqType; // open ||close || p_1k(dep, with, transf) || p_6Acc
 	private char accType;
-	private String response;// accepted || denied
 	private boolean pin = false;
 	private String accFromNr;
 	private String accToNr;
 	private double amount;
+
+	private int tellerId;
+	private String response;// accepted || denied
 	private boolean status = false;// true -complete, false-incomplete
 
-	public int lastManCons;
+	public void print() {
+		System.out.println("lastManagerToConsiderIt -"
+				+ lastManagerToConsiderIt + "\n tellerId-" + tellerId);
+		System.out.println("reqType-" + reqType + " \n accType-" + accType);
+		System.out.println("response-" + response + "\n note-" + note);
+		System.out.println("accFromNr-" + accFromNr + " \n accToNr-" + accToNr
+				+ "\n amount-" + amount);
+		System.out.println("pin-" + pin + "\n status-" + status);
+		for (String s : clientIdsList) {
+			System.out.println(s);
+		}
+	}
 
 	public OCRequest() {
 	}
@@ -153,4 +166,13 @@ public class OCRequest {
 	public void setNote(String note) {
 		this.note = note;
 	}
+
+	public int getLastManagerToConsiderIt() {
+		return lastManagerToConsiderIt;
+	}
+
+	public void setLastManagerToConsiderIt(int lastManagerToConsiderIt) {
+		this.lastManagerToConsiderIt = lastManagerToConsiderIt;
+	}
+
 }

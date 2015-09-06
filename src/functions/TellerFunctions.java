@@ -1,5 +1,6 @@
 package functions;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +10,12 @@ import javax.websocket.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import system.AccountsManagment;
 import system.Coordinator;
 import system.TellerQuery;
 import utils.GeneralFunctions;
 import utils.PushClientSide;
+import utils.TelMsgPusher;
 import comon.AccountType;
 import comon.OCRequest;
 import comon.Response;
@@ -43,42 +46,78 @@ public class TellerFunctions extends EmployeeFunctions {
 		this.empId = 000;
 	}
 
-	public void alert(String requestType, String response, String accNr,
-			String note) {
-		// TODO implement an alert for client side the operation was evaluated
-		PushClientSide pcs = new PushClientSide();
-		pcs.pushToClient(requestType, response, accNr, note);
-		EmployeeAction ea;
-		if (response.equals(StaticVars.REQ_APPROVE)) {
-			if (requestType.equals(StaticVars.OPEN)) {
-				logger.info("MENAGER \" {}. request to open account :{}.\" .",
-						response, accNr);
-				ea = new EmployeeAction(accNr, StaticVars.OPEN, "", empId);
-				super.requestOpenAcc(ea);
-			}
-			if (requestType.equals(StaticVars.CLOSE)) {
-				logger.info("MENAGER \" {}. request to close account :{}.\" .",
-						response, accNr);
-				ea = new EmployeeAction(accNr, StaticVars.CLOSE, "", empId);
-				super.requestOpenAcc(ea);
-			}
-		} else if (response.equals(StaticVars.REQ_DENIED)) {
-			logger.info("{} for the operation {} under the reason '{}'",
-					response, requestType, note);
-		} else if (response.equals(StaticVars.UNREG_USR)) {
-			logger.info("{}  for the operation {}. ", response, requestType);
-		} else {
-			logger.info("note :{}  , {}. ", note, response);
-		}
-	}
+	public void alert(OCRequest req) throws IOException {
 
-	private void logHelper(String response, String operation, String accNr) {
-		EmployeeAction ea = new EmployeeAction(accNr, operation, "", empId);
-		super.requestOpenAcc(ea);
+		if (req.getResponse().equals(StaticVars.REQ_APPROVE)) {
+			EmployeeAction ea = new EmployeeAction();
+			ea.setEmpId(empId);
+			ea.setActionType(req.getReqType());
+			if (req.getReqType().equals(StaticVars.OPEN)) {
+				AccountsManagment am = new AccountsManagment();
+				// open account and +1 to the customers accounts number they
+				// poses
+				String accNr = am.openAccount(req.getAccType(),
+						req.getClientIdsList());
+				ea.setAccountId1(accNr);
+				ea.setCustomerId(req.getClientIdsList());
+				super.requestOpenAcc(ea);
+			}
+			if (req.getReqType().equals(StaticVars.CLOSE)) {
+				AccountsManagment am = new AccountsManagment();
+				// close account and decrease accounts number customers poses
+				am.closeAccount(req.getAccFromNr());
+				ea.setAccountId1(req.getAccFromNr());
+				ea.setCustomerId(req.getClientIdsList());
+				super.requestCloseAcc(ea);
+			}
+			if (req.getReqType().equals(StaticVars.PLUS_1K_DEP)) {
+				TellerQuery tq = new TellerQuery();
+				long trnr = tq.deposite(req.getAccFromNr(), req.getAmount());
+				ea.setAccountId1(req.getAccFromNr());
+				ea.setCustomerId(req.getClientIdsList());
+				ea.setTrNr(trnr);
+				ea.setAmount(req.getAmount());
+				super.deposite(ea);
+			}
+			if (req.getReqType().equals(StaticVars.PLUS_1K_WITH)) {
+				TellerQuery tq = new TellerQuery();
+				long trnr = tq.withdraw(req.getClientIdsList().get(0),
+						req.getAccFromNr(), req.getAmount());
+				ea.setAccountId1(req.getAccFromNr());
+				ea.setCustomerId(req.getClientIdsList());
+				ea.setTrNr(trnr);
+				ea.setAmount(req.getAmount());
+				super.withdraw(ea);
+			}
+			if (req.getReqType().equals(StaticVars.PLUS_1K_TRANS)) {
+				TellerQuery tq = new TellerQuery();
+				long trnr = tq.transfer(req.getClientIdsList().get(0),
+						req.getAccFromNr(), req.getAccToNr(), req.getAmount(),
+						't');
+				ea.setAccountId1(req.getAccFromNr());
+				ea.setAccountId2(req.getAccToNr());
+				ea.setCustomerId(req.getClientIdsList());
+				ea.setTrNr(trnr);
+				ea.setAmount(req.getAmount());
+				super.transfer(ea);
+			}
+			if (req.getReqType().equals(StaticVars.PLUS_6_ACC)) {
+				AccountsManagment am = new AccountsManagment();
+				String accNr = am.openAccount(req.getAccType(),
+						req.getClientIdsList());
+				ea.setAccountId1(accNr);
+				ea.setCustomerId(req.getClientIdsList());
+				super.requestOpenAcc(ea);
+			}
+		}// if approved req
+			// if( req is completed) remove ocr from coordinator list
+		Coordinator.deleteOCR(req);
+		TelMsgPusher tp = new TelMsgPusher();
+		tp.returnResponse(req, wsSession);
+		// send the request results to the tellers server side
 	}
 
 	public List<String> openAccount(List<String> personalIds, char accType) {
-//??? increase and decreas accs Ne in db
 		GeneralFunctions gf = new GeneralFunctions();
 		List<String> problematicClients = gf.registrationCheck(personalIds);
 		if (problematicClients.size() == 0) {
@@ -94,11 +133,12 @@ public class TellerFunctions extends EmployeeFunctions {
 						StaticVars.PLUS_6_ACC);
 			}
 			list.addOCR(req);
-		} else {// registration check
-			alert(StaticVars.OPEN, StaticVars.UNREG_USR, null,
-					"unregistere users");
-			return problematicClients;
 		}
+		// else {// registration check
+		// alert(StaticVars.OPEN, StaticVars.UNREG_USR, null,
+		// "unregistere users");
+		// return problematicClients;
+		// }
 		return null;
 	}
 
@@ -159,7 +199,8 @@ public class TellerFunctions extends EmployeeFunctions {
 					EmployeeAction ea = new EmployeeAction(StaticVars.DEPOSITE,
 							note, empId, trNr);
 					ea.setAmount(amount);
-					ea.setAccountId(accNr);
+					ea.setAccountId1(accNr);
+					ea.setNote(note);
 					super.deposite(ea);
 				}
 			}
@@ -184,9 +225,9 @@ public class TellerFunctions extends EmployeeFunctions {
 				if (trNr > 0) {
 					EmployeeAction ea = new EmployeeAction(StaticVars.WITHDRAW,
 							"", empId, trNr);
-					ea.setCustomerId(personalId);
+					ea.getCustomerId().add(personalId);
 					ea.setAmount(amount);
-					ea.setAccountId(accNr);
+					ea.setAccountId1(accNr);
 					super.withdraw(ea);
 				}
 			}
@@ -196,11 +237,6 @@ public class TellerFunctions extends EmployeeFunctions {
 
 	public String transfer(String personalId, String accFrom, String accTo,
 			double amount) {
-		// TODO check if amount >=1000; if yes
-		// check transaction regularity; if yes
-		// ask manager for permission; if confirmed
-		// proceed to action;
-
 		TellerQuery tq = new TellerQuery();
 
 		String regCheck = tq.checkTransferRegularity(personalId, accFrom,
@@ -219,10 +255,11 @@ public class TellerFunctions extends EmployeeFunctions {
 				if (trNr > 0) {
 					EmployeeAction ea = new EmployeeAction(StaticVars.TRANSFER,
 							"", empId, trNr);
-					ea.setCustomerId(personalId);
+					ea.getCustomerId().add(personalId);
 					ea.setAmount(amount);
-					ea.setAccountId(accFrom);
-					super.transfer(ea);
+					ea.setAccountId1(accFrom);
+					ea.setAccountId2(accTo);
+					super.requestOpenAcc(ea);
 				}
 			}
 		}
@@ -326,8 +363,11 @@ public class TellerFunctions extends EmployeeFunctions {
 		String response = tq.alter(persId, fname, lname, eMail, bdate, address,
 				phone, password);
 		if (response != null && response.length() == 0) {
-			EmployeeAction ea = new EmployeeAction(persId,
-					StaticVars.ALTER_USR, empId);
+			EmployeeAction ea = new EmployeeAction();
+			ea.getCustomerId().add(persId);
+			ea.setActionType(StaticVars.ALTER_USR);
+			ea.setEmpId(empId);
+
 			super.registerClient(ea);
 		}
 		return response;

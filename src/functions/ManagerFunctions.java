@@ -1,5 +1,6 @@
 package functions;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -30,12 +31,12 @@ public class ManagerFunctions extends EmployeeFunctions {
 	private final Logger logger = LoggerFactory
 			.getLogger(ManagerFunctions.class);
 
-	private Coordinator lists = new Coordinator();
+	// private Coordinator lists = new Coordinator();
 	private OCRequest req;
 	private int empId;
 	private Session wsSession;
 
-	private AccountsManagment accm = new AccountsManagment();
+	// private AccountsManagment accm = new AccountsManagment();
 
 	// private List<String> clientsPersonalIds;
 
@@ -50,18 +51,17 @@ public class ManagerFunctions extends EmployeeFunctions {
 	}
 
 	public void confirmOpen(String response, String note) {
-
 		// the coordinator should delete OCR
 		String accNr = "";
-		String msgResponse = "";
+		// String msgResponse = "";
 		if (response.equals(StaticVars.ACCEPT)) {
-			accNr = accm.openAccount(req.getAccType(), req.getClientIdsList());
+			// accNr = accm.openAccount(req.getAccType(),
+			// req.getClientIdsList());
 			logger.info("ACCOUNT {}. is oppen", accNr);
-
-			lists.getTellerFunc(req.getTellerId()).alert(StaticVars.OPEN,
-					StaticVars.REQ_APPROVE, accNr, note);
+			req.setResponse(StaticVars.ACCEPT);
+			req.setNote(note);
 			req.setStatusComplete();
-			lists.deleteOCR(req);
+			req.unPin();
 			// ----------------------------
 			EmployeeAction ea = new EmployeeAction(accNr, StaticVars.CNF_OPEN,
 					"", empId);
@@ -69,33 +69,63 @@ public class ManagerFunctions extends EmployeeFunctions {
 			// ----------------------------
 		} else {
 			logger.info("OPEN ACCOUNT REQEST WAS DENNIED");
-			lists.getTellerFunc(req.getTellerId()).alert(StaticVars.OPEN,
-					StaticVars.REQ_DENIED, null, note);
+			req.setResponse(StaticVars.DENIE);
+			req.setNote(note);
+			req.setStatusComplete();
+			req.unPin();
+
+		}
+		try {
+			Coordinator.reviewedOCR(req);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	public void confirmClose(String response, String note) {
 		if (response.equals(StaticVars.ACCEPT)) {
-			accm.closeAccount(req.getAccFromNr());
-			req.setStatusComplete();
-			lists.deleteOCR(req);
 			logger.info("CLOSE ACCOUNT {}. REQEST WAS APPROVED",
 					req.getAccFromNr());
+			// accm.closeAccount(req.getAccFromNr());
+			req.setResponse(StaticVars.ACCEPT);
+			req.setNote(note);
+			req.setStatusComplete();
 			// ----------------------------
 			EmployeeAction ea = new EmployeeAction(req.getAccFromNr(),
 					StaticVars.CNF_CLOSE, "", empId);
 			super.confirmCloseAcc(ea);
 			// ----------------------------
-			lists.getTellerFunc(req.getTellerId()).alert(StaticVars.CLOSE,
-					StaticVars.REQ_APPROVE, req.getAccFromNr(), note);
 		} else {
 			logger.info("CLOSE ACCOUNT {}. REQEST WAS DENNIED",
 					req.getAccFromNr());
-			lists.getTellerFunc(req.getTellerId()).alert(StaticVars.CLOSE,
-					StaticVars.REQ_DENIED, null, note);
+			req.setResponse(StaticVars.DENIE);
+			req.setNote(note);
+			req.setStatusComplete();
+		}
+		try {
+			Coordinator.reviewedOCR(req);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
+	public void confirmTransaction(String response, String note)
+			throws IOException {
+		if (response.equals(StaticVars.ACCEPT)) {
+			logger.info("TRANSACTION {} WAS ACCEPTED", req.getReqType());
+			req.setResponse(StaticVars.ACCEPT);
+		} else {
+			logger.info("TRANSACTION {} WAS DENNIED", req.getReqType());
+			req.setResponse(StaticVars.DENIE);
+		}
+		req.setNote(note);
+		req.setStatusComplete();
+		Coordinator.reviewedOCR(req);
+	}
+
+	// ------------------
 	public void returnRequest() {
 		if (req != null) {
 			req.unPin();
@@ -105,22 +135,37 @@ public class ManagerFunctions extends EmployeeFunctions {
 
 	public void alert() {
 		// to be summoned in every ocr addition
-		System.out.println("A NEW REQUEST ARIVED");
+		System.out.println("MANAGER !!! A NEW REQUEST ARIVED IN LINE");
 		// TODO send an alert msg to the client side manager
 		// AI choice
 		// artificialChoise();
 	}
 
-	public void getOCR() {
-		req = lists.getNextOCR(empId);
-		req.lastManCons = empId;
+	public void getNextOCR() {
+		req = Coordinator.getNextOCR(empId);
+
+		if (req == null) {
+			logger.info("NO REQUEST AVAILABLE");
+		} else {
+			req.setLastManagerToConsiderIt(empId);
+			req.pin();
+		}
 		// TODO send OCR data
 
 	}
 
 	public void getForceOCR() {
-		req = lists.getForceNextOCR();
+		req = Coordinator.getForceNextOCR();
 
+	}
+
+	public void getOCR() {
+		getNextOCR();
+		if (req == null) {
+			getForceOCR();
+		}
+		if (req == null)
+			logger.warn("NO OCRS AQUIRED, PROBABLY THERE ISNT ONE");
 	}
 
 	public void checkClients() {
@@ -141,10 +186,10 @@ public class ManagerFunctions extends EmployeeFunctions {
 
 	public void artificialChoise() {
 		// the simulation of a managers decisions
-		getOCR();
+		getNextOCR();
 		if (req != null) {
 			System.out.println("Examining");
-			Random rand = new Random();
+			// Random rand = new Random();
 			int r = 0;// rand.nextInt(1);
 			// try {
 			// TimeUnit.SECONDS.sleep(2);
@@ -189,8 +234,8 @@ public class ManagerFunctions extends EmployeeFunctions {
 			} else if (req.getReqType() == (StaticVars.CLOSE)) {
 				confirmClose(response, req.getNote());
 			} else {
-				lists.getTellerFunc(req.getTellerId()).alert(null,
-						"UNDEFINED ERROR OCOURED", null, "");
+				// lists.getTellerFunc(req.getTellerId()).alert(null,
+				// "UNDEFINED ERROR OCOURED", null, "");
 			}
 		}
 
@@ -203,13 +248,13 @@ public class ManagerFunctions extends EmployeeFunctions {
 		// involved. for every set of client transactions send a response to the
 		// Manager client side
 		ManagerQuery mq = new ManagerQuery();
-		ManMsgHandler mmh = new ManMsgHandler();
+		// ManMsgHandler mmh = new ManMsgHandler();
 		String clientId;
 		List<Transaction> trList = null;
 		for (int i = 0; i < ids.size(); i++) {
 			clientId = ids.get(i);
 			trList = mq.getClientInvolvedTransactionsPart(clientId);
-			mmh.transReplyClientPart(i, trList, wsSession);
+			// mm/h.transReplyClientPart(i, trList, wsSession);
 		}
 		return trList;
 	}
@@ -218,18 +263,18 @@ public class ManagerFunctions extends EmployeeFunctions {
 		// for every client id find the transactions in witch they were
 		// involved and send them all togather
 		ManagerQuery mq = new ManagerQuery();
-		ManMsgHandler mmh = new ManMsgHandler();
+		// ManMsgHandler mmh = new ManMsgHandler();
 		List<Transaction> trList = mq.getClientInvolvedTransactionsAll(ids);
-		mmh.transReplyClientAll(trList, wsSession);
+		// mmh.transReplyClientAll(trList, wsSession);
 		return trList;
 	}
 
 	public List<Transaction> accountInvolvedTransactions(String accNr) {
 		// return the transactions where the account is involved
 		ManagerQuery mq = new ManagerQuery();
-		ManMsgHandler mmh = new ManMsgHandler();
+		// ManMsgHandler mmh = new ManMsgHandler();
 		List<Transaction> trList = mq.getAccountInvolvedTrans(accNr);
-		mmh.transReplyAccount(trList, wsSession);
+		// mmh.transReplyAccount(trList, wsSession);
 		return trList;
 	}
 
@@ -285,8 +330,17 @@ public class ManagerFunctions extends EmployeeFunctions {
 	}
 
 	/* END */
+
 	public int getEmpId() {
 		return empId;
+	}
+
+	public OCRequest getReq() {
+		return req;
+	}
+
+	public void setReq(OCRequest req) {
+		this.req = req;
 	}
 
 	public void setEmpId(int empId) {

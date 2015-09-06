@@ -72,8 +72,6 @@ public class GeneralFunctions {
 			tr.rollback();
 		}
 		s.close();
-		if (c == null)
-			return null;
 		return c;
 	}
 

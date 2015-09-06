@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.websocket.Session;
@@ -8,6 +9,7 @@ import javax.websocket.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import system.Coordinator;
 import cod.server.ws.ManagerWS;
 
 import com.google.gson.Gson;
@@ -16,44 +18,43 @@ import com.google.gson.JsonObject;
 
 import comon.OCRequest;
 import comon.StaticVars;
+import entity.Account;
+import entity.Customers;
 import entity.Transaction;
 import functions.DirectorFunctions;
+import functions.ManagerFunctions;
 
 public class ManMsgHandler {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(DirMsgWsHandler.class);
-	private static Gson gson = new GsonBuilder().serializeNulls().create();
-	JsonObject jo = new JsonObject();
-	ManagerWS mws = new ManagerWS(); 
+	// private static Gson gson = new GsonBuilder().create();
 
-	public static String switchit(String msg) {
-		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
+	ManagerWS mws = new ManagerWS();
+	private ManagerFunctions mf;
+
+	public String switchit(String msg) {
+		Gson gson = new GsonBuilder().create();
+		JsonObject jobj = gson.fromJson(msg, JsonObject.class);
 		String head = jobj.get("head").getAsString();
-		DirectorFunctions df = new DirectorFunctions();
-		JsonObject jo = new JsonObject();
+		// DirectorFunctions df = new DirectorFunctions();
+		// JsonObject jo = new JsonObject();
 
 		switch (head) {
-		case "open":
-			return open(df, jobj);
-			// break;
-		case "close":
-			return close(df, jobj);
-			// // break;
-		case "p_1k":
-			return p_1k(df, jobj);
-			// // break;
-		case "p_6Acc":
-			return p_6Acc(df, jobj);
-			// // break;
-			// case "balance":
-			// return getBalance(df, jobj);
-			// // break;
-			// case "transaction":
-			// return getTransactions(df, jobj);
-			// // break;
-			// case "empAct":
-			// break;
+		case "getRequest":
+			return getRequest(jobj);
+		case "leaveRequest":
+			return leaveRequest(jobj);
+		case "accountTransactions":
+			return accountTransactions(jobj);
+		case "clientTransactions":
+			return clientTransactions(jobj);
+		case "clientAccounts":
+			return clientAccounts(jobj);
+		case "accountCoowners":
+			return accountCoowners(jobj);
+		case "accountStatus":
+			return accountStatus(jobj);
 		default:
 			logger.info("invalid switch criterias");
 		}
@@ -61,30 +62,134 @@ public class ManMsgHandler {
 		return null;
 	}
 
-	private static String p_6Acc(DirectorFunctions df, JsonObject jobj) {
-		// TODO Auto-generated method stub
-		return null;
+	private String accountStatus(JsonObject jobj) {
+		int manEmpId = jobj.get("empId").getAsInt();
+		mf = Coordinator.getManagerFunc(manEmpId);
+		Account ret = mf.getAccountStatus(jobj.get("accountNr").getAsString());
+		Gson gson = null;
+		JsonObject jo = new JsonObject();
+		jo.addProperty("head", "accountStatusReply");
+		if (ret == null) {
+			jo.addProperty("msg", "Account not found");
+		} else {
+			gson = new GsonBuilder().serializeNulls().create();
+			jo.add("account", gson.toJsonTree(ret));
+		}
+		return gson.toJson(jo);
 	}
 
-	private static String p_1k(DirectorFunctions df, JsonObject jobj) {
-		// TODO Auto-generated method stub
-		return null;
+	private String accountCoowners(JsonObject jobj) {
+		int manEmpId = jobj.get("empId").getAsInt();
+		mf = Coordinator.getManagerFunc(manEmpId);
+		JsonObject jo = new JsonObject();
+		List<Customers> ret = mf.getAccountClients(jobj.get("accountNr")
+				.getAsString());
+		Gson gson = null;
+		if (ret == null) {
+			jo.addProperty("msg", "No Clients Where Found For This Account");
+		} else {
+			gson = new GsonBuilder().serializeNulls().create();
+			jo.add("ownersList", gson.toJsonTree(ret));
+		}
+		return gson.toJson(jo);
 	}
 
-	private static String close(DirectorFunctions df, JsonObject jobj) {
-		// TODO Auto-generated method stub
-		return null;
+	private String clientAccounts(JsonObject jobj) {
+		int manEmpId = jobj.get("empId").getAsInt();
+		mf = Coordinator.getManagerFunc(manEmpId);
+		List<Account> ret = mf.getClientAccounts(jobj.get("personalId")
+				.getAsString());
+		JsonObject jo = new JsonObject();
+		Gson gson = null;
+		if (ret == null) {
+			jo.addProperty("msg", "No Accounts Where Found For This Clients");
+		} else {
+			gson = new GsonBuilder().serializeNulls().create();
+			jo.add("ownersList", gson.toJsonTree(ret));
+		}
+		return gson.toJson(jo);
 	}
 
-	private static String open(DirectorFunctions df, JsonObject jobj) {
-		// TODO Auto-generated method stub
-		return null;
+	private String clientTransactions(JsonObject jobj) {
+		int manEmpId = jobj.get("empId").getAsInt();
+		mf = Coordinator.getManagerFunc(manEmpId);
+		List<String> ls = new ArrayList<String>();
+		ls.add(jobj.get("personalId").getAsString());
+		List<Transaction> ret = mf.clientInvolvedTransactionsAll(ls);
+		JsonObject jo = new JsonObject();
+		Gson gson = null;
+		if (ret == null) {
+			jo.addProperty("msg",
+					"No Transactions Where Found Involving This Clients");
+		} else {
+			gson = new GsonBuilder().serializeNulls().create();
+			jo.add("ownersList", gson.toJsonTree(ret));
+		}
+		return gson.toJson(jo);
 	}
 
-	public void newAlert() {
-		jo.addProperty("head", "newRequest");
-		String jsonResp = gson.toJson(jo);
-//		mws.sendMsg(jsonResp, ses);
+	private String manyClientTransactions(JsonObject jobj) {
+		int manEmpId = jobj.get("empId").getAsInt();
+		mf = Coordinator.getManagerFunc(manEmpId);
+		List<String> ls = new ArrayList<String>();
+		// TODO for all client id find transactions
+		ls.add(jobj.get("personalId").getAsString());
+		List<Transaction> ret = mf.clientInvolvedTransactionsAll(ls);
+		JsonObject jo = new JsonObject();
+		Gson gson = null;
+		if (ret == null) {
+			jo.addProperty("msg",
+					"No Transactions Where Found Involving This Clients");
+		} else {
+			gson = new GsonBuilder().serializeNulls().create();
+			jo.add("ownersList", gson.toJsonTree(ret));
+		}
+		return gson.toJson(jo);
+	}
+
+	private String accountTransactions(JsonObject jobj) {
+		int manEmpId = jobj.get("empId").getAsInt();
+		mf = Coordinator.getManagerFunc(manEmpId);
+		List<Transaction> ret = mf.accountInvolvedTransactions(jobj.get(
+				"accountNr").getAsString());
+		JsonObject jo = new JsonObject();
+		Gson gson = null;
+		if (ret == null) {
+			jo.addProperty("msg",
+					"No Transactions Where Found Involving This Account");
+		} else {
+			gson = new GsonBuilder().serializeNulls().create();
+			jo.add("ownersList", gson.toJsonTree(ret));
+		}
+		return gson.toJson(jo);
+	}
+
+	private String leaveRequest(JsonObject jobj) {
+		// TODO Auto-generated method stub
+		JsonObject jo = new JsonObject();
+		int manEmpId = jobj.get("empId").getAsInt();
+		mf = Coordinator.getManagerFunc(manEmpId);
+		mf.getReq().unPin();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "leaveRequestReply");
+		jo.addProperty("msg", "Done");
+
+		return gson.toJson(jo);
+	}
+
+	private String getRequest(JsonObject jobj) {
+		int manEmpId = jobj.get("empId").getAsInt();
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		mf = Coordinator.getManagerFunc(manEmpId);
+		mf.getOCR();
+		jo.addProperty("head", "requestRequestReply");// the req of a telReq
+		if (mf.getReq() == null) {
+			jo.addProperty("msg", "No New Request Available");
+		} else {
+			jo.add("requestDetails", gson.toJsonTree(mf.getReq()));
+		}
+		return gson.toJson(jo);
 	}
 
 	public void convertOCRToMsg(OCRequest req) {
@@ -128,47 +233,6 @@ public class ManMsgHandler {
 		}
 		String jsonResp = gson.toJson(jo);
 
-	}
-
-	public void transReplyClientPart(int i, List<Transaction> trList,
-			Session wsSession) {
-		jo.addProperty("head", "transRepCliPart");
-		jo.addProperty("part", i);
-		jo.add("trList", gson.toJsonTree(trList));
-
-		String jsonResp = gson.toJson(jo);
-		ManagerWS mws = new ManagerWS();
-		try {
-			mws.sendMsg(jsonResp, wsSession);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void transReplyClientAll(List<Transaction> trList, Session wsSession) {
-		jo.addProperty("head", "transRepCliPart");
-		jo.addProperty("part", "All");
-		jo.add("trList", gson.toJsonTree(trList));
-
-		String jsonResp = gson.toJson(jo);
-		ManagerWS mws = new ManagerWS();
-		try {
-			mws.sendMsg(jsonResp, wsSession);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void transReplyAccount(List<Transaction> trList, Session wsSession) {
-		jo.addProperty("head", "transRepAccPart");
-		jo.add("trList", gson.toJsonTree(trList));
-		String jsonResp = gson.toJson(jo);
-		ManagerWS mws = new ManagerWS();
-		try {
-			mws.sendMsg(jsonResp, wsSession);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

@@ -18,9 +18,10 @@ import org.hibernate.Session;
 //import org.hibernate.Transaction;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
-import com.sun.media.jfxmedia.logging.Logger;
 
 import cod.test.HQLTest;
 import system.Coordinator;
@@ -42,14 +43,15 @@ import functions.ManagerFunctions;
 import functions.TellerFunctions;
 
 public class Run {
-	// private static final Logger logger = Logger.getLogger(Run.class);
+	private final static Logger logger = (Logger) LoggerFactory
+			.getLogger(Run.class);
 
 	public static void main(String[] args) throws ParseException, IOException {
 
-		 CustomerFunctions cf = new CustomerFunctions();
+		// CustomerFunctions cf = new CustomerFunctions();
 		//
-		 cf.register("1234567890", "Mario", "Rista", "this@that.com",
-		 "12/01/1990", "under the bridge", "+355...", "123");
+		// cf.register("1234567890", "Mario", "Rista", "this@that.com",
+		// "12/01/1990", "under the bridge", "+355...", "123");
 		//
 		// cf.register("1234567899", "Mariano", "Rista", "this2@that.com",
 		// "12/01/1990", "under the bridge", "+355...", "321");
@@ -62,7 +64,7 @@ public class Run {
 		// e.print();
 		// log.closeSession();
 		// logger.info(resp);
-		Session ses = DBHandler.getSessionFactory().openSession();
+		// Session ses = DBHandler.getSessionFactory().openSession();
 
 		// TellerFunctions tf = new TellerFunctions(1);
 		// tf.register("1111111116", "ARMANDO", "Delavega", "delavega@that.com",
@@ -166,16 +168,56 @@ public class Run {
 		// .println("--------***********------------" + b.getAccount2());
 		// // }
 		// }
-		ManagerFunctions mf1 = new ManagerFunctions(32);
-		List<String> sl = new ArrayList<>();
-		sl.add("1111111111");
-		sl.add("1111111112");
-		List<Transaction> ret = mf1.clientInvolvedTransactionsAll(sl);
-		for (Transaction t : ret) {
-			System.out.println(t.getTransactionNr() + " " + t.getTrDate() + " "
-					+ t.getAccount1() + " " + t.getAccount2() + " "
-					+ t.getAcction() + " " + t.getAmount());
-		}
+//		ManagerFunctions mf = new ManagerFunctions(31);
+//		Coordinator.addManagerFunc(mf);
+//		TellerFunctions tf = new TellerFunctions(2);
+//		Coordinator.addTellerFunc(tf);
+//		List<String> sl = new ArrayList<>();
+//		sl.add("1111111111");
+//		 sl.add("1111111112");
+//
+//		OCRequest ocr = new OCRequest(2, sl, StaticVars.OPEN, 'b');
+//		Coordinator.addOCR(ocr);
+////		ocr.print();
+//		sl = new ArrayList<>();
+//		sl.add("1111111111");
+//		OCRequest	ocr2 = new OCRequest(2, sl, StaticVars.OPEN, 's');
+//		Coordinator.addOCR(ocr2);
+//		ocr.print();
+
+		// --------------------
+
+//		logger.info("Coordinator  OCR size={} ",Coordinator.ocrListSize());
+//		Coordinator.printAll();
+//		
+//		logger.info("Manager get a OCR and  print ");
+//		mf.getOCR();
+//		Coordinator.printAll();
+//		
+//		mf.confirmOpen(StaticVars.DENIE, "Shure why not, OPS, Found an Error!");
+//		Coordinator.printAll();
+//		
+//		logger.info("Coordinator  OCR size={}",Coordinator.ocrListSize());
+//		
+//		mf.getReq().print();
+//		mf.getOCR();
+//		logger.info(mf.getReq().getReqType());
+//		mf.returnRequest();
+//		Coordinator.printAll();
+		
+
+
+
+		// ManagerFunctions mf1 = new ManagerFunctions(32);
+		// List<String> sl = new ArrayList<>();
+		// sl.add("1111111111");
+		// sl.add("1111111112");
+		// List<Transaction> ret = mf1.clientInvolvedTransactionsAll(sl);
+		// for (Transaction t : ret) {
+		// System.out.println(t.getTransactionNr() + " " + t.getTrDate() + " "
+		// + t.getAccount1() + " " + t.getAccount2() + " "
+		// + t.getAcction() + " " + t.getAmount());
+		// }
 
 		// ManagerQuery mq = new ManagerQuery();
 		// mq.getBalance(sq1,sq2);
@@ -190,7 +232,7 @@ public class Run {
 		//
 		// DirMsgWsHandler.switchit(jo.toString());
 
-		DBHandler.closeSessionFactory();
+		// DBHandler.closeSessionFactory();
 
 		// logger.debug("WTF");
 		// FileHandler fh = new FileHandler();

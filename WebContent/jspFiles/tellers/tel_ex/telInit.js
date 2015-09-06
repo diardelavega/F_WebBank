@@ -68,6 +68,9 @@ function onMessage(evt) {
 	case 'transferReply':
 		transferReply(jsobj);
 		break;
+	case 'requestReply':
+		reqReplyAlert(jsobj);
+		break;
 
 	case 'error':
 		errorRes(jsobj);

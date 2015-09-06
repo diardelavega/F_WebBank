@@ -18,19 +18,23 @@ public class AccountsManagment {
 
 	public void closeAccount(String accNr) {
 		GeneralFunctions gf = new GeneralFunctions();
-
-		// gf.dtfan(accNr);
 		List<String> customersIds = gf.accountsClients(accNr);
-		if (customersIds != null) {
+
+		Session s = DBHandler.getSessionFactory().openSession();
+		try {
+			s.beginTransaction();
+			s.createQuery("DELETE Account WHERE accountId=:accNr")
+					.setParameter("accNr", accNr).executeUpdate();
+			// Account a = (Account) s.load(Account.class, accNr);
+			// s.delete(a);
+			s.getTransaction().commit();
 			for (String ss : customersIds) {
 				gf.accountNrDecreas(ss);
 			}
+		} catch (Exception e) {
+			s.getTransaction().rollback();
+			e.printStackTrace();
 		}
-		Session s = DBHandler.getSessionFactory().openSession();
-		s.beginTransaction();
-		s.createQuery("DELETE Account WHERE accountId=:accNr")
-				.setParameter("accNr", accNr).executeUpdate();
-		s.getTransaction().commit();
 		s.close();
 	}
 
@@ -42,15 +46,19 @@ public class AccountsManagment {
 				.getTime());
 		Account acc = new Account(accNr, t, 0, accType, StaticVars.ACTIVE);
 
-		for (String ss : clientIdsList) {
-			// hibernate specific, add a tuple to the normalization table
-			Customers c = gf.getCustomersAddAccountNr(ss);
-			acc.getCustomers().add(c);
-		}
 		Session s = DBHandler.getSessionFactory().openSession();
-		s.beginTransaction();
-		s.save(acc);
-		s.getTransaction().commit();
+		try {
+			for (String ss : clientIdsList) {
+				Customers c = gf.getCustomersAddAccountNr(ss);
+				acc.getCustomers().add(c);
+			}
+			s.beginTransaction();
+			s.save(acc);
+			s.getTransaction().commit();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		s.close();
 		return accNr;
 	}

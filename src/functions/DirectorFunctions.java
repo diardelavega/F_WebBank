@@ -39,8 +39,10 @@ public class DirectorFunctions extends EmployeeFunctions {
 		long regEmpId = dq.register(e);
 		if (regEmpId != StaticVars.ERROR
 				&& regEmpId != StaticVars.NON_UNIQUE_EMAIL) {
-			EmployeeAction ea = new EmployeeAction(regEmpId + "",
-					StaticVars.REG_EMPLOYEE, empId);
+			EmployeeAction ea = new EmployeeAction();
+			ea.setActionType(StaticVars.REG_EMPLOYEE);
+			ea.setEmpId(empId);
+			ea.getCustomerId().add(regEmpId + "");
 			super.registerEmployee(ea);
 		}
 		return regEmpId;
@@ -52,8 +54,10 @@ public class DirectorFunctions extends EmployeeFunctions {
 		long altEmpId = dq.alterEmp(empId, fname, lname, address, possition,
 				eMail, password);
 		if (altEmpId != StaticVars.ERROR) {
-			EmployeeAction ea = new EmployeeAction(empId + "",
-					StaticVars.DEL_EMPLOYEE, empId);
+			EmployeeAction ea = new EmployeeAction();
+			ea.setActionType(StaticVars.ALTER_EMPLOYEE);
+			ea.setEmpId(empId);
+			ea.getCustomerId().add(altEmpId + "");
 			super.alterEmployee(ea);
 		}
 		return altEmpId;
@@ -64,8 +68,10 @@ public class DirectorFunctions extends EmployeeFunctions {
 		long delEmpId = dq.delete(empId);
 		if (delEmpId != StaticVars.ERROR
 				&& delEmpId != StaticVars.DOES_NOT_EXISTS) {
-			EmployeeAction ea = new EmployeeAction(empId + "",
-					StaticVars.DEL_EMPLOYEE, empId);
+			EmployeeAction ea = new EmployeeAction();
+			ea.setActionType(StaticVars.DEL_EMPLOYEE);
+			ea.setEmpId(empId);
+			ea.getCustomerId().add(delEmpId + "");
 			super.deleteEmployee(ea);
 		}
 		return delEmpId;

@@ -1,5 +1,6 @@
 package system;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Queue;
 
 import javax.websocket.Session;
 
+import sun.security.action.GetLongAction;
 import comon.OCRequest;
 import comon.TupleEntityFuncWS;
 import entity.Employee;
@@ -30,111 +32,118 @@ import functions.TellerFunctions;
 public class Coordinator {
 
 	private static List<OCRequest> ocr = new ArrayList<>();
-
 	private static Map<Integer, ManagerFunctions> managers = new HashMap<>();
 	private static Map<Integer, TellerFunctions> tellers = new HashMap<>();
 	private static Map<Integer, DirectorFunctions> directors = new HashMap<>();
-
 	private static Map<String, CustomerFunctions> clients = new HashMap<>();
 
-	public void addTellerFunc(TellerFunctions telf) {
+	public static void addTellerFunc(TellerFunctions telf) {
 		tellers.put(telf.getEmpId(), telf);
 	}
 
-	public void addTellSession(int id, Session session) {
+	public static  void addTellSession(int id, Session session) {
 		tellers.get(id).setWsSession(session);
 	}
 
-	public void deleteTeller(int id) {
+	public static  void deleteTeller(int id) {
 		tellers.remove(id);
 	}
 
-	public Session getTellerSession(int id) {
+	public static  Session getTellerSession(int id) {
 		return tellers.get(id).getWsSession();
 	}
 
-	public TellerFunctions getTellerFunc(int id) {
+	public static  TellerFunctions getTellerFunc(int id) {
 		return tellers.get(id);
 	}
 
 	/* MANAGER */
-	public void addManagerFunc(ManagerFunctions telf) {
+	public static  void addManagerFunc(ManagerFunctions telf) {
 		managers.put(telf.getEmpId(), telf);
 	}
 
-	public void addManagerSession(int id, Session session) {
+	public static  void addManagerSession(int id, Session session) {
 		managers.get(id).setWsSession(session);
 	}
 
-	public void deleteManager(int id) {
+	public static  void deleteManager(int id) {
 		managers.remove(id);
 	}
 
-	public Session getManagerSession(int id) {
+	public static  Session getManagerSession(int id) {
 		return managers.get(id).getWsSession();
 	}
 
-	public ManagerFunctions getManagerFunc(int id) {
+	public static  ManagerFunctions getManagerFunc(int id) {
 		return managers.get(id);
 	}
 
 	/* DIRECTOR */
-	public void addDirectorFunc(DirectorFunctions telf) {
+	public static  void addDirectorFunc(DirectorFunctions telf) {
 		directors.put(telf.getEmpId(), telf);
 	}
 
-	public void addDirectorSession(int id, Session session) {
+	public static  void addDirectorSession(int id, Session session) {
 		directors.get(id).setWsSession(session);
 	}
 
-	public void deleteDirector(int id) {
+	public static  void deleteDirector(int id) {
 		directors.remove(id);
 	}
 
-	public Session getDirectorSession(int id) {
+	public static  Session getDirectorSession(int id) {
 		return directors.get(id).getWsSession();
 	}
 
-	public DirectorFunctions getDirectorFunc(int id) {
+	public static  DirectorFunctions getDirectorFunc(int id) {
 		return directors.get(id);
 	}
 
 	/* CLIENTS */
-	public void addCustomerFunc(CustomerFunctions cf) {
+	public static  void addCustomerFunc(CustomerFunctions cf) {
 		clients.put(cf.getPersonalId(), cf);
 	}
 
-	public CustomerFunctions getCustomerFunctions(String id) {
+	public static  CustomerFunctions getCustomerFunctions(String id) {
 		return clients.get(id);
 	}
 
-	public void addCustomerSession(String id, Session session) {
+	public static  void addCustomerSession(String id, Session session) {
 		clients.get(id).setSession(session);
 	}
 
-	public Session getCustomerSession(String id) {
+	public static  Session getCustomerSession(String id) {
 		return clients.get(id).getSession();
 	}
 
-	public void deleteCustomer(String persId) {
+	public static  void deleteCustomer(String persId) {
 		clients.remove(persId);
 	}
 
 	/* OCR */
-	public void addOCR(OCRequest req) {
+	public static  void addOCR(OCRequest req) {
 		ocr.add(req);
 		scatterAlertNewOCR();
 	}
 
-	public void deleteOCR(OCRequest req) {
+	public static  void deleteOCR(OCRequest req) {
 		ocr.remove(req);
 	}
 
-	public OCRequest getNextOCR(int manId) {
+	public static  OCRequest getNextOCR(int manId) {
 		for (int i = 0; i < ocr.size(); i++) {
 			if (ocr.get(i).isPin())
 				continue;
-			if (ocr.get(i).lastManCons == manId)
+			if (ocr.get(i).getLastManagerToConsiderIt() == manId)
+				continue;
+			return ocr.get(i);
+		}
+		return null;
+	}
+
+	public static  OCRequest getForceNextOCR() {
+		for (int i = 0; i < ocr.size(); i++) {
+			if (ocr.get(i).isPin())
 				continue;
 			ocr.get(i).pin();
 			return ocr.get(i);
@@ -142,23 +151,29 @@ public class Coordinator {
 		return null;
 	}
 
-	public OCRequest getForceNextOCR() {
-		for (int i = 0; i < ocr.size(); i++) {
-			if (ocr.get(i).isPin())
-				continue;
-			ocr.get(i).pin();
-			return ocr.get(i);
-		}
-		return null;
-	}
-
-	public void leaveOCR(OCRequest req) {
+	public static  void leaveOCR(OCRequest req) {
 		ocr.get(ocr.indexOf(req)).unPin();
 	}
 
-	private void scatterAlertNewOCR() {
+	private static void scatterAlertNewOCR() {
 		for (Integer key : managers.keySet()) {
 			getManagerFunc(key).alert();
+		}
+	}
+
+	public static  void reviewedOCR(OCRequest req) throws IOException {
+		if (req.isStatus()) {
+			tellers.get(req.getTellerId()).alert(req);
+		}
+	}
+
+	public static String ocrListSize(){
+		return ocr.size()+"";
+	}
+
+	public static void printAll(){
+		for(OCRequest re:ocr){
+			re.print();
 		}
 	}
 }
