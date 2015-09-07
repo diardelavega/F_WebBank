@@ -35,38 +35,35 @@ function onMessage(evt) {
 	var head = jsobj.head;
 
 	switch (head) {
-	case 'balanceReply':
-		balanceReply(jsobj)
-		break;
-	case 'transactionReply':
-		transactionReply(jsobj)
-		break;
+//	case 'balanceReply':
+//		balanceReply(jsobj)
+//		break;
+//	case 'transactionReply':
+//		transactionReply(jsobj)
+//		break;
 	case 'clientAccountsReply':
-		clientAccounts(jsobj);
+		manClientAccounts(jsobj);
 		break;
 	case 'accountStatusReply':
-		accountStatus(jsobj);
+		manAccountStatusReply(jsobj);
 		break;
-	case 'open':
-		openAcc(jsobj);
+	case 'accountOwnersReply':
+		manAccountCooReply(jsobj);
 		break;
-	case 'close':
-		closeAcc(jsobj);
+	case 'clientTransactionReply':
+		manClientTrans(jsobj);
 		break;
-	case 'p_1k_dep':
-		p1kDep(jsobj);
+	case 'manyClientTransactionReply':
+		manManyClientTrans(jsobj);
 		break;
-	case 'p_1k_with':
-		p1kWith(jsobj);
+	case 'accountTransactionsReply':
+		manAccountTrans(jsobj);
 		break;
-	case 'p_1k_trans':
-		p1kTrans(jsobj);
+	case 'leaveRequestReply':
+		leaveRequest(jsobj);
 		break;
-	case 'p_6_acc':
+	case 'requestRequestReply':
 		p6Acc(jsobj);
-		break;
-	case 'newRequest':
-		newReq(jsobj);
 		break;
 	case 'error':
 		errorRes(jsobj);

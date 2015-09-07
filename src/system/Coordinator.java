@@ -121,7 +121,7 @@ public class Coordinator {
 	}
 
 	/* OCR */
-	public static  void addOCR(OCRequest req) {
+	public static  void addOCR(OCRequest req){
 		ocr.add(req);
 		scatterAlertNewOCR();
 	}

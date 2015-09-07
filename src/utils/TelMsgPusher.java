@@ -19,7 +19,7 @@ public class TelMsgPusher {
 
 	public void returnResponse(OCRequest req, Session ses) throws IOException {
 		JsonObject jo = new JsonObject();
-		Gson gson = new GsonBuilder().create();
+		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "requestReply");
 		jo.add("replyData", gson.toJsonTree(req));
 		 tws.sendMsg(gson.toJson(jo), ses);

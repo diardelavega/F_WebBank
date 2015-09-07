@@ -51,14 +51,14 @@
 							<div id="accs" class="tab-pane fade ">
 								<h3>Account's Status :</h3>
 								<!-- table with the response Account Status -->
-								<table>
+								<table id="manAccountStatus">
 									<thead>
 										<tr>
-											<th>Account Id</th>
+											<!-- <th>Account Id</th>
 											<th>Open Date</th>
 											<th>Balance</th>
 											<th>Account Type</th>
-											<th>Account Status</th>
+											<th>Account Status</th> -->
 										</tr>
 									</thead>
 									<tbody id="manAccountStatus">
@@ -69,18 +69,41 @@
 
 							<div id="a_coo" class="tab-pane fade">
 								<h3>Account's Co-owners:</h3>
+								<div id="manAccCoo"></div>
 							</div>
 
 							<div id="cli_a" class="tab-pane fade">
 								<h3>Client's Accounts</h3>
+								<table id="manClientAccounts" border="1" bordercolor="olive">
+									<thead>
+										<tr>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="tabSpace">
+										</tr>
+									</tbody>
+								</table>
 							</div>
 
 							<div id="accTrans" class="tab-pane fade">
 								<h3>Account Transactions:</h3>
+								<table id="manAccTrans">
+								<thead> <tr></tr></thead>
+								<tbody>
+								<tr></tr>
+								</tbody>
+								</table>
 							</div>
-							
+
 							<div id="cliTrans" class="tab-pane fade">
 								<h3>Client Transactions:</h3>
+								<table id="manClientTrans">
+								<thead> <tr></tr></thead>
+								<tbody>
+								<tr></tr>
+								</tbody>
+								</table>
 							</div>
 
 						</div>

@@ -377,10 +377,11 @@ public class TellerQuery {
 
 	// --------------------reg alter delete
 
-	public String registerCustomer(String fname, String lname, String eMail,
+	public String registerCustomer(String persId,String fname, String lname, String eMail,
 			String bdate, String address, String phone, String password) {
-		StringBuilder sb = new StringBuilder();
 		GeneralFunctions gf = new GeneralFunctions();
+		logger.info("IN TELLER QUERY");
+		StringBuilder sb = new StringBuilder();// the validation error msgs
 		sb.append(gf.valName(fname));
 		sb.append(gf.valName(lname));
 		sb.append(gf.valAddress(address));
@@ -400,6 +401,7 @@ public class TellerQuery {
 			}
 
 			Customers c = new Customers();
+			c.setPersonalId(persId);
 			c.setFname(fname);
 			c.setLname(lname);
 			c.setAddress(address);
@@ -407,7 +409,8 @@ public class TellerQuery {
 			c.seteMail(eMail);
 			c.setPhone(phone);
 			c.setPassword(password);
-
+			
+			logger.info("IN TELLER QUERY, READY TO SAVE CLIENT");
 			upSession();
 			try {
 				s.beginTransaction();

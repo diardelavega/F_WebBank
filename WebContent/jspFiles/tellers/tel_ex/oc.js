@@ -5,9 +5,10 @@ function openAccount() {
 		pId2 : $("[name=telOpenId2]").val(),
 		pId3 : $("[name=telOpenId3]").val(),
 		pId4 : $("[name=telOpenId4]").val(),
-//		accType = ??
+		accType : $("[name=accType]").val()
 	}
 	doSend(JSON.stringify(persIdList));
+	alert("a request was sent to the Manager for confirmation");
 }
 function clearOpenAcc() {
 	$("[name=telOpenId1]").val("");
@@ -26,6 +27,7 @@ function tellCloseAcc() {
 		accNr : $("[name=telCloseAcc]").val()
 	}
 	doSend(JSON.stringify(persIdList));
+	alert("a request was sent to the Manager for confirmation");
 }
 
 function tellClearClose() {

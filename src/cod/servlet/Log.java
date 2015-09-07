@@ -92,7 +92,7 @@ public class Log extends HttpServlet {
 			} else {
 				logger.info("------------------------>usr :{} and psw:{}", usr,
 						psw);
-				Coordinator co = new Coordinator();
+//				Coordinator co = new Coordinator();
 
 				LogIn log = new LogIn();
 				if (domain.equalsIgnoreCase("webank")) {
@@ -108,19 +108,19 @@ public class Log extends HttpServlet {
 							// coordinator
 							TellerFunctions tf = new TellerFunctions(
 									e.getEmpId());
-							co.addTellerFunc(tf);
+							Coordinator.addTellerFunc(tf);
 							destination = "jspFiles/tellers/tellersPage.jsp";
 							break;
 						case "MANAGER":
 							ManagerFunctions mf = new ManagerFunctions(
 									e.getEmpId());
-							co.addManagerFunc(mf);
+							Coordinator.addManagerFunc(mf);
 							destination = "jspFiles/managers/managersPage.jsp";
 							break;
 						case "DIRECTOR":
 							DirectorFunctions df = new DirectorFunctions(
 									e.getEmpId());
-							co.addDirectorFunc(df);
+							Coordinator.addDirectorFunc(df);
 							destination = "jspFiles/directors/directorsPage.jsp";
 							break;
 						}
@@ -134,7 +134,7 @@ public class Log extends HttpServlet {
 
 						CustomerFunctions cf = new CustomerFunctions(
 								c.getPersonalId());
-						co.addCustomerFunc(cf);
+						Coordinator.addCustomerFunc(cf);
 						session = request.getSession(true);
 						session.setAttribute("primeKey", c.getPersonalId());
 						session.setAttribute("name", c.getFname());

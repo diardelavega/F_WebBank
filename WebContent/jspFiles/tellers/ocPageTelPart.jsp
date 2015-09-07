@@ -35,11 +35,11 @@ body {
 						<br>
 						<div class="tab-content">
 							<div id="open" class="tab-pane fade in active">
-								<table border="0" id="telOpen" class="normal"
+								<table border="1" id="telOpen" class="normal"
 									style="margin: 30px; margin-left: 10px; padding: 10px;">
 									<tbody>
 										<tr>
-											<td width="65%">
+											<td width="35%">
 												<!--small inner table  --> <!-- <table>
 											<tbody>
 											<tr><td><label>Personal Id</label><input type="text" name="telOpenId"> </td></tr>
@@ -66,7 +66,15 @@ body {
 												</div>
 
 											</td>
-											<td width="35%"><div id="telOpenResponse" class="box-r"></div>
+											<td width="35%"><label>Account Type :</label> <select name="accType">
+													<option value="b">BASICS CHECKING</option>
+													<option value="i">INTEREST BARING</option>
+													<option value="c">CERTIFICATE OF DEPSITE</option>
+													<option value="m">MONEY MARKET DEPOSITE</option>
+													<option value="s">SIMPLE BUSINESS</option>
+
+											</select></td>
+											<td width="30%"><div id="telOpenResponse" class="box-r"></div>
 
 												<p>Lorem ipsum dolor sit amet, consectetur adipisicing
 													elit, sed do eiusmod tempor incididunt ut labore et dolore

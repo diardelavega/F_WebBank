@@ -20,6 +20,7 @@ import system.ManagerQuery;
 import system.TellerQuery;
 import utils.GeneralFunctions;
 import utils.ManMsgHandler;
+import utils.ManMsgPusher;
 import comon.OCRequest;
 import comon.StaticVars;
 import entity.Account;
@@ -133,12 +134,14 @@ public class ManagerFunctions extends EmployeeFunctions {
 		}
 	}
 
-	public void alert() {
+	public void alert()  {
 		// to be summoned in every ocr addition
 		System.out.println("MANAGER !!! A NEW REQUEST ARIVED IN LINE");
 		// TODO send an alert msg to the client side manager
 		// AI choice
 		// artificialChoise();
+		ManMsgPusher mmp = new ManMsgPusher ();
+		mmp.requestNotifyer(wsSession);
 	}
 
 	public void getNextOCR() {

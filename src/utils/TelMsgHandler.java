@@ -241,6 +241,7 @@ public class TelMsgHandler {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 
+		String persId = jobj.get("id").getAsString();
 		String fname = jobj.get("fname").getAsString();
 		String lname = jobj.get("lname").getAsString();
 		String address = jobj.get("address").getAsString();
@@ -249,7 +250,7 @@ public class TelMsgHandler {
 		String password = jobj.get("password").getAsString();
 		String bdate = jobj.get("bdate").getAsString();
 
-		String report = tf.register(fname, lname, eMail, bdate, address, phone,
+		String report = tf.register(persId,fname, lname, eMail, bdate, address, phone,
 				password);
 		if (report == null) {
 			jo.addProperty("head", "error");
@@ -258,7 +259,7 @@ public class TelMsgHandler {
 		} else {
 			if (report.equals("")) {
 				jo.addProperty("head", "registerClientReply");
-				jo.addProperty("response", "alteration completed");
+				jo.addProperty("response", "registration completed");
 			} else {
 				jo.addProperty("head", "registerClientReply");
 				jo.addProperty("response", report);

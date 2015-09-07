@@ -121,7 +121,7 @@ public class TellerFunctions extends EmployeeFunctions {
 		GeneralFunctions gf = new GeneralFunctions();
 		List<String> problematicClients = gf.registrationCheck(personalIds);
 		if (problematicClients.size() == 0) {
-			Coordinator list = new Coordinator();
+//			Coordinator list = new Coordinator();
 			OCRequest req;
 			if (gf.accountsCountCheck(personalIds).size() == 0) {
 				req = new OCRequest(empId, personalIds, StaticVars.OPEN,
@@ -132,7 +132,7 @@ public class TellerFunctions extends EmployeeFunctions {
 				logger.info("{} requires man confirmation",
 						StaticVars.PLUS_6_ACC);
 			}
-			list.addOCR(req);
+			Coordinator.addOCR(req);
 		}
 		// else {// registration check
 		// alert(StaticVars.OPEN, StaticVars.UNREG_USR, null,
@@ -167,7 +167,7 @@ public class TellerFunctions extends EmployeeFunctions {
 			logger.info("SOME CO-OWNERS SUBMITED RESULT NOT REGISTERED");
 			return problematicClients;
 		}
-		Coordinator list = new Coordinator();
+//		Coordinator list = new Coordinator();
 		TellerQuery tq = new TellerQuery();
 		// check if there are acc owners whose id was not submitted
 		problematicClients = tq.clientAccountCompatibility(personalIds, accNr);
@@ -177,7 +177,7 @@ public class TellerFunctions extends EmployeeFunctions {
 		} else {
 			OCRequest req = new OCRequest(empId, personalIds, StaticVars.CLOSE,
 					accNr);
-			list.addOCR(req);
+			Coordinator.addOCR(req);
 		}
 		return null;
 
@@ -189,10 +189,10 @@ public class TellerFunctions extends EmployeeFunctions {
 		String regCheck = tq.checkDepositeRegularity(accNr, amount);
 		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
-				Coordinator cord = new Coordinator();
+//				Coordinator cord = new Coordinator();
 				OCRequest req = new OCRequest(empId, null,
 						StaticVars.PLUS_1K_DEP, accNr, null, amount, note);
-				cord.addOCR(req);
+				Coordinator.addOCR(req);
 			} else {
 				long trNr = tq.deposite(accNr, amount);
 				if (trNr > 0) {
@@ -215,11 +215,11 @@ public class TellerFunctions extends EmployeeFunctions {
 		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();
-				Coordinator cord = new Coordinator();
+//				Coordinator cord = new Coordinator();
 				ocrAl.add(personalId);
 				OCRequest req = new OCRequest(empId, ocrAl,
 						StaticVars.PLUS_1K_WITH, accNr);
-				cord.addOCR(req);
+				Coordinator.addOCR(req);
 			} else {
 				long trNr = tq.withdraw(personalId, accNr, amount);
 				if (trNr > 0) {
@@ -244,11 +244,11 @@ public class TellerFunctions extends EmployeeFunctions {
 		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();
-				Coordinator cord = new Coordinator();
+//				Coordinator cord = new Coordinator();
 				ocrAl.add(personalId);
 				OCRequest req = new OCRequest(empId, ocrAl,
 						StaticVars.PLUS_1K_WITH, accFrom, accTo, amount, null);
-				cord.addOCR(req);
+				Coordinator.addOCR(req);
 			} else {
 				long trNr = tq
 						.transfer(personalId, accFrom, accTo, amount, 't');
@@ -340,16 +340,21 @@ public class TellerFunctions extends EmployeeFunctions {
 		return response;
 	}
 
-	public String register(String fname, String lname, String eMail,
+	public String register(String persId,String fname, String lname, String eMail,
 			String bdate, String address, String phone, String psw)
 			throws ParseException {
-
+		logger.info("IN teller functions");
 		TellerQuery tq = new TellerQuery();
-		String response = tq.registerCustomer(fname, lname, eMail, bdate,
+		String response = tq.registerCustomer(persId,fname, lname, eMail, bdate,
 				address, phone, psw);
+		
 		if (response != null && response.length() == 0) {
-			EmployeeAction ea = new EmployeeAction(null, StaticVars.REG_USR,
-					empId);
+			List<String>persIdList = new ArrayList<>();
+			persIdList.add(persId);
+			EmployeeAction ea = new EmployeeAction();
+			ea.setEmpId(empId);
+			ea.setActionType(StaticVars.REG_USR);
+			ea.setCustomerId(persIdList);
 			super.registerClient(ea);
 		}
 		return response;

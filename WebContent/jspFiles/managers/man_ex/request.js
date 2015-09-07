@@ -1,3 +1,15 @@
+function severClientTupeling() {
+	alert("TUPELING");
+	var reg = {
+		head : "coordinate",
+		empId : $("#manEmpId").val()
+	}
+//	alert(empId);
+	doSend(JSON.stringify(reg));
+}
+
+
+
 function manGetRequest() {
 	var getter = {
 		head : "getRequest",
@@ -16,7 +28,7 @@ function manLeaveRequest() {
 }
 
 /* AFTER RESPONSE FUNCTIONS */
-function requestArival(jsobj) {
+function requestRequestReply(jsobj) {
 	var request = jsobj.requestData;
 	var reqType = request['reqType'];
 	var clients = request['clientIdsList'];
@@ -28,5 +40,8 @@ function requestArival(jsobj) {
 	console.log(request);
 	console.log(clients);
 	console.log(accFrom);
+}
 
+function leaveRequest(jsobj) {
+	alert(jsobj.get('msg'));
 }

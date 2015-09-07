@@ -85,6 +85,7 @@ public class ManMsgHandler {
 		List<Customers> ret = mf.getAccountClients(jobj.get("accountNr")
 				.getAsString());
 		Gson gson = null;
+		jo.addProperty("head", "accountOwnersReply");
 		if (ret == null) {
 			jo.addProperty("msg", "No Clients Where Found For This Account");
 		} else {
@@ -101,11 +102,12 @@ public class ManMsgHandler {
 				.getAsString());
 		JsonObject jo = new JsonObject();
 		Gson gson = null;
+		jo.addProperty("head", "clientAccountsReply");
 		if (ret == null) {
 			jo.addProperty("msg", "No Accounts Where Found For This Clients");
 		} else {
 			gson = new GsonBuilder().serializeNulls().create();
-			jo.add("ownersList", gson.toJsonTree(ret));
+			jo.add("accountsList", gson.toJsonTree(ret));
 		}
 		return gson.toJson(jo);
 	}
@@ -118,12 +120,13 @@ public class ManMsgHandler {
 		List<Transaction> ret = mf.clientInvolvedTransactionsAll(ls);
 		JsonObject jo = new JsonObject();
 		Gson gson = null;
+		jo.addProperty("head", "clientTransactionReply");
 		if (ret == null) {
 			jo.addProperty("msg",
 					"No Transactions Where Found Involving This Clients");
 		} else {
 			gson = new GsonBuilder().serializeNulls().create();
-			jo.add("ownersList", gson.toJsonTree(ret));
+			jo.add("clientTransList", gson.toJsonTree(ret));
 		}
 		return gson.toJson(jo);
 	}
@@ -137,6 +140,7 @@ public class ManMsgHandler {
 		List<Transaction> ret = mf.clientInvolvedTransactionsAll(ls);
 		JsonObject jo = new JsonObject();
 		Gson gson = null;
+		jo.addProperty("head", "manyClientTransactionReply");
 		if (ret == null) {
 			jo.addProperty("msg",
 					"No Transactions Where Found Involving This Clients");
@@ -154,12 +158,13 @@ public class ManMsgHandler {
 				"accountNr").getAsString());
 		JsonObject jo = new JsonObject();
 		Gson gson = null;
+		jo.addProperty("head", "accountTransactionsReply");
 		if (ret == null) {
 			jo.addProperty("msg",
 					"No Transactions Where Found Involving This Account");
 		} else {
 			gson = new GsonBuilder().serializeNulls().create();
-			jo.add("ownersList", gson.toJsonTree(ret));
+			jo.add("accountTransList", gson.toJsonTree(ret));
 		}
 		return gson.toJson(jo);
 	}

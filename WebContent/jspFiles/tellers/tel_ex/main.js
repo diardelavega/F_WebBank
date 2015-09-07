@@ -56,7 +56,7 @@ function deleteClient() {
 	doSend(JSON.stringify(clientData));
 }
 function newClientReg() {
-	clientData = {
+	clientData = { 
 		head : 'newClientReg',
 		// dirId : ${sessionScope.empId},
 		id : $('[name=id]').val(),
@@ -123,7 +123,7 @@ function clientFormDataSearch() {
 /* AFTER RESPONSE FUNCTION */
 
 function registerClientReply(jobj) {
-	if (jsobj.hasOwnProperty("response")) {
+	if (jobj.hasOwnProperty("response")) {
 		alertDisplay(jobj.response);
 	} else {
 		alertDisplay(jobj.msg);
@@ -131,7 +131,7 @@ function registerClientReply(jobj) {
 }
 
 function alterClientReply(jobj) {
-	if (jsobj.hasOwnProperty("response")) {
+	if (jobj.hasOwnProperty("response")) {
 		alertDisplay(jobj.response);
 	} else {
 		alertDisplay(jobj.msg);
@@ -139,7 +139,7 @@ function alterClientReply(jobj) {
 }
 
 function deleteClientReply(jobj) {
-	if (jsobj.hasOwnProperty("response")) {
+	if (jobj.hasOwnProperty("response")) {
 		alertDisplay(jobj.response);
 	} else {
 		alertDisplay(jobj.msg);
@@ -280,7 +280,6 @@ function accountCoowners(jsobj) {
 	writeDiv.empty();
 	if (jsobj.hasOwnProperty("ownList")) {
 		var owners = jsobj.ownList;
-		;
 		for (var i = 0; i < owners.length; i++) {
 			var p = document.createElement('p');
 			var t = document.createTextNode(owners[i]);
