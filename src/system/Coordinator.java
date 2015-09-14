@@ -9,6 +9,9 @@ import java.util.Queue;
 
 import javax.websocket.Session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sun.security.action.GetLongAction;
 import comon.OCRequest;
 import comon.TupleEntityFuncWS;
@@ -31,6 +34,7 @@ import functions.TellerFunctions;
  */
 public class Coordinator {
 
+	public static Logger logger=LoggerFactory.getLogger(Coordinator.class);
 	private static List<OCRequest> ocr = new ArrayList<>();
 	private static Map<Integer, ManagerFunctions> managers = new HashMap<>();
 	private static Map<Integer, TellerFunctions> tellers = new HashMap<>();
@@ -123,6 +127,7 @@ public class Coordinator {
 	/* OCR */
 	public static  void addOCR(OCRequest req){
 		ocr.add(req);
+		logger.info("OCR addet to Coordinator");
 		scatterAlertNewOCR();
 	}
 

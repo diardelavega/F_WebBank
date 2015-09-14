@@ -45,239 +45,183 @@ public class TellerQuery {
 	public long transfer(String personalId, String accFrom, String accTo,
 			double amount, char method) {
 
-		// TODO check if transfer amount is greater than 1000 (alert manager)
-		GeneralFunctions gf = new GeneralFunctions();
-		List<String> dbClients = gf.accountsClients(accFrom);
-		if (!dbClients.contains(personalId)) {
-			logger.warn("NOT THIS ACCOUNT : {}. OWNER", accFrom);
-		} else if (!gf.existsAccount(accTo)) {
-			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accTo);
-		} else {
-			upSession();
-			Account fromAcc = (Account) s.get(Account.class, accFrom);
-			if (fromAcc.getBalance() < amount) {
-				logger.info("UNSUFICIENT FOUNDS IN YOUR ACCOUNT");
-			} else {
-
-				Account toAcc = (Account) s.get(Account.class, accTo);
-				Transaction tr = s.beginTransaction();
-				try {
-					fromAcc.setBalance(fromAcc.getBalance() - amount);
-					toAcc.setBalance(toAcc.getBalance() + amount);
-					s.persist(fromAcc);
-					s.persist(toAcc);
-					s.flush();
-					tr.commit();
-				} catch (HibernateException e) {
-					System.out.println(" TRANSFER FAILED");
-					tr.rollback();
-					e.printStackTrace();
-				}
-				logger.info("TRANSFER COMPLETED");
-
-				// --------DB transaction & employeeAction----------
-				Timestamp tstamp = new java.sql.Timestamp(Calendar
-						.getInstance().getTime().getTime());
-				entity.Transaction t = new entity.Transaction(tstamp,
-						personalId, StaticVars.TRANSFER, accFrom, accTo,
-						amount, method);
-				tr = s.beginTransaction();
-				long idTra = StaticVars.ERROR;
-				try {
-					idTra = (long) s.save(t);
-					s.flush();
-					tr.commit();
-					/* alert director for the transaction if amount >=500 */
-					if (amount >= 500) {
-						PushClientSide pcs = new PushClientSide();
-						pcs.pushTransToDir(t);
-					}
-					/*************************/
-				} catch (HibernateException e) {
-					tr.rollback();
-					e.printStackTrace();
-				}
-
-				// EmployeeAction ea = new EmployeeAction(StaticVars.TRANSFER,
-				// note, empId, idTra);
-				// tr = s.beginTransaction();
-				// s.save(ea);
-				// s.flush();
-				// tr.commit();
-				s.close();
-				return idTra;
-				// ----------------------------------------
-				// s.close();
-				// TODO enter transaction & employeeAction
-			}
-		}
-		return StaticVars.ERROR;
-	}
-
-	public long deposite(String accNr, double amount) {
+		Account fromAcc = (Account) s.get(Account.class, accFrom);
+		Account toAcc = (Account) s.get(Account.class, accTo);
 
 		long idTra = StaticVars.ERROR;
-		Account acc = (Account) s.get(Account.class, accNr);
-		if (acc == null) {
-			logger.warn("ACCOUNT DOES NOT EXIST");
-			idTra = StaticVars.DOES_NOT_EXISTS;
-		} else {
-			Timestamp tstamp = new java.sql.Timestamp(Calendar.getInstance()
-					.getTime().getTime());
-			entity.Transaction t = null;
-			Transaction tr = s.beginTransaction();
+		// -------ALTER ACCOUNT BALANCES
+		Transaction tr = s.beginTransaction();
+		try {
+			fromAcc.setBalance(fromAcc.getBalance() - amount);
+			toAcc.setBalance(toAcc.getBalance() + amount);
+			s.persist(fromAcc);
+			s.persist(toAcc);
+			s.flush();
+			tr.commit();
+			// ------- New Transaction --------------------------------
+			Timestamp tstamp = new Timestamp(Calendar.getInstance().getTime()
+					.getTime());
+			entity.Transaction t = new entity.Transaction(tstamp, personalId,
+					StaticVars.TRANSFER, accFrom, accTo, amount, method);
+			tr = s.beginTransaction();
 			try {
-				t = new entity.Transaction(tstamp, null, StaticVars.DEPOSITE,
-						accNr, null, amount, 't');
-				acc.setBalance(acc.getBalance() + amount);
-				s.persist(acc);
-				s.flush();
-
 				idTra = (long) s.save(t);
 				s.flush();
 				tr.commit();
-				logger.info("DEPOSITE OPERATION DONE");
-				/* alert director for the transaction if amount >=500 */
-				if (amount >= 500) {
-					PushClientSide pcs = new PushClientSide();
-					pcs.pushTransToDir(t);
-				}
+				// TODO Push to client side if customer is online
+				/* alert client's account for the transaction if amount */
+				// PushClientSide pcs = new PushClientSide();
+				// pcs.pushTransToDir(t);
 				/*************************/
 			} catch (HibernateException e) {
 				tr.rollback();
 				e.printStackTrace();
 			}
-			s.close();
+			// -------------------------------------------------
+		} catch (HibernateException e) {
+			System.out.println(" TRANSFER FAILED");
+			tr.rollback();
+			e.printStackTrace();
 		}
+		logger.info("TRANSFER COMPLETED");
+		s.close();
+
+		return idTra;
+	}
+
+	public long deposite(String accNr, double amount) {
+
+		long idTra = StaticVars.ERROR;
+		upSession();
+		Account acc = (Account) s.get(Account.class, accNr);
+
+		Timestamp tstamp = new java.sql.Timestamp(Calendar.getInstance()
+				.getTime().getTime());
+		entity.Transaction t = null;
+		Transaction tr = s.beginTransaction();
+		try {
+			t = new entity.Transaction(tstamp, null, StaticVars.DEPOSITE,
+					accNr, null, amount, 't');
+			acc.setBalance(acc.getBalance() + amount);
+			s.persist(acc);
+			s.flush();
+
+			idTra = (long) s.save(t);
+			s.flush();
+			tr.commit();
+			logger.info("DEPOSITE OPERATION DONE");
+			/* alert director for the transaction if amount >=500 */
+			// TODO IF Clients account is online push changes to Client Side
+			// if (amount >= 500) {
+			// PushClientSide pcs = new PushClientSide();
+			// pcs.pushTransToDir(t);
+			// }
+			/*************************/
+		} catch (HibernateException e) {
+			tr.rollback();
+			e.printStackTrace();
+		}
+		s.close();
+
 		return idTra;
 	}
 
 	public long withdraw(String personalId, String accNr, double amount) {
-		GeneralFunctions gf = new GeneralFunctions();
-		List<String> dbClients = gf.accountsClients(accNr);
-		if (!dbClients.contains(personalId) || dbClients == null) {
-			System.out.println("NOT THIS ACCOUNT :" + accNr + " OWNER");
-		} else {
-			upSession();
-			Account acc = (Account) s.get(Account.class, accNr);
-			double balance = acc.getBalance();
-			if (balance < amount) {
-				System.out.println("UNSUFICIENT FOUNDS IN YOUR ACCOUNT");
-				s.close();
-			} else {
-				Transaction tr = s.beginTransaction();
-				try {
-					acc.setBalance(balance - amount);
-					s.persist(acc);
-					s.flush();
-					tr.commit();
-				} catch (HibernateException e) {
-					tr.rollback();
-					e.printStackTrace();
-				}
-				// s.close();
-				System.out.println("WITHDRAW OPERATION DONE");
 
-				// --------DB transaction & employeeAction----------
-				Timestamp tstamp = new java.sql.Timestamp(Calendar
-						.getInstance().getTime().getTime());
-				entity.Transaction t = new entity.Transaction(tstamp,
-						personalId, StaticVars.WITHDRAW, accNr, null, amount,
-						't');
-				// upSession();
-				tr = s.beginTransaction();
-				long idTra = StaticVars.ERROR;// invalid data for the
-												// initialisation
-				try {
-					idTra = (long) s.save(t);
-					s.flush();
-					tr.commit();
-					/* alert director for the transaction if amount >=500 */
-					if (amount >= 500) {
-						PushClientSide pcs = new PushClientSide();
-						pcs.pushTransToDir(t);
-					}
-					/*************************/
-				} catch (Exception e) {
-					tr.rollback();
-					logger.info("problem with the db at transaction storage phase");
-				}
-				s.close();
-				// TODO alert everyone interested in new transactions
+		upSession();
+		Account acc = (Account) s.get(Account.class, accNr);
+		double balance = acc.getBalance();
+		long idTra = StaticVars.ERROR;
 
-				return idTra;
-				// EmployeeAction ea = new EmployeeAction(StaticVars.WITHDRAW,
-				// note, empId, idTra);
-				// tr = s.beginTransaction();
-				// s.save(ea);
-				// s.flush();
-				// tr.commit();
-				// s.close();
-				// ----------------------------------------
+		// ---Set new balance in the accounts
+		Transaction tr = s.beginTransaction();
+		try {
+			acc.setBalance(balance - amount);
+			s.persist(acc);
+			s.flush();
+			tr.commit();
+
+			// ------ Create A new Transaction
+			Timestamp tstamp = new java.sql.Timestamp(Calendar.getInstance()
+					.getTime().getTime());
+			entity.Transaction t = new entity.Transaction(tstamp, personalId,
+					StaticVars.WITHDRAW, accNr, null, amount, 't');
+			tr = s.beginTransaction();
+			try {
+				idTra = (long) s.save(t);
+				s.flush();
+				tr.commit();
+
+				/*TODO push to client side
+				 * alert client's client side accounts for the transaction if
+				 * amount >=500
+				 */
+				PushClientSide pcs = new PushClientSide();
+				pcs.pushTransToDir(t);
+				/*************************/
+			} catch (Exception e) {
+				tr.rollback();
+				logger.info("problem with the db at transaction storage phase");
 			}
+		} catch (HibernateException e) {
+			tr.rollback();
+			e.printStackTrace();
 		}
-		return StaticVars.ERROR;
+		System.out.println("WITHDRAW OPERATION DONE");
+		s.close();
+
+		return idTra;
 	}
 
 	public String checkTransferRegularity(String personalId, String accFrom,
 			String accTo, double amount, char method) {
-		String regular = null;
 		GeneralFunctions gf = new GeneralFunctions();
 
 		if (!gf.existsAccount(accFrom)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accFrom);
-			regular = "ACCOUNT_FROM DOES NOT EXIST";
-			return regular;
+			return "ACCOUNT_FROM DOES NOT EXIST";
 		} else if (!gf.existsAccount(accTo)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accTo);
-			regular = "ACCOUNT_TO DOES NOT EXIST";
-			return regular;
+			return "ACCOUNT_TO DOES NOT EXIST";
 		} else {
 			List<String> dbClients = gf.accountsClients(accFrom);
 			if (!dbClients.contains(personalId)) {
 				logger.warn("NOT THIS ACCOUNT : {}. OWNER", accFrom);
-				regular = "NOT ACCOUNTS OWNER";
-				return regular;
+				return "NOT ACCOUNTS OWNER";
 			}
 			upSession();
-			Account fromAcc = (Account) s.get(Account.class, accFrom);
+			Account fromAcc = gf.getAccount(accFrom);
 			if (fromAcc.getBalance() < amount) {
 				logger.info("UNSUFICIENT FOUNDS IN YOUR ACCOUNT");
-				regular = "UNSUFICIENT FOUNDS IN YOUR ACCOUNT";
-				return regular;
+				return "UNSUFICIENT FOUNDS IN YOUR ACCOUNT";
 			}
 		}
-		return regular;
+		return null;
 	}
 
 	public String checkWithdrawRegularity(String personalId, String accNr,
 			double amount) {
-		String regular = null;
 		GeneralFunctions gf = new GeneralFunctions();
 
 		if (!gf.existsAccount(accNr)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accNr);
-			regular = "ACCOUNT DOES NOT EXIST";
-			return regular;
+			return "ACCOUNT DOES NOT EXIST";
 		} else {
 			List<String> dbClients = gf.accountsClients(accNr);
 			if (!dbClients.contains(personalId)) {
 				logger.warn("NOT THIS ACCOUNT : {}. OWNER", accNr);
-				regular = "NOT ACCOUNTS OWNER";
-				return regular;
+				return "NOT ACCOUNTS OWNER";
 			}
-			upSession();
-			Account acc = (Account) s.get(Account.class, accNr);
+			Account acc = gf.getAccount(accNr);
 			if (acc.getBalance() < amount) {
 				logger.info("UNSUFICIENT FOUNDS IN YOUR ACCOUNT");
-				regular = "UNSUFICIENT FOUNDS IN YOUR ACCOUNT";
-				return regular;
+				return "UNSUFICIENT FOUNDS IN YOUR ACCOUNT";
 			}
 		}
-		return regular;
+		return null;
 	}
 
-	public String checkDepositeRegularity(String accNr, double amount) {
+	public String checkDepositeRegularity(String accNr) {
 		String regular = null;
 		Account acc = (Account) s.get(Account.class, accNr);
 		if (acc == null) {
@@ -377,8 +321,9 @@ public class TellerQuery {
 
 	// --------------------reg alter delete
 
-	public String registerCustomer(String persId,String fname, String lname, String eMail,
-			String bdate, String address, String phone, String password) {
+	public String registerCustomer(String persId, String fname, String lname,
+			String eMail, String bdate, String address, String phone,
+			String password) {
 		GeneralFunctions gf = new GeneralFunctions();
 		logger.info("IN TELLER QUERY");
 		StringBuilder sb = new StringBuilder();// the validation error msgs
@@ -409,7 +354,7 @@ public class TellerQuery {
 			c.seteMail(eMail);
 			c.setPhone(phone);
 			c.setPassword(password);
-			
+
 			logger.info("IN TELLER QUERY, READY TO SAVE CLIENT");
 			upSession();
 			try {
@@ -476,6 +421,10 @@ public class TellerQuery {
 		Customers c = gf.getCustomer(persId);
 		if (c == null)
 			return StaticVars.UNREG_USR;
+
+		// search for open accounts
+		if (c.getAccountsNr() > 0)
+			return "Could Not Delete,Customer Has Running Accounts";
 
 		upSession();
 		try {

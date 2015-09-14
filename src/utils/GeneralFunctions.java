@@ -140,18 +140,10 @@ public class GeneralFunctions {
 
 	public List<String> registrationCheck(List<String> pId) {
 		// check for unregistered clients
-		upSession();
-		List<String> unreg = new ArrayList<String>();
-		Query q = s
-				.createQuery("SELECT personalId FROM Customers WHERE personalId=:pid");
-		// ( :pid1 or :pid2 or :pid3 or :pid4")
-		// .setParameter("pid1", pId.get(0))
-		// .setParameter("pid2", pId.get(1))
-		// .setParameter("pid3", pId.get(2))
-		// .setParameter("pid4", pId.get(3));
 
+		List<String> unreg = new ArrayList<String>();
 		for (String ss : pId) {
-			if (q.setParameter("pid", ss).list().size() == 0) {
+			if (getCustomer(ss) == null) {
 				unreg.add(ss);
 			}
 		}
@@ -159,6 +151,7 @@ public class GeneralFunctions {
 	}
 
 	public List<String> accountsCountCheck(List<String> pId) {
+		// find clients with more than 6 accounts
 		upSession();
 		List<String> pluss6AccLst = new ArrayList<String>();
 		Query q = s

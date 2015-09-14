@@ -64,7 +64,7 @@ public class Run {
 		// e.print();
 		// log.closeSession();
 		// logger.info(resp);
-		// Session ses = DBHandler.getSessionFactory().openSession();
+		 Session ses = DBHandler.getSessionFactory().openSession();
 
 		// TellerFunctions tf = new TellerFunctions(1);
 		// tf.register("1111111116", "ARMANDO", "Delavega", "delavega@that.com",
@@ -168,17 +168,18 @@ public class Run {
 		// .println("--------***********------------" + b.getAccount2());
 		// // }
 		// }
-//		ManagerFunctions mf = new ManagerFunctions(31);
-//		Coordinator.addManagerFunc(mf);
-//		TellerFunctions tf = new TellerFunctions(2);
-//		Coordinator.addTellerFunc(tf);
-//		List<String> sl = new ArrayList<>();
-//		sl.add("1111111111");
-//		 sl.add("1111111112");
+		ManagerFunctions mf = new ManagerFunctions(31);
+		Coordinator.addManagerFunc(mf);
+		TellerFunctions tf = new TellerFunctions(2);
+		Coordinator.addTellerFunc(tf);
+		List<String> sl = new ArrayList<>();
+		sl.add("1111111111");
+		sl.add("1111111112");
 //
-//		OCRequest ocr = new OCRequest(2, sl, StaticVars.OPEN, 'b');
-//		Coordinator.addOCR(ocr);
-////		ocr.print();
+		OCRequest ocr = new OCRequest(2, sl, StaticVars.OPEN, 'b');
+		Coordinator.addOCR(ocr);
+		
+		ocr.print();
 //		sl = new ArrayList<>();
 //		sl.add("1111111111");
 //		OCRequest	ocr2 = new OCRequest(2, sl, StaticVars.OPEN, 's');
@@ -232,7 +233,7 @@ public class Run {
 		//
 		// DirMsgWsHandler.switchit(jo.toString());
 
-		// DBHandler.closeSessionFactory();
+		 DBHandler.closeSessionFactory();
 
 		// logger.debug("WTF");
 		// FileHandler fh = new FileHandler();

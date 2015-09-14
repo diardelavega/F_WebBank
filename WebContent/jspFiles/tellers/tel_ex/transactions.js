@@ -31,6 +31,64 @@ function tranfer() {
 	doSend(JSON.stringify(transfData));
 }
 
+/* AFTER RESPONSE */
+
+function depositeReply(jsobj) {
+	// clonsole.log(jsobj.msg);
+	transAlertDisplay(jsobj.msg);
+}
+function withdrawReply(jsobj) {
+	// clonsole.log(jsobj.msg);
+	transAlertDisplay(jsobj.msg);
+}
+function transferReply(jsobj) {
+	// clonsole.log(jsobj.msg);
+	transAlertDisplay(jsobj.msg);
+}
+
+function errorRes(jsobj) {
+	clonsole.log(jsobj.msg);
+}
+
+/* Functionality */
+var telTimeOut;
+	function transAlertDisplay(msg, alertType) {
+		var div = $("#telTransMsgAlert");
+		clearTimeout(telTimeOut);
+		div.empty();
+		// div.text(msg);
+		if (alertType === 'info') {
+			$(div).addClass("alert alert-info");
+		} else {
+			$(div).addClass("alert alert-warning");
+		}
+
+		var span = document.createElement("span");
+		$(span).attr("align", "left");
+		span.style.padding = "40px";
+
+		var a = document.createElement("a");
+		a.innerHTML = "x";
+		$(a).attr("href", "#");
+		$(a).attr("onclick", "closeThis(event)");
+		var br = document.createElement("br");
+
+		span.appendChild(a)
+		div.append(span);
+		div.append(br);
+		div.append(msg);
+
+		$(div).show();
+		// fadeOut(div);
+		return div;
+	}
+
+function transFadeOut(div) {
+	telTimeOut = setTimeout(function() {
+		$(div).hide(1000);
+	}, 5000);
+}
+
 function clearDep() {
 	$('[name=accNr]').val("");
 	$('[name=amount]').val("");
@@ -46,19 +104,4 @@ function clearTransfer() {
 	accTo: $('[name=accNrTo]').val("");
 	amount: $('[name=transfAmount]').val("");
 	persId: $('[name=transfPersId]').val("");
-}
-/* AFTER RESPONSE */
-
-function depositeReply(jsobj) {
-	clonsole.log(jsobj.msg);
-}
-function withdrawReply(jsobj) {
-	clonsole.log(jsobj.msg);
-}
-function transferReply(jsobj) {
-	clonsole.log(jsobj.msg);
-}
-
-function errorRes(jsobj) {
-	clonsole.log(jsobj.msg);
 }

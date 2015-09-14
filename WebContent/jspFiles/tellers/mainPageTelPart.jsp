@@ -19,7 +19,7 @@ th {
 }
 
 .tabSpace {
-	border: 1;
+	/* border: 1; */
 	border-color: olive;
 }
 
@@ -28,7 +28,7 @@ table {
 	/* border-collapse: separate; */
 	border-spacing: 2px;
 	border-color: gray;
-	border: 1;
+	/* border: 1; */
 }
 
 th, td {
@@ -57,13 +57,12 @@ body {
 		</thead>
 		<tbody>
 			<tr>
-				<td><label>Personal Id:&nbsp;</label><input type="text" class="persId"
-					id="telPersonalId" style="margin-right: 15px"></td>
-				<td><label style="margin-left: 15px">Account Nr.:&nbsp;</label><input class="accNr"
-					type="text" id="telAccountNr"></td>
-				<td><div id="mainMsgAlert">
-						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-					</div></td>
+				<td><label style="margin-left: 15px">Account Nr.:&nbsp;</label><input
+					class="accNr" type="text" id="telAccountNr"></td>
+				<td><label>Personal Id:&nbsp;</label><input type="text"
+					class="persId" id="telPersonalId" style="margin-right: 15px"></td>
+				<td><div id="telMainMsgAlert"
+						style="width: 270px; height: 50px;"></div></td>
 			</tr>
 		</tbody>
 	</table>
@@ -95,7 +94,7 @@ body {
 							<div id="accs" class="tab-pane fade ">
 								<h3>Account's Status :</h3>
 								<!-- table with the response Account Status -->
-								<table id="telAccountStatus" border="1" bordercolor="olive">
+								<table id="telAccountStatus" border="0" bordercolor="olive">
 									<thead>
 										<tr>
 										</tr>
@@ -113,7 +112,7 @@ body {
 							<div id="cli_a" class="tab-pane fade">
 								<h3>Client's Accounts</h3>
 								<!-- table with the response Account Status -->
-								<table id="telClientAccounts" border="1" bordercolor="olive">
+								<table id="telClientAccounts" border="0" bordercolor="olive">
 									<thead>
 										<tr>
 										</tr>
@@ -159,7 +158,8 @@ body {
 													<tbody>
 														<tr>
 															<td><label> Address&nbsp;</label></td>
-															<td><input type="text" name="address1" class="address"></td>
+															<td><input type="text" name="address1"
+																class="address"></td>
 														</tr>
 														<tr>
 															<td><label> phone Nr.&nbsp;</label></td>
@@ -167,7 +167,8 @@ body {
 														</tr>
 														<tr>
 															<td><label> E-mail&nbsp;</label></td>
-															<td><input id="email" type="text" name="email1" class="mail"></td>
+															<td><input id="email" type="text" name="email1"
+																class="mail"></td>
 														</tr>
 														<tr>
 															<td><label> Password&nbsp;</label></td>
@@ -179,23 +180,24 @@ body {
 											</td>
 										</tr>
 										<tr>
-											<td colspan="1" align="center"><input id="newbut"
-												onclick="clientFormDataSearch();" type="button"
-												value="Search"><span class="space"></span>
+											<td colspan="1" align="center">
+												<button id="newbut" onclick="clientFormDataSearch();">Search</button>
+												<span class="space"></span>
 												<button id="clearbut" onclick="clear1();">
-												Clear <span class="glyphicon glyphicon-erase"></span>
-												</button></td>
+													Clear <span class="glyphicon glyphicon-erase"></span>
+												</button>
+											</td>
 											<td><button onclick="newClientReg();">Reg. New</button>
 												<span class="space"></span>
-												<button onclick="alterClient();">Alter</button>
-												 <span class="space"></span>
+												<button onclick="alterClient();">Alter</button> <span
+												class="space"></span>
 												<button onclick="deleteClient();">Delete</button></td>
 										</tr>
 									</tbody>
 								</table>
 								<br>
 								<div class="scroll">
-									<table id="telClientTableList" border="1" bordercolor="olive"
+									<table id="telClientTableList" border="0" bordercolor="olive"
 										class="table-condensed" width="100%">
 										<thead>
 											<tr>

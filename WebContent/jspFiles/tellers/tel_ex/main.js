@@ -1,10 +1,8 @@
-function severClientTupeling() {
-	alert("TUPELING");
+function telSeverClientTupeling() {
 	var reg = {
 		head : "coordinate",
-		empId : $("#telEmpId").val()
+		empId : telId
 	}
-//	alert(empId);
 	doSend(JSON.stringify(reg));
 }
 
@@ -45,9 +43,6 @@ function telClientAccounts() {
 	doSend(JSON.stringify(req));
 }
 
-
-
-
 function deleteClient() {
 	clientData = {
 		head : 'deleteClient',
@@ -56,9 +51,9 @@ function deleteClient() {
 	doSend(JSON.stringify(clientData));
 }
 function newClientReg() {
-	clientData = { 
+	clientData = {
 		head : 'newClientReg',
-		// dirId : ${sessionScope.empId},
+		empId : telId,
 		id : $('[name=id]').val(),
 		fname : $('[name=fname1]').val(),
 		lname : $('[name=lname1]').val(),
@@ -73,7 +68,7 @@ function newClientReg() {
 function alterClient() {
 	clientData = {
 		head : 'alterClient',
-		// dirId : ${sessionScope.empId},
+		empId : telId,
 		id : $('[name=id]').val(),
 		fname : $('[name=fname1]').val(),
 		lname : $('[name=lname1]').val(),
@@ -86,19 +81,16 @@ function alterClient() {
 	doSend(JSON.stringify(clientData));
 }
 
-//-----------TRANSACTIONS
+// -----------TRANSACTIONS
 
-
-//-----------END OFTRANSACTIONS
-
-
+// -----------END OFTRANSACTIONS
 
 function clientIdDataSearch() {
 	var persId = $("#telPersonalId").val();
 	if (persId != '') {
 		clientDataSearch = {
 			head : 'search',
-			// dirId : ${sessionScope.empId},
+			empId : telId,
 			id : persId
 		}
 		doSend(JSON.stringify(clientDataSearch));
@@ -108,7 +100,7 @@ function clientIdDataSearch() {
 function clientFormDataSearch() {
 	clientDataSearch = {
 		head : 'search',
-		// dirId : ${sessionScope.empId},
+		empId : telId,
 		id : $('[name=id]').val(),
 		fname : $('[name=fname1]').val(),
 		lname : $('[name=lname1]').val(),
@@ -123,26 +115,34 @@ function clientFormDataSearch() {
 /* AFTER RESPONSE FUNCTION */
 
 function registerClientReply(jobj) {
+	var div = $("#telMainMsgAlert");
 	if (jobj.hasOwnProperty("response")) {
-		alertDisplay(jobj.response);
+		div.text(jobj.response);
+
+		var a = document.createElement("a");
+		$(a).attr("href", "#");
+		a.innerHTML = "&times";
+		div.append(a);
 	} else {
-		alertDisplay(jobj.msg);
+		mainAlertDisplay(jobj.msg);
 	}
 }
 
 function alterClientReply(jobj) {
 	if (jobj.hasOwnProperty("response")) {
-		alertDisplay(jobj.response);
+		mainAlertDisplay(jobj.response);
 	} else {
-		alertDisplay(jobj.msg);
+		mainAlertDisplay(jobj.msg);
 	}
 }
 
 function deleteClientReply(jobj) {
 	if (jobj.hasOwnProperty("response")) {
-		alertDisplay(jobj.response);
+		// mainAlertDisplay(jobj.response);
+		alert(jobj.response);
 	} else {
-		alertDisplay(jobj.msg);
+		// mainAlertDisplay(jobj.msg);
+		mainAlertDisplay(jobj.msg);
 	}
 }
 // ---------------
@@ -151,11 +151,12 @@ function searchReply(jsobj) {
 	console.log(jsobj);
 	if (jsobj.hasOwnProperty("customerList")) {
 		var custList = jsobj.customerList;
+
 		var tableHead = $('#telClientTableList thead');
 		var tablebody = $('#telClientTableList tbody');
-
 		tableHead.empty();
 		tablebody.empty();
+
 		for (var i = 0; i < custList.length; i++) {
 			var cust = custList[i];
 			var tr = document.createElement('tr');
@@ -173,19 +174,17 @@ function searchReply(jsobj) {
 				}
 				// -----------body creation
 				var td = document.createElement('td');
-				// var t = document.createTextNode(cust[key]); // Create a tex
-
 				if (key === 'bdata') {
 					var bd = new Date(cust[key]);
 					var t = document.createTextNode(bd.getDate() + "/"
 							+ (bd.getMonth() + 1) + "/" + bd.getFullYear());
-					// .toLocaleDateString('en-GB'));
 				} else {
 					var t = document.createTextNode(cust[key]);
 				}
 
 				if (key === 'personalId') {
 					var a = document.createElement('a');
+					$(a).attr("href", "#");
 					a.onclick = function(event) {
 						onPersId(event);
 					};
@@ -201,7 +200,7 @@ function searchReply(jsobj) {
 			}// for key
 		}// for i
 	} else {
-		alert(jsobj.msg);
+		mainAlertDisplay(jsobj.msg);
 	}
 }
 
@@ -238,14 +237,27 @@ function clientAccounts(jsobj) {
 				// -----------body creation
 				var td = document.createElement('td');
 				var t = document.createTextNode(acc[key]);
-				td.appendChild(t);
-				tr.appendChild(td);
-				tb.append(tr);
+				if (key === 'accountId') {
+					var a = document.createElement('a');
+					$(a).attr("href", "#");
+					a.onclick = function(event) {
+						onAccId(event);
+					};
+					a.appendChild(t);
+					td.appendChild(a);
+					tr.appendChild(td);
+					tb.append(tr);
+				} else {
+
+					td.appendChild(t);
+					tr.appendChild(td);
+					tb.append(tr);
+				}
 			}
 			console.log(acc)
 		}
 	} else {
-		alert(jsobj.msg)
+		mainAlertDisplay(jsobj.msg)
 	}
 }
 
@@ -271,7 +283,7 @@ function accountStatus(jsobj) {
 		}
 		console.log(acc);
 	} else if (jsobj.hasOwnProperty("msg")) {
-		alert(jsobj.msg);
+		mainAlertDisplay(jsobj.msg);
 	}
 }
 
@@ -282,15 +294,31 @@ function accountCoowners(jsobj) {
 		var owners = jsobj.ownList;
 		for (var i = 0; i < owners.length; i++) {
 			var p = document.createElement('p');
-			var t = document.createTextNode(owners[i]);
-			p.appendChild(t);
-			writeDiv.append(p)
-
-			console.log(owners[i])
+			for (var j = 0; j < owners[i].length; j++) {
+				console.log(owners[i][j]);
+				if (j == 0) {
+					var a = document.createElement("a");
+					$(a).attr("href", "#");
+					a.onclick = function(event) {
+						onPersId(event);
+					};
+					a.innerHTML = owners[i][j];
+					$(p).append(a);
+					$(p).append(", ");
+				} else if (j == 3) {
+					var bd = new Date(owners[i][j]);
+					var t = document.createTextNode(bd.getDate() + "/"
+							+ (bd.getMonth() + 1) + "/" + bd.getFullYear()
+							+ ", ");
+					p.appendChild(t);
+				} else {
+					$(p).append(owners[i][j] + ", ");
+				}
+				writeDiv.append(p)
+			}
 		}
 	} else if (jsobj.hasOwnProperty("msg")) {
-		alert(jsobj.msg);
-		console.log(jsobj.msg)
+		mainAlertDisplay(jsobj.msg);
 	}
 }
 
@@ -308,18 +336,52 @@ function errorRes(jsobj) {
 	// alerter.addClass("alerter");
 	// $(alerter).addClass("alert alert-warning");
 	// alerter.innerHTML = jsobj.msg;
-	alertDisplay(jsobj.msg);
+	mainAlertDisplay(jsobj.msg);
 }
 
 /* END AFTER RESPONSE FUNCTION */
 
+// --------------FUNCTIONALITY
 function onPersId(event) {
 	var txt = $(event.target).text();
 	$("#telPersonalId").val(txt);
 }
 
-function alertDisplay(msg) {
-	var alerter = $('#mainMsgAlert');
-	alerter.classList.add("alert alert-info");
-	alerter.innerHTML = msg;
+function onAccId(event) {
+	var txt = $(event.target).text();
+	$("#telAccountNr").val(txt);
+}
+
+var telTimeOut;
+function mainAlertDisplay(msg) {
+	var div = $("#telMainMsgAlert");
+	clearTimeout(telTimeOut);
+	div.empty();
+	div.text(msg);
+	$(div).addClass("alert alert-info");
+
+	var span = document.createElement("span");
+	$(span).attr("align", "left");
+	span.style.padding = "40px";
+
+	var a = document.createElement("a");
+	a.innerHTML = "x";
+	$(a).attr("href", "#");
+	$(a).attr("onclick", "closeThis(event)");
+
+	span.appendChild(a)
+	div.append(span);
+	$(div).show();
+	fadeOut(div);
+}
+
+function fadeOut(div) {
+	telTimeOut = setTimeout(function() {
+		$(div).hide(1000);
+	}, 5000);
+}
+
+function closeThis(event) {
+	var div = $(event.target).parent().parent();
+	$(div).hide(1000);
 }

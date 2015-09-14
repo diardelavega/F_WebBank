@@ -28,8 +28,8 @@ public class TelMsgHandler {
 	// ---------client to server side
 	private TellerFunctions tf = new TellerFunctions();
 
-	public String switchit(String msg, JsonObject jobj, String head)
-			throws ParseException {
+	public String switchit(JsonObject jobj, String head) throws ParseException {
+		logger.info("SWITCHING IT");
 		// JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
 		// String head = jobj.get("head").getAsString();
 
@@ -56,17 +56,38 @@ public class TelMsgHandler {
 			return withdraw(jobj);
 		case "transfer":
 			return transfer(jobj);
-		case "closeAccount":
-			return closeAccount(jobj);
-		case "openAccount":
-			return openAccount(jobj);
+		case "closeAccountRequest":
+			return closeAccountReq(jobj);
+		case "openAccountRequest":
+			return openAccountReq(jobj);
+		case "closeAccountDefinite":
+			return closeAccountDef(jobj);
+		case "openAccountDefinite":
+			return openAccountDef(jobj);
+
 		default:
 			logger.info("invalid switch criterias");
 		}
 		return null;
 	}
 
-	private String openAccount(JsonObject jobj) {
+	/**
+	 * After the manager confirms the closure, is the teller that executes the
+	 * final action. Open account definitive and close account definitive.
+	 * Maybe the closure should be done automatically in case of approval
+	 * */
+	private String openAccountDef(JsonObject jobj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String closeAccountDef(JsonObject jobj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String openAccountReq(JsonObject jobj) {
+
 		ArrayList<String> pidList = new ArrayList<String>();
 		if (jobj.get("pId1").getAsString().length() != 0) {
 			pidList.add(jobj.get("pId1").getAsString());
@@ -81,29 +102,32 @@ public class TelMsgHandler {
 			pidList.add(jobj.get("pId4").getAsString());
 		}
 		char accType = jobj.get("accType").getAsCharacter();
+		logger.info("OPENING Account with {}, {}, {}, {}, {}", pidList.get(0),
+				accType);
+		List<String> problemIds = tf.openAccountReq(pidList, accType);
 
-		List<String> problemIds = tf.openAccount(pidList, accType);
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "requestReply");
 		if (problemIds != null) {
-			JsonObject jo = new JsonObject();
-			Gson gson = new GsonBuilder().serializeNulls().create();
-			jo.addProperty("head", "openAccReply");
 			jo.add("problematicId", gson.toJsonTree(problemIds));
-			return gson.toJson(jo);
+		} else {
+			jo.addProperty("msg", "Request Was Filed For Confirmation");
 		}
-		return null;
+		return gson.toJson(jo);
 	}
 
-	private String closeAccount(JsonObject jobj) {
+	private String closeAccountReq(JsonObject jobj) {
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "requestReply");
+
 		String accNr = jobj.get("accNr").getAsString();
 		String resp = tf.accCloseAccCheck(accNr);
 		if (resp != null) {
-			JsonObject jo = new JsonObject();
-			Gson gson = new GsonBuilder().serializeNulls().create();
-			jo.addProperty("head", "closeAccReply");
 			jo.addProperty("msg", resp);
 			return gson.toJson(jo);
 		}
-
 		ArrayList<String> pidList = new ArrayList<String>();
 		if (jobj.get("pId1").getAsString().length() != 0) {
 			pidList.add(jobj.get("pId1").getAsString());
@@ -117,15 +141,12 @@ public class TelMsgHandler {
 		if (jobj.get("pId4").getAsString().length() != 0) {
 			pidList.add(jobj.get("pId4").getAsString());
 		}
-		List<String> probList = tf.closeAccount(pidList, accNr);
+		List<String> probList = tf.closeAccountReq(pidList, accNr);
 		if (probList != null) {
-			JsonObject jo = new JsonObject();
-			Gson gson = new GsonBuilder().serializeNulls().create();
-			jo.addProperty("head", "closeAccReply");
 			jo.add("problematicId", gson.toJsonTree(probList));
-			return gson.toJson(jo);
 		}
-		return null;
+		jo.addProperty("msg", "Request Was Filed For Confirmation");
+		return gson.toJson(jo);
 	}
 
 	private String transfer(JsonObject jobj) {
@@ -152,8 +173,6 @@ public class TelMsgHandler {
 
 		String resp = tf.withdraw(persId, account, amount);
 		if (resp != null) {
-			// some irregularity was found
-			// TODO return the response
 			JsonObject jo = new JsonObject();
 			Gson gson = new GsonBuilder().serializeNulls().create();
 			jo.addProperty("head", "withdrawReply");
@@ -164,15 +183,12 @@ public class TelMsgHandler {
 	}
 
 	private String deposite(JsonObject jobj) {
-
 		String account = jobj.get("accNr").getAsString();
 		double amount = jobj.get("amount").getAsDouble();
 		String note = jobj.get("note").getAsString();
 
 		String resp = tf.deposite(account, amount, note);
 		if (resp != null) {
-			// some irregularity was found
-			// TODO return the response
 			JsonObject jo = new JsonObject();
 			Gson gson = new GsonBuilder().serializeNulls().create();
 			jo.addProperty("head", "depositeReply");
@@ -250,8 +266,8 @@ public class TelMsgHandler {
 		String password = jobj.get("password").getAsString();
 		String bdate = jobj.get("bdate").getAsString();
 
-		String report = tf.register(persId,fname, lname, eMail, bdate, address, phone,
-				password);
+		String report = tf.register(persId, fname, lname, eMail, bdate,
+				address, phone, password);
 		if (report == null) {
 			jo.addProperty("head", "error");
 			jo.addProperty("msg",
@@ -389,8 +405,8 @@ public class TelMsgHandler {
 		 */
 
 		logger.info("in coord EMP id is--- []", empId);
-		Coordinator co = new Coordinator();
-		tf = co.getTellerFunc(empId);
+		// Coordinator co = new Coordinator();
+		tf = Coordinator.getTellerFunc(empId);
 		tf.setWsSession(ses);
 	}
 

@@ -12,8 +12,10 @@ import javax.websocket.server.ServerEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import utils.DirMsgWsHandler;
 import utils.ManMsgHandler;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @ServerEndpoint("/man")
 public class ManagerWS {
@@ -37,8 +39,29 @@ public class ManagerWS {
 	public void recMsg(String msg, Session ses) throws IOException {
 		// System.out.println("received msg from: " + ses.getId());
 		System.out.println("ON MANAGER :received msg seas : " + msg);
+		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
+		String head = jobj.get("head").getAsString();
+		
 		ManMsgHandler mmh = new ManMsgHandler();
-		String webResponse = mmh.switchit(msg);
+		String webResponse = null ;
+		
+		
+		logger.info("HEAD  is {}", head);
+		if (head.equalsIgnoreCase("coordinate")) {
+			int empId = 0;
+			try {
+				empId = jobj.get("empId").getAsInt();
+				logger.info("EmpId  is {}", empId);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			mmh.coordRegister(empId, ses);
+		} else {
+			webResponse = mmh.switchit(jobj,head);// .switchit(msg, jobj, head);
+			if (webResponse != null)
+				sendMsg(webResponse, ses);
+		}
+		
 
 		sendMsg(webResponse, ses);
 	}

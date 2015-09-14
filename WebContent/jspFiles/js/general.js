@@ -1,13 +1,13 @@
-//function capitalize() {
-//	// setTimeout(function() {
-//	$("input[type=text]").keyup(function() {
-//		$(this).val($(this).val().toUpperCase());
-//	});
-//	// }, 3000)
-//}
+function capitalize() {
+	// setTimeout(function() {
+	$("input[type=text]").focusout(function() {
+		$(this).val($(this).val().toUpperCase());
+	});
+	// }, 3000)
+}
 
 $(function() {
-	$("input[type=text]").keyup(function() {
+	$("input[type=text]").focusout(function() {
 		$(this).val($(this).val().toUpperCase());
 	});
 });

@@ -5,8 +5,8 @@
 	<div id="reqManField"></div>
 	<h1>Evaluate your requests</h1>
 	<hr>
-	<button onclick="magGetRequest">GET</button>
-	<button onclick="magLeaveRequest">LEAVE</button>
+	<button onclick="manGetRequest();">GET</button>
+	<button onclick="manLeaveRequest();">LEAVE</button>
 	<br> <br>
 	<div id="requestDetails">
 		<p id="requestType"></p>

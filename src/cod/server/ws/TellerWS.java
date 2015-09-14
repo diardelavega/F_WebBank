@@ -22,7 +22,7 @@ import utils.TelMsgHandler;
 @ServerEndpoint("/tel")
 public class TellerWS {
 
-	Logger logger = LoggerFactory.getLogger(ManagerWS.class);
+	Logger logger = LoggerFactory.getLogger(TellerWS.class);
 
 	@OnOpen
 	public void open(Session ses) {
@@ -59,7 +59,7 @@ public class TellerWS {
 			}
 			tmh.coordRegister(empId, ses);
 		} else {
-			webResponse = tmh.switchit(msg, jobj, head);
+			webResponse = tmh.switchit( jobj, head);
 			if (webResponse != null)
 				sendMsg(webResponse, ses);
 		}

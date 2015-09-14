@@ -63,7 +63,7 @@ function onMessage(evt) {
 		leaveRequest(jsobj);
 		break;
 	case 'requestRequestReply':
-		p6Acc(jsobj);
+		requestRequestReply(jsobj);
 		break;
 	case 'error':
 		errorRes(jsobj);
@@ -76,7 +76,7 @@ function onError(evt) {
 	alert(evt.data);
 }
 
-function hideShow(chosen) {
+function ManHideShow(chosen) {
 	$('.hidable').each(function(index) {
 		if ($(this).attr("id") === chosen) {
 			$(this).show();
@@ -88,17 +88,17 @@ function hideShow(chosen) {
 	});
 }
 function divhide() {
-	hideShow('mainMan');
+	ManHideShow('mainMan');
 	// $('.hidable').attr("style", "visibility: visible");
 }
 
 
 
 
-function capitalize() {
+/*function capitalize() {
 	// setTimeout(function() {
-	$("input[type=text]").keyup(function() {
+	$("input[type=text]").onblure(function() {
 		$(this).val($(this).val().toUpperCase());
 	});
 	// }, 3000)
-}
+}*/

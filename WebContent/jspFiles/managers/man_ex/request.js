@@ -1,14 +1,13 @@
-function severClientTupeling() {
+function manseverClientTupeling() {
 	alert("TUPELING");
+	alert(bigEmpId);
 	var reg = {
 		head : "coordinate",
 		empId : $("#manEmpId").val()
 	}
-//	alert(empId);
+	// alert(empId);
 	doSend(JSON.stringify(reg));
 }
-
-
 
 function manGetRequest() {
 	var getter = {
@@ -29,6 +28,7 @@ function manLeaveRequest() {
 
 /* AFTER RESPONSE FUNCTIONS */
 function requestRequestReply(jsobj) {
+	console.log(jsobj);
 	var request = jsobj.requestData;
 	var reqType = request['reqType'];
 	var clients = request['clientIdsList'];

@@ -20,13 +20,21 @@
 	right: 2%;
 }
 
-/* td {
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-left: .5em;
-	padding-right: 5em;
-	margin: 5px;
-} */
+table.format {
+	table-layout: fixed;
+	width: 400px;
+	margin-top: 30px;
+}
+
+table.format td {
+	overflow: hidden;
+}
+
+table, th, td {
+	/* border: 1px solid black; */
+	
+}
+
 body {
 	font-family: Verdana, Arial, sans-serif;
 	font-size: 12px;
@@ -37,8 +45,22 @@ body {
 		<tbody>
 			<tr>
 				<td>
+					<table width="850px">
+						<tr>
+							<td>
+								<h3>Transactions</h3>
+							</td>
+							<td align="right" width="30px">
+								<div style="width: 300px;" align="right" id="telTransMsgAlert"></div>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
 					<div class="container-fluid">
-						<h3>Transactions:</h3>
+
 						<ul class="nav nav-tabs ">
 							<li class="active"><a data-toggle="tab" href="#dep"><strong>DEPOSITE</strong></a></li>
 							<li><a data-toggle="tab" href="#transf"><strong>TRANSFERS</strong></a></li>
@@ -49,32 +71,26 @@ body {
 						<div class="tab-content">
 							<div id="dep" class="tab-pane fade in active">
 
-								<table border="0" id="telDeposite">
+								<table border="0" id="telDeposite" class="format">
 									<tbody>
 										<tr>
-											<td width="65%">
-												<div class="box-l">
-													<label>Account Nr. :</label><input type="text" name="accNr">
-													<span class="space"></span> <label>Amount :</label> <input
-														type="text" name="amount">
+											<td width="620px">
+												<!-- <div class="box-l"> --> <label>Account Nr. :</label><input
+												type="text" name="accNr"> <span class="space"></span>
+												<label>Amount :</label> <input type="text" name="amount">
 
-													<center>
-														<label>Note :</label>
-														<textarea rows="4" cols="60" name="note"></textarea>
-													</center>
-													<br>
-													<center>
-														<button id="telDepOk" onclick="deposite();">OK</button>
-														<span class="space"></span>
-														<button id="telDepClear" onclick="clearDep();">Clear</button>
-													</center>
-												</div>
+												<center>
+													<label>Note :</label>
+													<textarea rows="4" cols="60" name="note"></textarea>
+												</center>
+												<center style="padding-top: 10px">
+													<button id="telDepOk" onclick="deposite();">OK</button>
+													<span class="space"></span>
+													<button id="telDepClear" onclick="clearDep();">Clear</button>
+												</center> <!-- </div> -->
 											</td>
-											<td width="35%"><div id="telDepResponse" class="box-r"></div>
-
-												<p>Lorem ipsum dolor sit amet, consectetur adipisicing
-													elit, sed do eiusmod tempor incididunt ut labore et dolore
-													magna aliqua.</p></td>
+											<td width="230px"><div id="telDepResponse" class="box-r"></div>
+											</td>
 										</tr>
 
 									</tbody>
@@ -83,63 +99,80 @@ body {
 							</div>
 							<div id="transf" class="tab-pane fade">
 
-								<table border="0" id="telTransfer">
+								<table border="0" id="telTransfer" class="format">
 									<tbody>
 										<tr>
-											<td width="70%">
-												<div class="box-l">
-													<label>Account From :</label><input type="text"
-														class="accNr" name="accNrFrom"> <span
-														class="space"></span> <label>Account To :</label> <input
-														type="text" name="accNrTo" class="accNr"> <br>
-													<label>Personal ID :</label><input type="text"
-														class="persId" name="transfPersId"> <span class="space"></span>
-													<label>Amount :</label> <input type="text" name="transfAmount"
-														class="amount">
-													<br>
-													<center>
-														<button id="telDepOk">OK</button>
-														<span class="space"></span>
-														<button id="telDepClear">Clear</button>
-													</center>
-												</div>
+											<td width="620px">
+												<table>
+													<tbody>
+														<tr>
+															<td><label>Account From :</label></td>
+															<td><input type="text" class="accNr"
+																name="accNrFrom"></td>
+															<td><label>Account To :</label></td>
+															<td><input type="text" name="accNrTo" class="accNr">
+															</td>
+														</tr>
+														<tr>
+															<td><label>Personal ID :</label></td>
+															<td><input type="text" class="persId"
+																name="transfPersId"></td>
+															<td><label>Amount :</label></td>
+															<td><input type="text" name="transfAmount"
+																class="amount"></td>
+														</tr>
+														<tr align="center">
+															<td colspan="4" style="padding-top: 10px">
+																<button id="telDepOk">OK</button> <span class="space"></span>
+																<button id="telDepClear">Clear</button>
+															</td>
+														</tr>
+													</tbody>
+												</table>
 											</td>
-											<td width="30%"><div id="telDepResponse" class="box-r"></div>
-												<p>Ut enim ad minim veniam, quis nostrud exercitation
-													ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></td>
+											<td width="230px"><div id="telDepResponse" class="box-r"></div>
+											</td>
 										</tr>
 									</tbody>
 								</table>
 
 							</div>
 							<div id="with" class="tab-pane fade">
-								<table border="0" id="telWithdraw">
+								<table border="0" id="telWithdraw" class="format">
 									<tbody>
 										<tr>
-											<td width="65%">
-												<div class="box-l">
-													<label>Account From :</label><input type="text"
-														class="accNr" name="withAccNr"> <span
-														class="space"></span> <br> <label>Personal ID
-														:</label><input type="text" name="withPersId" class="persId">
-													<br> <label>Amount :</label> <input type="text"
-														class="amount" name="withAmount">
-												</div> <br>
-												<center>
-													<button id="telDepOk" onclick="withdraw();">OK</button>
-													<span class="space"></span>
-													<button id="telDepClear" onclick="clearWithdraw();">Clear</button>
-												</center>
+											<td width="620px">
+												<table>
+													<tbody>
+														<tr>
+															<td><label>Account From :</label></td>
+															<td><input type="text" class="accNr"
+																name="withAccNr"></td>
+															<td><label>Personal ID :</label></td>
+															<td><input type="text" name="withPersId"
+																class="persId"></td>
+														</tr>
+														<tr>
+															<td colspan="2" align="right"><label>Amount
+																	:</label></td>
+															<td colspan="2" align="left"><input type="text"
+																class="amount" name="withAmount"></td>
+														</tr>
+														<tr>
+															<td colspan="4" style="padding-top: 10px" align="center">
+																<button id="telDepOk" onclick="withdraw();">OK</button>
+																<span class="space"></span>
+																<button id="telDepClear" onclick="clearWithdraw();">Clear</button>
+															</td>
+														</tr>
+													</tbody>
+												</table>
 											</td>
-											<td width="35%"><div id="telDepResponse" class="box-r"></div>
-												<p>Sed ut perspiciatis unde omnis iste natus error sit
-													voluptatem accusantium doloremque laudantium, totam rem
-													aperiam.</p></td>
+											<td width="230px"><div id="telDepResponse" class="box-r"></div>
+											</td>
 										</tr>
 									</tbody>
 								</table>
-
-
 
 							</div>
 							<div id="manInfo" class="tab-pane fade">

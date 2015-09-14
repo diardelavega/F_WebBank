@@ -54,8 +54,7 @@ public class TellerFunctions extends EmployeeFunctions {
 			ea.setActionType(req.getReqType());
 			if (req.getReqType().equals(StaticVars.OPEN)) {
 				AccountsManagment am = new AccountsManagment();
-				// open account and +1 to the customers accounts number they
-				// poses
+				// open acc, +1 to the customers accounts number they poses
 				String accNr = am.openAccount(req.getAccType(),
 						req.getClientIdsList());
 				ea.setAccountId1(accNr);
@@ -73,33 +72,39 @@ public class TellerFunctions extends EmployeeFunctions {
 			if (req.getReqType().equals(StaticVars.PLUS_1K_DEP)) {
 				TellerQuery tq = new TellerQuery();
 				long trnr = tq.deposite(req.getAccFromNr(), req.getAmount());
+				if(trnr >0){
 				ea.setAccountId1(req.getAccFromNr());
 				ea.setCustomerId(req.getClientIdsList());
 				ea.setTrNr(trnr);
 				ea.setAmount(req.getAmount());
 				super.deposite(ea);
+				}
 			}
 			if (req.getReqType().equals(StaticVars.PLUS_1K_WITH)) {
 				TellerQuery tq = new TellerQuery();
 				long trnr = tq.withdraw(req.getClientIdsList().get(0),
 						req.getAccFromNr(), req.getAmount());
+				if(trnr >0){
 				ea.setAccountId1(req.getAccFromNr());
 				ea.setCustomerId(req.getClientIdsList());
 				ea.setTrNr(trnr);
 				ea.setAmount(req.getAmount());
 				super.withdraw(ea);
+				}
 			}
 			if (req.getReqType().equals(StaticVars.PLUS_1K_TRANS)) {
 				TellerQuery tq = new TellerQuery();
 				long trnr = tq.transfer(req.getClientIdsList().get(0),
 						req.getAccFromNr(), req.getAccToNr(), req.getAmount(),
 						't');
+				if(trnr >0){
 				ea.setAccountId1(req.getAccFromNr());
 				ea.setAccountId2(req.getAccToNr());
 				ea.setCustomerId(req.getClientIdsList());
 				ea.setTrNr(trnr);
 				ea.setAmount(req.getAmount());
 				super.transfer(ea);
+				}
 			}
 			if (req.getReqType().equals(StaticVars.PLUS_6_ACC)) {
 				AccountsManagment am = new AccountsManagment();
@@ -117,15 +122,18 @@ public class TellerFunctions extends EmployeeFunctions {
 		// send the request results to the tellers server side
 	}
 
-	public List<String> openAccount(List<String> personalIds, char accType) {
+	public List<String> openAccountReq(List<String> personalIds, char accType) {
+		logger.info("On teller function, looking to open account");
+
 		GeneralFunctions gf = new GeneralFunctions();
 		List<String> problematicClients = gf.registrationCheck(personalIds);
 		if (problematicClients.size() == 0) {
-//			Coordinator list = new Coordinator();
+			// Coordinator list = new Coordinator();
 			OCRequest req;
 			if (gf.accountsCountCheck(personalIds).size() == 0) {
 				req = new OCRequest(empId, personalIds, StaticVars.OPEN,
 						accType);
+				logger.info("{} requires submited ", StaticVars.OPEN);
 			} else {// accounts count check
 				req = new OCRequest(empId, personalIds, StaticVars.PLUS_6_ACC,
 						accType);
@@ -133,33 +141,27 @@ public class TellerFunctions extends EmployeeFunctions {
 						StaticVars.PLUS_6_ACC);
 			}
 			Coordinator.addOCR(req);
+			return null;
 		}
-		// else {// registration check
-		// alert(StaticVars.OPEN, StaticVars.UNREG_USR, null,
-		// "unregistere users");
-		// return problematicClients;
-		// }
-		return null;
+		return problematicClients;
 	}
 
 	public String accCloseAccCheck(String accNr) {
-		// TODO check if accountExist and is empty
+		//  check if accountExist and is empty
 		GeneralFunctions gf = new GeneralFunctions();
 		Account acc = gf.getAccount(accNr);
 		if (acc == null) {
 			logger.info("ACCOUNT {} was not founr in db", accNr);
 			return "ACCOUNT DOES NOT EXISTS";
-		} else {
-			if (acc.getBalance() > 0.5) {
-				// if acc is empty or not
-				logger.info("Account {} could not be closed");
-				return "ACCOUNTi IS NOT EMPTY, WITHDRAW REMAINING CREDIT";
-			}
+		} else if (acc.getBalance() > 0.5) {
+			logger.info("Account {} could not be closed");
+			return "ACCOUNT IS NOT EMPTY, WITHDRAW REMAINING CREDIT";
 		}
+		assert (acc.getBalance() <= 0.5);
 		return null;
 	}
 
-	public List<String> closeAccount(List<String> personalIds, String accNr) {
+	public List<String> closeAccountReq(List<String> personalIds, String accNr) {
 		// check if all client id are registered
 		GeneralFunctions gf = new GeneralFunctions();
 		List<String> problematicClients = gf.registrationCheck(personalIds);
@@ -167,7 +169,7 @@ public class TellerFunctions extends EmployeeFunctions {
 			logger.info("SOME CO-OWNERS SUBMITED RESULT NOT REGISTERED");
 			return problematicClients;
 		}
-//		Coordinator list = new Coordinator();
+		// Coordinator list = new Coordinator();
 		TellerQuery tq = new TellerQuery();
 		// check if there are acc owners whose id was not submitted
 		problematicClients = tq.clientAccountCompatibility(personalIds, accNr);
@@ -185,14 +187,18 @@ public class TellerFunctions extends EmployeeFunctions {
 
 	/* transaction functions */
 	public String deposite(String accNr, double amount, String note) {
+		if (amount <= 0) {
+			return "Deposition Ammount Is Very Low";
+		}
 		TellerQuery tq = new TellerQuery();
-		String regCheck = tq.checkDepositeRegularity(accNr, amount);
+		String regCheck = tq.checkDepositeRegularity(accNr);
 		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
-//				Coordinator cord = new Coordinator();
+				// Coordinator cord = new Coordinator();
 				OCRequest req = new OCRequest(empId, null,
 						StaticVars.PLUS_1K_DEP, accNr, null, amount, note);
 				Coordinator.addOCR(req);
+				return "Transactions Over 1000, Require Manager Confirmation";
 			} else {
 				long trNr = tq.deposite(accNr, amount);
 				if (trNr > 0) {
@@ -202,24 +208,34 @@ public class TellerFunctions extends EmployeeFunctions {
 					ea.setAccountId1(accNr);
 					ea.setNote(note);
 					super.deposite(ea);
+					return "Transaction Completed, tr.# : " + trNr;
+				} else {
+					return "Transaction Not Completed, Some Error Ocoured";
 				}
+
 			}
 		}
+		// pracically if acc does not exist return response
 		return regCheck;
 
 	}
 
 	public String withdraw(String personalId, String accNr, double amount) {
+		if (amount <= 0) {
+			return "Deposition Ammount Is Very Low";
+		}
+
 		TellerQuery tq = new TellerQuery();
 		String regCheck = tq.checkWithdrawRegularity(personalId, accNr, amount);
 		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();
-//				Coordinator cord = new Coordinator();
+				// Coordinator cord = new Coordinator();
 				ocrAl.add(personalId);
 				OCRequest req = new OCRequest(empId, ocrAl,
 						StaticVars.PLUS_1K_WITH, accNr);
 				Coordinator.addOCR(req);
+				return "Transactions Over 1000, Require Manager Confirmation";
 			} else {
 				long trNr = tq.withdraw(personalId, accNr, amount);
 				if (trNr > 0) {
@@ -229,6 +245,9 @@ public class TellerFunctions extends EmployeeFunctions {
 					ea.setAmount(amount);
 					ea.setAccountId1(accNr);
 					super.withdraw(ea);
+					return "Transaction Completed, tr.# : " + trNr;
+				} else {
+					return "Transaction Not Completed, Some Error Ocoured";
 				}
 			}
 		}
@@ -237,18 +256,22 @@ public class TellerFunctions extends EmployeeFunctions {
 
 	public String transfer(String personalId, String accFrom, String accTo,
 			double amount) {
-		TellerQuery tq = new TellerQuery();
+		if (amount <= 0) {
+			return "Deposition Ammount Is Very Low";
+		}
 
+		TellerQuery tq = new TellerQuery();
 		String regCheck = tq.checkTransferRegularity(personalId, accFrom,
 				accTo, amount, 't');
 		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();
-//				Coordinator cord = new Coordinator();
+				// Coordinator cord = new Coordinator();
 				ocrAl.add(personalId);
 				OCRequest req = new OCRequest(empId, ocrAl,
 						StaticVars.PLUS_1K_WITH, accFrom, accTo, amount, null);
 				Coordinator.addOCR(req);
+				return "Transactions Over 1000, Require Manager Confirmation";
 			} else {
 				long trNr = tq
 						.transfer(personalId, accFrom, accTo, amount, 't');
@@ -260,6 +283,9 @@ public class TellerFunctions extends EmployeeFunctions {
 					ea.setAccountId1(accFrom);
 					ea.setAccountId2(accTo);
 					super.requestOpenAcc(ea);
+					return "Transaction Completed, tr.# : " + trNr;
+				} else {
+					return "Transaction Not Completed, Some Error Ocoured";
 				}
 			}
 		}
@@ -332,24 +358,28 @@ public class TellerFunctions extends EmployeeFunctions {
 	public String deleteCustomer(String persId) {
 		TellerQuery tq = new TellerQuery();
 		String response = tq.deleteCustomer(persId);
-		if (response != StaticVars.UNREG_USR) {
-			EmployeeAction ea = new EmployeeAction(null, StaticVars.REG_USR,
-					empId);
+		if (response == StaticVars.DONE) {
+			List<String> persIdList = new ArrayList<>();
+			persIdList.add(persId);
+			EmployeeAction ea = new EmployeeAction();
+			ea.setEmpId(empId);
+			ea.setActionType(StaticVars.REG_USR);
+			ea.setCustomerId(persIdList);
 			super.registerClient(ea);
 		}
 		return response;
 	}
 
-	public String register(String persId,String fname, String lname, String eMail,
-			String bdate, String address, String phone, String psw)
+	public String register(String persId, String fname, String lname,
+			String eMail, String bdate, String address, String phone, String psw)
 			throws ParseException {
 		logger.info("IN teller functions");
 		TellerQuery tq = new TellerQuery();
-		String response = tq.registerCustomer(persId,fname, lname, eMail, bdate,
-				address, phone, psw);
-		
+		String response = tq.registerCustomer(persId, fname, lname, eMail,
+				bdate, address, phone, psw);
+
 		if (response != null && response.length() == 0) {
-			List<String>persIdList = new ArrayList<>();
+			List<String> persIdList = new ArrayList<>();
 			persIdList.add(persId);
 			EmployeeAction ea = new EmployeeAction();
 			ea.setEmpId(empId);
@@ -367,9 +397,12 @@ public class TellerFunctions extends EmployeeFunctions {
 		TellerQuery tq = new TellerQuery();
 		String response = tq.alter(persId, fname, lname, eMail, bdate, address,
 				phone, password);
+
 		if (response != null && response.length() == 0) {
+			List<String> ls = new ArrayList<>();
+			ls.add(persId);
 			EmployeeAction ea = new EmployeeAction();
-			ea.getCustomerId().add(persId);
+			ea.setCustomerId(ls);
 			ea.setActionType(StaticVars.ALTER_USR);
 			ea.setEmpId(empId);
 

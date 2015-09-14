@@ -1,6 +1,5 @@
 package utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,22 +20,21 @@ import comon.StaticVars;
 import entity.Account;
 import entity.Customers;
 import entity.Transaction;
-import functions.DirectorFunctions;
 import functions.ManagerFunctions;
 
 public class ManMsgHandler {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(DirMsgWsHandler.class);
+			.getLogger(ManMsgHandler.class);
 	// private static Gson gson = new GsonBuilder().create();
 
 	ManagerWS mws = new ManagerWS();
 	private ManagerFunctions mf;
 
-	public String switchit(String msg) {
-		Gson gson = new GsonBuilder().create();
-		JsonObject jobj = gson.fromJson(msg, JsonObject.class);
-		String head = jobj.get("head").getAsString();
+	public String switchit(JsonObject jobj, String head) {
+		// Gson gson = new GsonBuilder().create();
+		// JsonObject jobj = gson.fromJson(msg, JsonObject.class);
+		// String head = jobj.get("head").getAsString();
 		// DirectorFunctions df = new DirectorFunctions();
 		// JsonObject jo = new JsonObject();
 
@@ -183,17 +181,28 @@ public class ManMsgHandler {
 	}
 
 	private String getRequest(JsonObject jobj) {
-		int manEmpId = jobj.get("empId").getAsInt();
+		logger.info("in teller function get request");
+		int manEmpId = 0;
+		try {
+			manEmpId = jobj.get("empId").getAsInt();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "requestRequestReply");
+
 		mf = Coordinator.getManagerFunc(manEmpId);
+		if (mf == null) {
+			logger.warn("Null functioner, EmployeeId not provided");
+		}
 		mf.getOCR();
-		jo.addProperty("head", "requestRequestReply");// the req of a telReq
 		if (mf.getReq() == null) {
 			jo.addProperty("msg", "No New Request Available");
 		} else {
 			jo.add("requestDetails", gson.toJsonTree(mf.getReq()));
 		}
+		logger.info(gson.toJson(jo));
 		return gson.toJson(jo);
 	}
 
@@ -238,6 +247,18 @@ public class ManMsgHandler {
 		}
 		String jsonResp = gson.toJson(jo);
 
+	}
+
+	public void coordRegister(int empId, Session ses) {
+		/*
+		 * get the tellerFunctions from the Coordinator list store web sockets
+		 * sessionId and hold it on stand by
+		 */
+
+		logger.info("in coord EMP id is--- []", empId);
+		// Coordinator co = new Coordinator();
+		mf = Coordinator.getManagerFunc(empId);
+		mf.setWsSession(ses);
 	}
 
 }

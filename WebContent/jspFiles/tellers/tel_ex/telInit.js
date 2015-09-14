@@ -50,6 +50,7 @@ function onMessage(evt) {
 	case 'searchReply':
 		searchReply(jsobj);
 		break;
+		//-------------------page 1
 	case 'registerClientReply':
 		registerClientReply(jsobj);
 		break;
@@ -59,6 +60,7 @@ function onMessage(evt) {
 	case 'deleteClientReply':
 		deleteClientReply(jsobj);
 		break;
+		//------------------page 1.1
 	case 'depositeReply':
 		depositeReply(jsobj);
 		break;
@@ -68,6 +70,7 @@ function onMessage(evt) {
 	case 'transferReply':
 		transferReply(jsobj);
 		break;
+		//----------------page 2
 	case 'requestReply':
 		reqReplyAlert(jsobj);
 		break;
@@ -92,26 +95,24 @@ function onError(evt) {
 	alert(evt.data);
 }
 
-function hideShow(chosen) {
+function telHideShow(chosen) {
 	$('.hidable').each(function(index) {
 		if ($(this).attr("id") === chosen) {
 			$(this).show();
-			// $(this).attr("style", "visibility: visible");
 		} else {
-			// $(this).attr("style", "visibility: collapse");
 			$(this).hide();
 		}
 	});
 }
-function divhide() {
-	hideShow('mainTel');
+function telDivhide() {
+	telHideShow('mainTel');
 	// $('.hidable').attr("style", "visibility: visible");
 }
 
-function capitalize() {
-	// setTimeout(function() {
-	$("input[type=text]").keyup(function() {
-		$(this).val($(this).val().toUpperCase());
-	});
-	// }, 3000)
-}
+// function capitalize() {
+// // setTimeout(function() {
+// $("input[type=text]").focusout(function() {
+// $(this).val($(this).val().toUpperCase());
+// });
+// }, 3000)
+// }

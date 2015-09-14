@@ -3,6 +3,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<%
+	HttpSession ses = request.getSession();
+%>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <!-- Bootstrap Core CSS -->
 <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -33,23 +36,15 @@ body {
 .space {
 	margin: 9px;
 }
-
-/* button{
-width: 35pt;
-
-} */
 </style>
 
+<script type="text/javascript">
+window.telId="<%=ses.getAttribute("primeKey")%>"
+</script>
 <title>Teller's Page</title>
-<%
-	HttpSession ses = request.getSession();
-%>
 </head>
-<body onload="divhide(); capitalize(); ">
+<body onload="telDivhide(); capitalize(); ">
 
-	<input type="hidden" id="telEmpId"
-		value="<%=ses.getAttribute("primeKey")%>">
-	<!-- $(sessionScope.empId) -->
 	<div id="wrapper">
 		<!-- Navigation -->
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -62,7 +57,7 @@ width: 35pt;
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#" onclick="severClientTupeling();">Teller
+				<a class="navbar-brand" href="#" onclick="telSeverClientTupeling();">Teller
 				</a>
 			</div>
 
@@ -158,30 +153,19 @@ width: 35pt;
 	<!-- jQuery -->
 	<script src="../../bootstrap/js/jquery.js"></script>
 
-
 	<!-- teller scripts -->
+	<script src="../js/general.js"></script>
 	<script src="./tel_ex/telInit.js"></script>
 	<script src="./tel_ex/tel.js"></script>
 	<script src="./tel_ex/main.js"></script>
 	<script src="./tel_ex/transactions.js"></script>
 	<script src="./tel_ex/oc.js"></script>
 
-
-
-	<!-- flot charts -->
-	<!-- <script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.min.js"></script>
-	<script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.pie.min.js"></script>
-	<script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.categories.min.js"></script> -->
-
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<!-- jquery-ui -->
 	<script src="../../jquery-ui/jquery-ui.min.js"></script>
-
 
 </body>
 </html>
