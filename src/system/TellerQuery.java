@@ -152,9 +152,9 @@ public class TellerQuery {
 				s.flush();
 				tr.commit();
 
-				/*TODO push to client side
-				 * alert client's client side accounts for the transaction if
-				 * amount >=500
+				/*
+				 * TODO push to client side alert client's client side accounts
+				 * for the transaction if amount >=500
 				 */
 				PushClientSide pcs = new PushClientSide();
 				pcs.pushTransToDir(t);
@@ -176,6 +176,11 @@ public class TellerQuery {
 	public String checkTransferRegularity(String personalId, String accFrom,
 			String accTo, double amount, char method) {
 		GeneralFunctions gf = new GeneralFunctions();
+
+		String ret = gf.valAmmount(amount + "");
+		if (ret != null) {
+			return ret;
+		}
 
 		if (!gf.existsAccount(accFrom)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accFrom);
@@ -202,6 +207,10 @@ public class TellerQuery {
 	public String checkWithdrawRegularity(String personalId, String accNr,
 			double amount) {
 		GeneralFunctions gf = new GeneralFunctions();
+		String ret = gf.valAmmount(amount + "");
+		if (ret != null) {
+			return ret;
+		}
 
 		if (!gf.existsAccount(accNr)) {
 			logger.warn("THIS ACCOUNT :{}. DOES NOT EXISTS", accNr);
@@ -221,14 +230,19 @@ public class TellerQuery {
 		return null;
 	}
 
-	public String checkDepositeRegularity(String accNr) {
-		String regular = null;
-		Account acc = (Account) s.get(Account.class, accNr);
+	public String checkDepositeRegularity(String accNr, double amount) {
+		GeneralFunctions gf = new GeneralFunctions();
+		String ret = gf.valAmmount(amount + "");
+		if (ret != null) {
+			return ret;
+		}
+
+		Account acc = gf.getAccount(accNr);
 		if (acc == null) {
 			logger.warn("ACCOUNT DOES NOT EXIST");
-			regular = "ACCOUNT DOES NOT EXIST";
+			return "ACCOUNT DOES NOT EXIST";
 		}
-		return regular;
+		return null;
 	}
 
 	public void upSession() {

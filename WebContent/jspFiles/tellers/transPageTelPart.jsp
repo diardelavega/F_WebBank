@@ -75,13 +75,14 @@ body {
 									<tbody>
 										<tr>
 											<td width="620px">
-												<!-- <div class="box-l"> --> <label>Account Nr. :</label><input
+												<!-- <div class="box-l"> --> <label style="margin-left: 18px;">Account Nr. :</label><input
 												type="text" name="accNr"> <span class="space"></span>
-												<label>Amount :</label> <input type="text" name="amount">
+												<label>Amount :</label> <input type="text" name="amount"
+												class="amount">
 
 												<center>
 													<label>Note :</label>
-													<textarea rows="4" cols="60" name="note"></textarea>
+													<textarea class="note" rows="4" cols="60" name="note"></textarea>
 												</center>
 												<center style="padding-top: 10px">
 													<button id="telDepOk" onclick="deposite();">OK</button>
@@ -142,7 +143,7 @@ body {
 									<tbody>
 										<tr>
 											<td width="620px">
-												<table>
+												<table border="0">
 													<tbody>
 														<tr>
 															<td><label>Account From :</label></td>
@@ -153,10 +154,11 @@ body {
 																class="persId"></td>
 														</tr>
 														<tr>
-															<td colspan="2" align="right"><label>Amount
-																	:</label></td>
+															<!-- <td></td> -->
+															<td colspan="2" align="right"><label>Amount :</label></td>
 															<td colspan="2" align="left"><input type="text"
 																class="amount" name="withAmount"></td>
+															<!-- <td></td> -->
 														</tr>
 														<tr>
 															<td colspan="4" style="padding-top: 10px" align="center">
@@ -175,10 +177,6 @@ body {
 								</table>
 
 							</div>
-							<div id="manInfo" class="tab-pane fade">
-								<h1>maby it souldn't be here ??</h1>
-							</div>
-
 						</div>
 					</div>
 				</td>

@@ -54,26 +54,6 @@ function reqReplyAlert(jsobj) {
 		ret = ocAlertDisplay(jsobj.msg, "info");
 		fadeOut(ret);
 
-	} else if (jsobj.hasOwnProperty("replyData")) {
-		// TODO to be considered more regarding its performance and
-		// functionality
-		var req = jsobj.replyData;
-
-		var lastManagerToConsiderIt = req.lastManagerToConsiderIt;
-		var note = req.note;
-		var clientIdsList = req.clientIdsList;
-		var reqType = req.reqType;
-		var accType = req.accType;
-		var accFromNr = req.accFromNr;
-		var accToNr = req.accToNr;
-		var amount = req.amount;
-		var response = req.response;// accepted || denied
-
-		var txt = reqType
-		" - " + response + " " + " " + note + " ";
-
-		ret = ocAlertDisplay(txt + " ", "info");
-		fadeOut(ret);
 	}
 
 }
@@ -92,7 +72,7 @@ function ocAlertDisplay(msg, alertType) {
 
 	var span = document.createElement("span");
 	$(span).attr("align", "left");
-	span.style.padding = "40px";
+	span.style.padding = "230px";
 
 	var a = document.createElement("a");
 	a.innerHTML = "x";
@@ -106,7 +86,7 @@ function ocAlertDisplay(msg, alertType) {
 	div.append(msg);
 
 	$(div).show();
-	// fadeOut(div);
+	fadeOut(div);
 	return div;
 }
 
@@ -136,10 +116,29 @@ function tellClearClose() {
 	$("[name=telCloseAcc]").val("");
 }
 
-function openAccReply(jsobj) {
+function ocRequestReply(jsobj) {
+	//TODO signal the msg-s tab in the tellers page
 	console.log(jsobj);
-}
+	if (jsobj.hasOwnProperty("replyData")) {
+		// TODO to be considered more regarding its performance and
+		// functionality
+		var req = jsobj.replyData;
 
-function closeAccReply(jsobj) {
-	console.log(jsobj);
+		var lastManagerToConsiderIt = req.lastManagerToConsiderIt;
+		var note = req.note;
+		var clientIdsList = req.clientIdsList;
+		var reqType = req.reqType;
+		var accType = req.accType;
+		var accFromNr = req.accFromNr;
+		var accToNr = req.accToNr;
+		var amount = req.amount;
+		var response = req.response;// accepted || denied
+
+		var txt = reqType
+		" - " + response + " " + " " + note + " ";
+
+		ret = ocAlertDisplay(txt + " ", "info");
+		fadeOut(ret);
+	}
+
 }

@@ -32,18 +32,44 @@ function tranfer() {
 }
 
 /* AFTER RESPONSE */
+function transRequestReply(jsobj) {
+	/* response for transactions with +1K */
+	if (jsobj.hasOwnProperty("replyData")) {
+		var req = jsobj.replyData;
+
+		var lastManagerToConsiderIt = req.lastManagerToConsiderIt;
+		var note = req.note;
+		var clientIdsList = req.clientIdsList;
+		var reqType = req.reqType;
+		var accType = req.accType;
+		var accFromNr = req.accFromNr;
+		var accToNr = req.accToNr;
+		var amount = req.amount;
+		var response = req.response;// accepted || denied
+
+		var txt = reqType
+		" - " + response + " " + " " + note + " ";
+
+		if (response === "APROVED") {
+			ret = transAlertDisplay(txt + " ", "info");
+		} else {
+			ret = transAlertDisplay(txt + " ", "warning");
+		}
+		fadeOut(ret);
+	}
+}
 
 function depositeReply(jsobj) {
 	// clonsole.log(jsobj.msg);
-	transAlertDisplay(jsobj.msg);
+	transAlertDisplay(jsobj.msg, "info");
 }
 function withdrawReply(jsobj) {
 	// clonsole.log(jsobj.msg);
-	transAlertDisplay(jsobj.msg);
+	transAlertDisplay(jsobj.msg, "info");
 }
 function transferReply(jsobj) {
 	// clonsole.log(jsobj.msg);
-	transAlertDisplay(jsobj.msg);
+	transAlertDisplay(jsobj.msg, "info");
 }
 
 function errorRes(jsobj) {
@@ -52,36 +78,36 @@ function errorRes(jsobj) {
 
 /* Functionality */
 var telTimeOut;
-	function transAlertDisplay(msg, alertType) {
-		var div = $("#telTransMsgAlert");
-		clearTimeout(telTimeOut);
-		div.empty();
-		// div.text(msg);
-		if (alertType === 'info') {
-			$(div).addClass("alert alert-info");
-		} else {
-			$(div).addClass("alert alert-warning");
-		}
-
-		var span = document.createElement("span");
-		$(span).attr("align", "left");
-		span.style.padding = "40px";
-
-		var a = document.createElement("a");
-		a.innerHTML = "x";
-		$(a).attr("href", "#");
-		$(a).attr("onclick", "closeThis(event)");
-		var br = document.createElement("br");
-
-		span.appendChild(a)
-		div.append(span);
-		div.append(br);
-		div.append(msg);
-
-		$(div).show();
-		// fadeOut(div);
-		return div;
+function transAlertDisplay(msg, alertType) {
+	var div = $("#telTransMsgAlert");
+	clearTimeout(telTimeOut);
+	div.empty();
+	// div.text(msg);
+	if (alertType === 'info') {
+		$(div).addClass("alert alert-info");
+	} else {
+		$(div).addClass("alert alert-warning");
 	}
+
+	var span = document.createElement("span");
+	$(span).attr("align", "left");
+	span.style.padding = "230px";
+
+	var a = document.createElement("a");
+	a.innerHTML = "x";
+	$(a).attr("href", "#");
+	$(a).attr("onclick", "closeThis(event)");
+	var br = document.createElement("br");
+
+	span.appendChild(a)
+	div.append(span);
+	div.append(br);
+	div.append(msg);
+
+	$(div).show();
+	fadeOut(div);
+	return div;
+}
 
 function transFadeOut(div) {
 	telTimeOut = setTimeout(function() {
@@ -105,3 +131,6 @@ function clearTransfer() {
 	amount: $('[name=transfAmount]').val("");
 	persId: $('[name=transfPersId]').val("");
 }
+
+// --------NEW ALERT TellPage NAV Panel
+

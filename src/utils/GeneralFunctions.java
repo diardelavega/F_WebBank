@@ -276,22 +276,20 @@ public class GeneralFunctions {
 
 	public String valAmmount(String ammount) {
 		String[] temp = ammount.split(".");
-		String error = "";
+		String error = null;
 		if (temp[0].length() > 5) {
-			error = " ammount value is too big, max 5 digits! ";
+			error = " ammount value is too big, integer part max 5 digits! ";
 		} else if (temp[1].length() > 7) {
 			error = " ammount precision is exciding the limit, max 7 digits! ";
 		} else {
 			for (int i = 0; i < temp[0].length(); i++) {
 				if (!Character.isDigit(temp[0].charAt(i))) {
-					error = "not valid ammount entry! ";
-					return error;
+					return "not valid ammount entry! ";
 				}
 			}
 			for (int i = 0; i < temp[1].length(); i++) {
 				if (!Character.isDigit(temp[1].charAt(i))) {
-					error = "not valid ammount entry! ";
-					return error;
+					return "not valid ammount entry! ";
 				}
 			}
 		}

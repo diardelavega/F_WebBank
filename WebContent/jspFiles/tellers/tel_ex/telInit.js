@@ -74,11 +74,20 @@ function onMessage(evt) {
 	case 'requestReply':
 		reqReplyAlert(jsobj);
 		break;
+		
+	case 'ocRequestReply':
+		ocRequestReply(jsobj);
+		break;
+	case 'transRequestReply':
+		transRequestReply(jsobj);
+		break;
 
 	case 'error':
 		errorRes(jsobj);
 		break;
-
+	case 'test':
+		testOcrReciver(jsobj);
+		break;
 	/*
 	 * case 'alterEmployee': alterEmpRes(jsobj); break; case 'dirTransaction':
 	 * transactionHandler(jsobj); break; case 'dirBalance': //

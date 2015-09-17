@@ -2,15 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <style>
-/* td {
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-left: .5em;
-	padding-right: 5em;
-} */
 .scroll {
-	/* width: 650px;
-    height: 300px; */
 	overflow: auto;
 }
 
@@ -19,23 +11,19 @@ th {
 }
 
 .tabSpace {
-	/* border: 1; */
 	border-color: olive;
 }
 
 table {
 	display: table;
-	/* border-collapse: separate; */
 	border-spacing: 2px;
 	border-color: gray;
-	/* border: 1; */
 }
 
 th, td {
 	padding-left: 5px;
 	padding-right: 5px;
 }
-
 .space {
 	margin: 9px;
 }

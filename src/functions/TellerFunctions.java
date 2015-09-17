@@ -191,7 +191,7 @@ public class TellerFunctions extends EmployeeFunctions {
 			return "Deposition Ammount Is Very Low";
 		}
 		TellerQuery tq = new TellerQuery();
-		String regCheck = tq.checkDepositeRegularity(accNr);
+		String regCheck = tq.checkDepositeRegularity(accNr,amount);
 		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				// Coordinator cord = new Coordinator();

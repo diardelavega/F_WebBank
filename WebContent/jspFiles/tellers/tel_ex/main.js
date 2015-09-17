@@ -117,32 +117,31 @@ function clientFormDataSearch() {
 function registerClientReply(jobj) {
 	var div = $("#telMainMsgAlert");
 	if (jobj.hasOwnProperty("response")) {
-		div.text(jobj.response);
-
-		var a = document.createElement("a");
-		$(a).attr("href", "#");
-		a.innerHTML = "&times";
-		div.append(a);
+		ret = mainAlertDisplay(jobj.response, "info");
+		fadeOut(ret);
 	} else {
-		mainAlertDisplay(jobj.msg);
+		ret = mainAlertDisplay(jobj.msg, "warning");
+		fadeOut(ret);
 	}
 }
 
 function alterClientReply(jobj) {
 	if (jobj.hasOwnProperty("response")) {
-		mainAlertDisplay(jobj.response);
+		ret = mainAlertDisplay(jobj.response, "info");
+		fadeOut(ret);
 	} else {
-		mainAlertDisplay(jobj.msg);
+		ret = mainAlertDisplay(jobj.msg, "warning");
+		fadeOut(ret);
 	}
 }
 
 function deleteClientReply(jobj) {
 	if (jobj.hasOwnProperty("response")) {
-		// mainAlertDisplay(jobj.response);
-		alert(jobj.response);
+		ret = mainAlertDisplay(jobj.response, "info");
+		fadeOut(ret);
 	} else {
-		// mainAlertDisplay(jobj.msg);
-		mainAlertDisplay(jobj.msg);
+		ret = mainAlertDisplay(jobj.msg, "warning");
+		fadeOut(ret);
 	}
 }
 // ---------------
@@ -353,26 +352,35 @@ function onAccId(event) {
 }
 
 var telTimeOut;
-function mainAlertDisplay(msg) {
+function mainAlertDisplay(msg, alertType) {
 	var div = $("#telMainMsgAlert");
 	clearTimeout(telTimeOut);
 	div.empty();
-	div.text(msg);
-	$(div).addClass("alert alert-info");
+	// div.text(msg);
+	if (alertType === 'info') {
+		$(div).addClass("alert alert-info");
+	} else {
+		$(div).addClass("alert alert-warning");
+	}
 
 	var span = document.createElement("span");
 	$(span).attr("align", "left");
-	span.style.padding = "40px";
+	span.style.padding = "230px";
 
 	var a = document.createElement("a");
 	a.innerHTML = "x";
 	$(a).attr("href", "#");
 	$(a).attr("onclick", "closeThis(event)");
+	var br = document.createElement("br");
 
 	span.appendChild(a)
 	div.append(span);
+	div.append(br);
+	div.append(msg);
+
 	$(div).show();
-	fadeOut(div);
+	// fadeOut(div);
+	return div;
 }
 
 function fadeOut(div) {

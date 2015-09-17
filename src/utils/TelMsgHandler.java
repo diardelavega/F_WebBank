@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import comon.OCRequest;
 import comon.StaticVars;
 import entity.Account;
 import entity.Customers;
@@ -64,6 +65,8 @@ public class TelMsgHandler {
 			return closeAccountDef(jobj);
 		case "openAccountDefinite":
 			return openAccountDef(jobj);
+		case "testOcr":
+			return ocrTest(jobj);
 
 		default:
 			logger.info("invalid switch criterias");
@@ -73,8 +76,8 @@ public class TelMsgHandler {
 
 	/**
 	 * After the manager confirms the closure, is the teller that executes the
-	 * final action. Open account definitive and close account definitive.
-	 * Maybe the closure should be done automatically in case of approval
+	 * final action. Open account definitive and close account definitive. Maybe
+	 * the closure should be done automatically in case of approval
 	 * */
 	private String openAccountDef(JsonObject jobj) {
 		// TODO Auto-generated method stub
@@ -150,16 +153,23 @@ public class TelMsgHandler {
 	}
 
 	private String transfer(JsonObject jobj) {
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "transferReply");
+
 		String accountFrom = jobj.get("accFrom").getAsString();
 		String accountTo = jobj.get("accTo").getAsString();
-		double amount = jobj.get("amount").getAsDouble();
+		double amount = 0;
+		try {
+			amount = jobj.get("amount").getAsDouble();
+		} catch (Exception e) {
+			jo.addProperty("msg", "incorrect ammount value");
+			return (gson.toJson(jo));
+		}
 		String persId = jobj.get("persId").getAsString();
 
 		String resp = tf.transfer(persId, accountFrom, accountTo, amount);
 		if (resp != null) {
-			JsonObject jo = new JsonObject();
-			Gson gson = new GsonBuilder().serializeNulls().create();
-			jo.addProperty("head", "transferReply");
 			jo.addProperty("msg", resp);
 			return (gson.toJson(jo));
 		}
@@ -167,15 +177,21 @@ public class TelMsgHandler {
 	}
 
 	private String withdraw(JsonObject jobj) {
-		String account = jobj.get("accNr").getAsString();
-		double amount = jobj.get("amount").getAsDouble();
-		String persId = jobj.get("persId").getAsString();
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "withdrawReply");
 
+		String account = jobj.get("accNr").getAsString();
+		String persId = jobj.get("persId").getAsString();
+		double amount = 0;
+		try {
+			amount = jobj.get("amount").getAsDouble();
+		} catch (Exception e) {
+			jo.addProperty("msg", "incorrect ammount value");
+			return (gson.toJson(jo));
+		}
 		String resp = tf.withdraw(persId, account, amount);
 		if (resp != null) {
-			JsonObject jo = new JsonObject();
-			Gson gson = new GsonBuilder().serializeNulls().create();
-			jo.addProperty("head", "withdrawReply");
 			jo.addProperty("msg", resp);
 			return (gson.toJson(jo));
 		}
@@ -183,15 +199,21 @@ public class TelMsgHandler {
 	}
 
 	private String deposite(JsonObject jobj) {
-		String account = jobj.get("accNr").getAsString();
-		double amount = jobj.get("amount").getAsDouble();
-		String note = jobj.get("note").getAsString();
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "withdrawReply");
 
+		String account = jobj.get("accNr").getAsString();
+		String note = jobj.get("note").getAsString();
+		double amount = 0;
+		try {
+			amount = jobj.get("amount").getAsDouble();
+		} catch (Exception e) {
+			jo.addProperty("msg", "incorrect ammount value");
+			return (gson.toJson(jo));
+		}
 		String resp = tf.deposite(account, amount, note);
 		if (resp != null) {
-			JsonObject jo = new JsonObject();
-			Gson gson = new GsonBuilder().serializeNulls().create();
-			jo.addProperty("head", "depositeReply");
 			jo.addProperty("msg", resp);
 			return (gson.toJson(jo));
 		}
@@ -418,4 +440,32 @@ public class TelMsgHandler {
 		this.tf = tf;
 	}
 
+	private String ocrTest(JsonObject jobj) {
+		logger.info("in Ocr test test testing");
+
+		OCRequest ocr = new OCRequest();
+		ocr.setReqType(StaticVars.OPEN);
+		ocr.setAccType(StaticVars.INTEREST_BARING);
+		List<String> sl = new ArrayList<>();
+		sl.add("1234567890");
+		sl.add("0987654321");
+		sl.add("0987654321");
+		sl.add("0987654321");
+		ocr.setClientIdsList(sl);
+		ocr.setResponse(StaticVars.ACCEPT);
+		ocr.setLastManagerToConsiderIt(31);
+		ocr.setTellerId(26);
+		ocr.setStatusComplete();
+		ocr.pin();
+
+		// logger.info("small print");
+		// ocr.print();
+
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().create();
+		jo.addProperty("head", "test");
+		jo.add("ocr", gson.toJsonTree(ocr));
+		logger.info(jo.toString());
+		return gson.toJson(jo);
+	}
 }

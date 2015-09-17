@@ -5,23 +5,27 @@ import java.util.List;
 import functions.TellerFunctions;
 
 public class OCRequest {
-	private int lastManagerToConsiderIt;
-	private String note;
-	private List<String> clientIdsList;
+
 	private String reqType; // open ||close || p_1k(dep, with, transf) || p_6Acc
+	private String response;// accepted || denied
 	private char accType;
-	private boolean pin = false;
+
+	private List<String> clientIdsList;
+	private String note;
+
 	private String accFromNr;
 	private String accToNr;
 	private double amount;
 
+	private int manId;
 	private int tellerId;
-	private String response;// accepted || denied
+
+	private boolean pin = false;
 	private boolean status = false;// true -complete, false-incomplete
 
 	public void print() {
 		System.out.println("lastManagerToConsiderIt -"
-				+ lastManagerToConsiderIt + "\n tellerId-" + tellerId);
+				+ manId + "\n tellerId-" + tellerId);
 		System.out.println("reqType-" + reqType + " \n accType-" + accType);
 		System.out.println("response-" + response + "\n note-" + note);
 		System.out.println("accFromNr-" + accFromNr + " \n accToNr-" + accToNr
@@ -168,11 +172,11 @@ public class OCRequest {
 	}
 
 	public int getLastManagerToConsiderIt() {
-		return lastManagerToConsiderIt;
+		return manId;
 	}
 
 	public void setLastManagerToConsiderIt(int lastManagerToConsiderIt) {
-		this.lastManagerToConsiderIt = lastManagerToConsiderIt;
+		this.manId = lastManagerToConsiderIt;
 	}
 
 }

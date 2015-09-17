@@ -80,34 +80,33 @@ window.telId="<%=ses.getAttribute("primeKey")%>"
 					data-toggle="dropdown"> <i class="fa fa-envelope"></i> <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu message-dropdown">
-						<li class="message-preview"><a href="#"> <!--<div class="media">-->
-								<span class="pull-left"> <img class="media-object"
-									src="http://placehold.it/50x50" alt="fing placee holder">
-							</span>
-								<div class="media-body">
-									<h5 class="media-heading">
-										<strong>John Smith</strong>
+						<li class="message-preview"><a href="#"
+							style="background-color: rgb(248, 248, 248);"
+							onclick="colorToNorm();">
+								<div id="telMsgPanel" style="background-color: white;">
+									<h5
+										style="background-color: rgb(210, 210, 210); padding: 10px;">
+										<strong></strong>
 									</h5>
-									<p class="small text-muted">
-										<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+									<!-- <p class="divider"></li> -->
+									<p style="font-size: 13pt;"></p>
+									<p style="font-size: 9pt;"></p>
+									<p class="small text-muted"
+										style="font-size: 8pt; background-color: rgb(240, 240, 225);">
+										<i> </i>
 									</p>
-									<p>Lorem ipsum dolor sit amet, consectetur...</p>
-								</div> <!--</div>-->
+								</div>
 						</a></li>
-						<li class="message-footer"><a href="#">Read All New
-								Messages</a></li>
+						<li class="message-footer"><a href="#" onclicl="gtReply();">Read
+								All New Messages</a></li>
 					</ul></li>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown"><i class="fa fa-arrow-up"></i> <b
-						class="caret"></b></a>
-					<ul class="dropdown-menu alert-dropdown">
-						<li><a href="#">Alert Name <span
-								class="label label-default">Alert Badge</span></a></li>
+					data-toggle="dropdown" onclick="colorToNorm();"> <i
+						class="fa fa-arrow-up"></i> <b class="caret"></b></a>
+					<ul class="dropdown-menu alert-dropdown" id="telHeadNotify">
+						<!-- <li><a href="#">Alert Name <span
+								class="label label-default">Alert Badge</span></a></li> -->
 
-						<li><a href="#">Alert Name <span
-								class="label label-danger">Alert Badge</span></a></li>
-						<li class="divider"></li>
-						<li><a href="#">View All</a></li>
 					</ul></li>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown"><i class="fa fa-user"></i>
@@ -131,8 +130,6 @@ window.telId="<%=ses.getAttribute("primeKey")%>"
 		<!-- Sidebar -->
 		<jsp:include page="./tel_ex/sidebar.html"></jsp:include>
 		<!-- /#sidebar-wrapper -->
-
-
 
 		<!-- Page Content -->
 		<div id="page-content-wrapper" style="background-color: azure">
