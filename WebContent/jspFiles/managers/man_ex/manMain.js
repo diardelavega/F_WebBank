@@ -3,7 +3,7 @@ function manAccountStatus() {
 	var accStat = {
 		head : "accountStatus",
 		accountNr : accNr,
-		empId : $('#manEmpId').val()
+		empId : bigEmpId
 	}
 	doSend(JSON.stringify(accStat));
 }
@@ -13,7 +13,7 @@ function manAccountCoo() {
 	var cliAcc = {
 		head : "accountCoowners",
 		accountNr : accNr,
-		empId : $('#manEmpId').val()
+		empId : bigEmpId
 	}
 	doSend(JSON.stringify(cliAcc));
 }
@@ -23,7 +23,7 @@ function manClientAccounts() {
 	var cliAcc = {
 		head : "clientAccounts",
 		personalId : persId,
-		empId : $('#manEmpId').val()
+		empId : bigEmpId
 	}
 	doSend(JSON.stringify(cliAcc));
 }
@@ -33,7 +33,7 @@ function manAccountTrans() {
 	var accTrans = {
 		head : "accountTransactions",
 		accountNr : accNr,
-		empId : $('#manEmpId').val()
+		empId : bigEmpId
 	}
 	doSend(JSON.stringify(accTrans));
 }
@@ -43,7 +43,7 @@ function manClientTrans() {
 	var cliTrans = {
 		head : "clientTransactions",
 		personalId : persId,
-		empId : $('#manEmpId').val()
+		empId : bigEmpId
 	}
 	doSend(JSON.stringify(cliTrans));
 }
@@ -51,12 +51,16 @@ function manClientTrans() {
 /* AFTER RESPONSE FUNCTIONS */
 
 function manAccountStatusReply(jsobj) {
+	console.log(acc);
+
 	var trd = $("#manAccountStatus tbody tr");
 	var trh = $("#manAccountStatus thead tr");
 	trh.empty();
 	trd.empty();
-	if (jsobj.hasOwnProperty("Account")) {
-		var acc = jsobj.Account;
+	if (jsobj.hasOwnProperty("account")) {
+		var acc = jsobj.account;
+		console.log(acc);
+
 		for ( var key in acc) {
 			// -----------header creation
 			var th = document.createElement('th');
@@ -77,16 +81,39 @@ function manAccountStatusReply(jsobj) {
 }
 
 function manAccountCooReply(jsobj) {
-	var writeDiv = $("#manAccCoo")
+	var writeDiv = $("#manAccCoo");
 	writeDiv.empty();
 	if (jsobj.hasOwnProperty("ownersList")) {
-		var owners = jsobj.ownList;
+		var owners = jsobj.ownersList;
+		console.log(owners);
+
 		for (var i = 0; i < owners.length; i++) {
 			var p = document.createElement('p');
-			var t = document.createTextNode(owners[i]);
-			p.appendChild(t);
-			writeDiv.append(p)
-			console.log(owners[i])
+
+			for (key in owners[i]) {
+				console.log(owners[i]);
+				if (key === 'personalId') {
+					var a = document.createElement("a");
+					$(a).attr("href", "#");
+					a.onclick = function(event) {
+						onPersId(event);
+					};
+					a.innerHTML = owners[i][key];
+					$(p).append(a);
+					$(p).append(", ");
+				} else if (key === 'bdata') {
+					var bd = new Date(owners[i][key]);
+					var t = document.createTextNode(bd.getDate() + "/"
+							+ (bd.getMonth() + 1) + "/" + bd.getFullYear()
+							+ ", ");
+					p.appendChild(t);
+				}
+				else {
+					$(p).append(owners[i][key]);
+					$(p).append(", ");
+				}
+			}
+			writeDiv.append(p);
 		}
 	} else if (jsobj.hasOwnProperty("msg")) {
 		alert(jsobj.msg);
@@ -94,13 +121,26 @@ function manAccountCooReply(jsobj) {
 	}
 }
 
-function manClientAccounts(jsobj) {
+function onPersId(event) {
+	var txt = $(event.target).text();
+	$("#manPersonalId").val(txt);
+}
+
+function onAccId(event) {
+	var txt = $(event.target).text();
+	$("#manAccountNr").val(txt);
+}
+
+function manClientAccountsReply(jsobj) {
+	console.log(jsobj);
+
 	var tb = $("#manClientAccounts tbody");
 	var trh = $("#manClientAccounts thead tr");
 	trh.empty();
 	tb.empty();
+
 	if (jsobj.hasOwnProperty("accountsList")) {
-		var accs = jsobj.accList;
+		var accs = jsobj.accountsList;
 		for (var i = 0; i < accs.length; i++) {
 			var acc = accs[i];
 			var tr = document.createElement('tr');
@@ -126,17 +166,17 @@ function manClientAccounts(jsobj) {
 	}
 }
 
-function manAccountTrans(jsobj) {
+function manAccountTransRply(jsobj) {
 	var tbody = $("#manAccTrans tbody");
 	var trh = $("#manAccTrans thead tr");
 	trh.empty();
-	trd.empty();
+	tbody.empty();
 	if (jsobj.hasOwnProperty('accountTransList')) {
-		var transList = jsobj.get('accountTransList');
+		var transList = jsobj.accountTransList;
 		for (var i = 0; i < transList.length; i++) {
 			var tra = transList[i];
 			var tr = document.createElement('tr');
-			for ( var key in acc) {
+			for ( var key in tra) {
 				// ----head creation
 				if (i == 0) {
 					var th = document.createElement('th');
@@ -146,12 +186,12 @@ function manAccountTrans(jsobj) {
 				}
 				// -----------body creation
 				var td = document.createElement('td');
-				var t = document.createTextNode(acc[key]);
+				var t = document.createTextNode(tra[key]);
 				td.appendChild(t);
 				tr.appendChild(td);
 				tbody.append(tr);
 			}
-			console.log(acc)
+			console.log(tra)
 		}
 	} else if (jsobj.hasOwnProperty("msg")) {
 		alert(jsobj.msg);
@@ -159,17 +199,17 @@ function manAccountTrans(jsobj) {
 
 }
 
-function manClientTrans(jsobj) {
+function manClientTransReply(jsobj) {
 	var tbody = $("#manClientTrans tbody");
 	var trh = $("#manClientTrans thead tr");
 	trh.empty();
-	trd.empty();
+	tbody.empty();
 	if (jsobj.hasOwnProperty('clientTransList')) {
-		var transList = jsobj.get('clientTransList');
+		var transList = jsobj.clientTransList;
 		for (var i = 0; i < transList.length; i++) {
 			var tra = transList[i];
 			var tr = document.createElement('tr');
-			for ( var key in acc) {
+			for ( var key in tra) {
 				// ----head creation
 				if (i == 0) {
 					var th = document.createElement('th');
@@ -179,12 +219,12 @@ function manClientTrans(jsobj) {
 				}
 				// -----------body creation
 				var td = document.createElement('td');
-				var t = document.createTextNode(acc[key]);
+				var t = document.createTextNode(tra[key]);
 				td.appendChild(t);
 				tr.appendChild(td);
 				tbody.append(tr);
 			}
-			console.log(acc)
+			console.log(tra)
 		}
 	} else if (jsobj.hasOwnProperty("msg")) {
 		alert(jsobj.msg);
@@ -192,8 +232,8 @@ function manClientTrans(jsobj) {
 
 }
 
-function manManyClientTrans(jsobj) {
+function manManyClientTransReply(jsobj) {
 }
 
-
+//-------functional Help
 

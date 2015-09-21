@@ -52,14 +52,16 @@ public class TellerWS {
 		if (head.equalsIgnoreCase("coordinate")) {
 			int empId = 0;
 			try {
-				empId = jobj.get("empId").getAsInt();
+				empId = Integer.parseInt(jobj.get("empId").getAsString());
 				logger.info("EmpId  is {}", empId);
 			} catch (Exception e) {
+				logger.info("EmpId in catch is {}", empId);
 				e.printStackTrace();
+
 			}
 			tmh.coordRegister(empId, ses);
 		} else {
-			webResponse = tmh.switchit( jobj, head);
+			webResponse = tmh.switchit(jobj, head);
 			if (webResponse != null)
 				sendMsg(webResponse, ses);
 		}

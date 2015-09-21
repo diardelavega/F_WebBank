@@ -65,7 +65,6 @@ body {
 							<li class="active"><a data-toggle="tab" href="#dep"><strong>DEPOSITE</strong></a></li>
 							<li><a data-toggle="tab" href="#transf"><strong>TRANSFERS</strong></a></li>
 							<li><a data-toggle="tab" href="#with"><strong>WITHDRAW</strong></a></li>
-							<li><a data-toggle="tab" href="#manInfo"><strong>INFO</strong></a></li>
 						</ul>
 
 						<div class="tab-content">
@@ -98,6 +97,7 @@ body {
 								</table>
 
 							</div>
+							
 							<div id="transf" class="tab-pane fade">
 
 								<table border="0" id="telTransfer" class="format">
@@ -124,8 +124,8 @@ body {
 														</tr>
 														<tr align="center">
 															<td colspan="4" style="padding-top: 10px">
-																<button id="telDepOk">OK</button> <span class="space"></span>
-																<button id="telDepClear">Clear</button>
+																<button id="telTransOk" onclick="tranfer();">OK</button> <span class="space"></span>
+																<button id="telTransClear" onclick="clearTransfer();">Clear</button>
 															</td>
 														</tr>
 													</tbody>
@@ -138,6 +138,7 @@ body {
 								</table>
 
 							</div>
+							
 							<div id="with" class="tab-pane fade">
 								<table border="0" id="telWithdraw" class="format">
 									<tbody>
@@ -162,9 +163,9 @@ body {
 														</tr>
 														<tr>
 															<td colspan="4" style="padding-top: 10px" align="center">
-																<button id="telDepOk" onclick="withdraw();">OK</button>
+																<button id="telWithOk" onclick="withdraw();">OK</button>
 																<span class="space"></span>
-																<button id="telDepClear" onclick="clearWithdraw();">Clear</button>
+																<button id="telWithClear" onclick="clearWithdraw();">Clear</button>
 															</td>
 														</tr>
 													</tbody>

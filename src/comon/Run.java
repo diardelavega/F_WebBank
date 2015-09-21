@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 //import java.util.logging.Logger;
 
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -26,9 +27,11 @@ import com.google.gson.JsonObject;
 import cod.test.HQLTest;
 import system.Coordinator;
 import system.ManagerQuery;
+import system.TellerQuery;
 import utils.AccGenerator;
 import utils.DirMsgWsHandler;
 import utils.GeneralFunctions;
+import utils.TelMsgHandler;
 import db.DBHandler;
 import entity.Account;
 import entity.Customers;
@@ -64,8 +67,14 @@ public class Run {
 		// e.print();
 		// log.closeSession();
 		// logger.info(resp);
-		 Session ses = DBHandler.getSessionFactory().openSession();
+		
+		
+		
+//		Session ses = DBHandler.getSessionFactory().openSession();
 
+		
+		
+		
 		// TellerFunctions tf = new TellerFunctions(1);
 		// tf.register("1111111116", "ARMANDO", "Delavega", "delavega@that.com",
 		// "12/01/1990", "under the bridge", "+355...", "321");
@@ -168,46 +177,52 @@ public class Run {
 		// .println("--------***********------------" + b.getAccount2());
 		// // }
 		// }
-		ManagerFunctions mf = new ManagerFunctions(31);
-		Coordinator.addManagerFunc(mf);
+		 ManagerFunctions mf = new ManagerFunctions(31);
+		 Coordinator.addManagerFunc(mf);
 		TellerFunctions tf = new TellerFunctions(2);
 		Coordinator.addTellerFunc(tf);
-		List<String> sl = new ArrayList<>();
-		sl.add("1111111111");
-		sl.add("1111111112");
-//
-		OCRequest ocr = new OCRequest(2, sl, StaticVars.OPEN, 'b');
-		Coordinator.addOCR(ocr);
-		
-		ocr.print();
-//		sl = new ArrayList<>();
-//		sl.add("1111111111");
-//		OCRequest	ocr2 = new OCRequest(2, sl, StaticVars.OPEN, 's');
-//		Coordinator.addOCR(ocr2);
-//		ocr.print();
+		 List<String> sl = new ArrayList<>();
+//		 sl.add("1111111111");
+//		 sl.add("1111111112");
+		 sl.add("1234567890");
+//		 tf.openAccountReq(sl, 'b');
+		 tf.closeAccountReq(sl, "68427666EXELD92");
+		 
+//		 OCRequest ocr = new OCRequest(2, sl, StaticVars.OPEN, 'b');
+		 
+//		 Coordinator.addOCR(ocr);
+
+		// ocr.print();
+
+//		TellerQuery tq = new TellerQuery();
+//		tq.checkDepositeRegularity("1233dsdd3", 123.44);
+
+		// sl = new ArrayList<>();
+		// sl.add("1111111111");
+		// OCRequest ocr2 = new OCRequest(2, sl, StaticVars.OPEN, 's');
+		// Coordinator.addOCR(ocr2);
+		// ocr.print();
 
 		// --------------------
 
-//		logger.info("Coordinator  OCR size={} ",Coordinator.ocrListSize());
-//		Coordinator.printAll();
-//		
-//		logger.info("Manager get a OCR and  print ");
-//		mf.getOCR();
-//		Coordinator.printAll();
-//		
-//		mf.confirmOpen(StaticVars.DENIE, "Shure why not, OPS, Found an Error!");
-//		Coordinator.printAll();
-//		
-//		logger.info("Coordinator  OCR size={}",Coordinator.ocrListSize());
-//		
-//		mf.getReq().print();
-//		mf.getOCR();
-//		logger.info(mf.getReq().getReqType());
-//		mf.returnRequest();
-//		Coordinator.printAll();
-		
-
-
+		// logger.info("Coordinator  OCR size={} ",Coordinator.ocrListSize());
+		// Coordinator.printAll();
+		//
+		// logger.info("Manager get a OCR and  print ");
+		// mf.getOCR();
+		// Coordinator.printAll();
+		//
+		// mf.confirmOpen(StaticVars.DENIE,
+		// "Shure why not, OPS, Found an Error!");
+		// Coordinator.printAll();
+		//
+		// logger.info("Coordinator  OCR size={}",Coordinator.ocrListSize());
+		//
+		// mf.getReq().print();
+		// mf.getOCR();
+		// logger.info(mf.getReq().getReqType());
+		// mf.returnRequest();
+		// Coordinator.printAll();
 
 		// ManagerFunctions mf1 = new ManagerFunctions(32);
 		// List<String> sl = new ArrayList<>();
@@ -233,7 +248,7 @@ public class Run {
 		//
 		// DirMsgWsHandler.switchit(jo.toString());
 
-		 DBHandler.closeSessionFactory();
+		DBHandler.closeSessionFactory();
 
 		// logger.debug("WTF");
 		// FileHandler fh = new FileHandler();

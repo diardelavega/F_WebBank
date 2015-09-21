@@ -21,6 +21,7 @@ import entity.Account;
 import entity.Customers;
 import entity.Transaction;
 import functions.ManagerFunctions;
+import functions.TellerFunctions;
 
 public class ManMsgHandler {
 
@@ -28,15 +29,22 @@ public class ManMsgHandler {
 			.getLogger(ManMsgHandler.class);
 	// private static Gson gson = new GsonBuilder().create();
 
-	ManagerWS mws = new ManagerWS();
+	// ManagerWS mws = new ManagerWS();
 	private ManagerFunctions mf;
 
 	public String switchit(JsonObject jobj, String head) {
-		// Gson gson = new GsonBuilder().create();
-		// JsonObject jobj = gson.fromJson(msg, JsonObject.class);
-		// String head = jobj.get("head").getAsString();
-		// DirectorFunctions df = new DirectorFunctions();
-		// JsonObject jo = new JsonObject();
+		logger.info(jobj.toString());
+		logger.info(head);
+
+		int empId;
+		try {
+			empId = Integer.parseInt(jobj.get("empId").getAsString());
+			mf = Coordinator.getManagerFunc(empId);
+		} catch (Exception e) {
+			logger.warn("EMP ID WAS NOt FOUND");
+			mf = new ManagerFunctions();
+			e.printStackTrace();
+		}
 
 		switch (head) {
 		case "getRequest":
@@ -56,146 +64,154 @@ public class ManMsgHandler {
 		default:
 			logger.info("invalid switch criterias");
 		}
-
 		return null;
 	}
 
 	private String accountStatus(JsonObject jobj) {
-		int manEmpId = jobj.get("empId").getAsInt();
-		mf = Coordinator.getManagerFunc(manEmpId);
-		Account ret = mf.getAccountStatus(jobj.get("accountNr").getAsString());
-		Gson gson = null;
 		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "accountStatusReply");
-		if (ret == null) {
+
+		String accNr = jobj.get("accountNr").getAsString();
+		if (accNr.equals("")) {
 			jo.addProperty("msg", "Account not found");
 		} else {
-			gson = new GsonBuilder().serializeNulls().create();
-			jo.add("account", gson.toJsonTree(ret));
+			Account ret = mf.getAccountStatus(accNr);
+			if (ret == null) {
+				jo.addProperty("msg", "Account not found");
+			} else {
+				jo.add("account", gson.toJsonTree(ret));
+			}
 		}
+		logger.info(jo.toString());
 		return gson.toJson(jo);
 	}
 
 	private String accountCoowners(JsonObject jobj) {
-		int manEmpId = jobj.get("empId").getAsInt();
-		mf = Coordinator.getManagerFunc(manEmpId);
 		JsonObject jo = new JsonObject();
-		List<Customers> ret = mf.getAccountClients(jobj.get("accountNr")
-				.getAsString());
-		Gson gson = null;
+		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "accountOwnersReply");
-		if (ret == null) {
+
+		String persId = jobj.get("accountNr").getAsString();
+		if (persId.equals("")) {
 			jo.addProperty("msg", "No Clients Where Found For This Account");
 		} else {
-			gson = new GsonBuilder().serializeNulls().create();
-			jo.add("ownersList", gson.toJsonTree(ret));
+			List<Customers> ret = mf.getAccountClients(jobj.get("accountNr")
+					.getAsString());
+			if (ret == null) {
+				jo.addProperty("msg", "No Clients Where Found For This Account");
+			} else {
+				jo.add("ownersList", gson.toJsonTree(ret));
+			}
 		}
 		return gson.toJson(jo);
 	}
 
 	private String clientAccounts(JsonObject jobj) {
-		int manEmpId = jobj.get("empId").getAsInt();
-		mf = Coordinator.getManagerFunc(manEmpId);
-		List<Account> ret = mf.getClientAccounts(jobj.get("personalId")
-				.getAsString());
 		JsonObject jo = new JsonObject();
-		Gson gson = null;
+		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "clientAccountsReply");
-		if (ret == null) {
-			jo.addProperty("msg", "No Accounts Where Found For This Clients");
+
+		String persId = jobj.get("personalId").getAsString();
+		if (persId.equals("")) {
+			jo.addProperty("msg",
+					"No Accounts Where Found Involving This Clients");
 		} else {
-			gson = new GsonBuilder().serializeNulls().create();
-			jo.add("accountsList", gson.toJsonTree(ret));
+			List<Account> ret = mf.getClientAccounts(persId);
+			if (ret == null) {
+				jo.addProperty("msg",
+						"No Accounts Where Found For This Clients");
+			} else {
+				jo.add("accountsList", gson.toJsonTree(ret));
+			}
 		}
 		return gson.toJson(jo);
 	}
 
 	private String clientTransactions(JsonObject jobj) {
-		int manEmpId = jobj.get("empId").getAsInt();
-		mf = Coordinator.getManagerFunc(manEmpId);
-		List<String> ls = new ArrayList<String>();
-		ls.add(jobj.get("personalId").getAsString());
-		List<Transaction> ret = mf.clientInvolvedTransactionsAll(ls);
 		JsonObject jo = new JsonObject();
-		Gson gson = null;
+		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "clientTransactionReply");
-		if (ret == null) {
+
+		String persId = jobj.get("personalId").getAsString();
+		if (persId.equals("")) {
 			jo.addProperty("msg",
 					"No Transactions Where Found Involving This Clients");
 		} else {
-			gson = new GsonBuilder().serializeNulls().create();
-			jo.add("clientTransList", gson.toJsonTree(ret));
+			List<String> ls = new ArrayList<String>();
+			ls.add(persId);
+			List<Transaction> ret = mf.clientInvolvedTransactionsAll(ls);
+			if (ret == null) {
+				jo.addProperty("msg",
+						"No Transactions Where Found Involving This Clients");
+			} else {
+				jo.add("clientTransList", gson.toJsonTree(ret));
+			}
 		}
 		return gson.toJson(jo);
 	}
 
 	private String manyClientTransactions(JsonObject jobj) {
-		int manEmpId = jobj.get("empId").getAsInt();
-		mf = Coordinator.getManagerFunc(manEmpId);
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "manyClientTransactionReply");
+
 		List<String> ls = new ArrayList<String>();
-		// TODO for all client id find transactions
+		// for all client id find transactions
 		ls.add(jobj.get("personalId").getAsString());
 		List<Transaction> ret = mf.clientInvolvedTransactionsAll(ls);
-		JsonObject jo = new JsonObject();
-		Gson gson = null;
-		jo.addProperty("head", "manyClientTransactionReply");
+
 		if (ret == null) {
 			jo.addProperty("msg",
 					"No Transactions Where Found Involving This Clients");
 		} else {
-			gson = new GsonBuilder().serializeNulls().create();
 			jo.add("ownersList", gson.toJsonTree(ret));
 		}
 		return gson.toJson(jo);
 	}
 
 	private String accountTransactions(JsonObject jobj) {
-		int manEmpId = jobj.get("empId").getAsInt();
-		mf = Coordinator.getManagerFunc(manEmpId);
-		List<Transaction> ret = mf.accountInvolvedTransactions(jobj.get(
-				"accountNr").getAsString());
 		JsonObject jo = new JsonObject();
-		Gson gson = null;
+		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "accountTransactionsReply");
-		if (ret == null) {
+
+		String accNr = jobj.get("accountNr").getAsString();
+		if (accNr.equals("")) {
 			jo.addProperty("msg",
 					"No Transactions Where Found Involving This Account");
 		} else {
-			gson = new GsonBuilder().serializeNulls().create();
-			jo.add("accountTransList", gson.toJsonTree(ret));
+			List<Transaction> ret = mf.accountInvolvedTransactions(accNr);
+			if (ret == null) {
+				jo.addProperty("msg",
+						"No Transactions Where Found Involving This Account");
+			} else {
+				jo.add("accountTransList", gson.toJsonTree(ret));
+			}
 		}
 		return gson.toJson(jo);
 	}
 
 	private String leaveRequest(JsonObject jobj) {
-		// TODO Auto-generated method stub
 		JsonObject jo = new JsonObject();
-		int manEmpId = jobj.get("empId").getAsInt();
-		mf = Coordinator.getManagerFunc(manEmpId);
-		mf.getReq().unPin();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "leaveRequestReply");
+		try {
+			mf.getReq().unPin();
+		} catch (Exception e) {
+			e.printStackTrace();
+			jo.addProperty("msg", "No Request Was Found For This Manager");
+			return gson.toJson(jo);
+		}
 		jo.addProperty("msg", "Done");
-
 		return gson.toJson(jo);
 	}
 
 	private String getRequest(JsonObject jobj) {
-		logger.info("in teller function get request");
-		int manEmpId = 0;
-		try {
-			manEmpId = jobj.get("empId").getAsInt();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		logger.info("in man msg handler function get request");
 		JsonObject jo = new JsonObject();
-		Gson gson = new GsonBuilder().serializeNulls().create();
+		Gson gson = new GsonBuilder().create();
 		jo.addProperty("head", "requestRequestReply");
 
-		mf = Coordinator.getManagerFunc(manEmpId);
-		if (mf == null) {
-			logger.warn("Null functioner, EmployeeId not provided");
-		}
 		mf.getOCR();
 		if (mf.getReq() == null) {
 			jo.addProperty("msg", "No New Request Available");
@@ -207,6 +223,7 @@ public class ManMsgHandler {
 	}
 
 	public void convertOCRToMsg(OCRequest req) {
+		/* Not Necesary Untill It Is Needed */
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 
@@ -249,16 +266,20 @@ public class ManMsgHandler {
 
 	}
 
-	public void coordRegister(int empId, Session ses) {
+	public String coordRegister(int empId, Session ses) {
 		/*
-		 * get the tellerFunctions from the Coordinator list store web sockets
+		 * get the managerFunctions from the Coordinator list store web sockets
 		 * sessionId and hold it on stand by
 		 */
 
-		logger.info("in coord EMP id is--- []", empId);
+		logger.info("in coordRegister EMP id is--- {}", empId);
 		// Coordinator co = new Coordinator();
 		mf = Coordinator.getManagerFunc(empId);
+		if (mf == null) {
+			return "The Manager Is Not Registerd";
+		}
 		mf.setWsSession(ses);
+		return null;
 	}
 
 }

@@ -157,12 +157,16 @@ public class EmployeeAction {
 		sb.append(delimeter);
 		sb.append(accountId1);
 		sb.append(delimeter);
-		for (String s : customerId) {
-			sb.append(s);
+		if (customerId != null) {
+			for (String s : customerId) {
+				sb.append(s);
+				sb.append(delimeter);
+			}
+		}
+		if (amount > 0.5) {
+			sb.append(amount);
 			sb.append(delimeter);
 		}
-		sb.append(amount);
-		sb.append(delimeter);
 		sb.append(trNr);
 		sb.append(delimeter);
 		sb.append(note);

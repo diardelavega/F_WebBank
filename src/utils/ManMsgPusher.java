@@ -14,12 +14,15 @@ import comon.OCRequest;
 
 public class ManMsgPusher {
 
-	public void requestNotifyer(Session ses) {
-		ManagerWS mws = new ManagerWS ();
+	public void requestNotifyer(Session ses, String reqType, String d2, String ed) {
+		ManagerWS mws = new ManagerWS();
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().create();
 		jo.addProperty("head", "requestAlert");
-		jo.addProperty("msg", "New Request Arrived"); 
+		jo.addProperty("msg", "New Request Arrived");
+		jo.addProperty("reqType", reqType);
+		jo.addProperty("d2", d2);
+		jo.addProperty("ed", ed);
 		try {
 			mws.sendMsg(gson.toJson(jo), ses);
 		} catch (IOException e) {
@@ -27,5 +30,5 @@ public class ManMsgPusher {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

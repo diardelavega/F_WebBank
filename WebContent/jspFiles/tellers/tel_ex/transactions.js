@@ -1,5 +1,6 @@
 function deposite() {
 	var depData = {
+		empId : telId,
 		head : "deposite",
 		accNr : $('[name=accNr]').val(),
 		amount : $('[name=amount]').val(),
@@ -12,6 +13,7 @@ function deposite() {
 
 function withdraw() {
 	var withData = {
+		empId : telId,
 		head : "withdraw",
 		accNr : $('[name=withAccNr]').val(),
 		amount : $('[name=withAmount]').val(),
@@ -22,6 +24,7 @@ function withdraw() {
 
 function tranfer() {
 	var transfData = {
+		empId : telId,
 		head : "transfer",
 		accFrom : $('[name=accNrFrom]').val(),
 		accTo : $('[name=accNrTo]').val(),
@@ -74,6 +77,8 @@ function transferReply(jsobj) {
 
 function errorRes(jsobj) {
 	clonsole.log(jsobj.msg);
+	ret =transAlertDisplay(jsobj.msg,"warning");
+	transFadeOut(ret);
 }
 
 /* Functionality */
@@ -82,7 +87,6 @@ function transAlertDisplay(msg, alertType) {
 	var div = $("#telTransMsgAlert");
 	clearTimeout(telTimeOut);
 	div.empty();
-	// div.text(msg);
 	if (alertType === 'info') {
 		$(div).addClass("alert alert-info");
 	} else {
@@ -90,7 +94,7 @@ function transAlertDisplay(msg, alertType) {
 	}
 
 	var span = document.createElement("span");
-	$(span).attr("align", "left");
+	$(span).attr("align", "right");
 	span.style.padding = "230px";
 
 	var a = document.createElement("a");

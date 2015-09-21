@@ -165,4 +165,7 @@ window.telId="<%=ses.getAttribute("primeKey")%>"
 	<script src="../../jquery-ui/jquery-ui.min.js"></script>
 
 </body>
+<!-- <script type="text/javascript">
+	telSeverClientTupeling();
+</script> -->
 </html>

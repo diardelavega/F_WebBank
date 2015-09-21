@@ -1,6 +1,5 @@
 package system;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,15 +14,15 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import comon.OCRequest;
-import comon.StaticVars;
 import utils.GeneralFunctions;
 import utils.PushClientSide;
+
+import comon.OCRequest;
+import comon.StaticVars;
+
 import db.DBHandler;
 import entity.Account;
 import entity.Customers;
-import entity.EmployeeAction;
-import functions.EmployeeFunctions;
 
 public class TellerQuery {
 	Logger logger = LoggerFactory.getLogger(TellerQuery.class);
@@ -232,7 +231,7 @@ public class TellerQuery {
 
 	public String checkDepositeRegularity(String accNr, double amount) {
 		GeneralFunctions gf = new GeneralFunctions();
-		String ret = gf.valAmmount(amount + "");
+		String ret = gf.valAmmount(String.valueOf(amount));
 		if (ret != null) {
 			return ret;
 		}

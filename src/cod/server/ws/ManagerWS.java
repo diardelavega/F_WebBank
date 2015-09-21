@@ -38,32 +38,33 @@ public class ManagerWS {
 	@OnMessage
 	public void recMsg(String msg, Session ses) throws IOException {
 		// System.out.println("received msg from: " + ses.getId());
-		System.out.println("ON MANAGER :received msg seas : " + msg);
+		logger.info("ON MANAGER :received msg seas : " + msg);
 		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
 		String head = jobj.get("head").getAsString();
-		
+
 		ManMsgHandler mmh = new ManMsgHandler();
-		String webResponse = null ;
-		
-		
+
 		logger.info("HEAD  is {}", head);
 		if (head.equalsIgnoreCase("coordinate")) {
 			int empId = 0;
 			try {
 				empId = jobj.get("empId").getAsInt();
 				logger.info("EmpId  is {}", empId);
+				String res = mmh.coordRegister(empId, ses);
+				if (res != null) {
+					sendMsg(res, ses);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				sendMsg("Operation Failed ", ses);
 			}
-			mmh.coordRegister(empId, ses);
-		} else {
-			webResponse = mmh.switchit(jobj,head);// .switchit(msg, jobj, head);
-			if (webResponse != null)
-				sendMsg(webResponse, ses);
-		}
-		
 
-		sendMsg(webResponse, ses);
+		} else {
+			String webResponse = mmh.switchit(jobj, head);
+			// if (webResponse != null)
+			sendMsg(webResponse, ses);
+		}
+
 	}
 
 	public void sendMsg(String msg, Session ses) throws IOException {

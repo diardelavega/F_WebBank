@@ -16,10 +16,10 @@ ws.onerror = function(evt) {
 };
 
 ws.onopen = function(evt) {
+	manSeverClientTupeling();
 };
 
 function doSend(msg) {
-	// ws.send(msgSend.value);
 	ws.send(msg);
 }
 function doClose() {
@@ -35,14 +35,8 @@ function onMessage(evt) {
 	var head = jsobj.head;
 
 	switch (head) {
-//	case 'balanceReply':
-//		balanceReply(jsobj)
-//		break;
-//	case 'transactionReply':
-//		transactionReply(jsobj)
-//		break;
 	case 'clientAccountsReply':
-		manClientAccounts(jsobj);
+		manClientAccountsReply(jsobj);
 		break;
 	case 'accountStatusReply':
 		manAccountStatusReply(jsobj);
@@ -51,13 +45,13 @@ function onMessage(evt) {
 		manAccountCooReply(jsobj);
 		break;
 	case 'clientTransactionReply':
-		manClientTrans(jsobj);
+		manClientTransReply(jsobj);
 		break;
 	case 'manyClientTransactionReply':
-		manManyClientTrans(jsobj);
+		manManyClientTransReply(jsobj);
 		break;
 	case 'accountTransactionsReply':
-		manAccountTrans(jsobj);
+		manAccountTransRply(jsobj);
 		break;
 	case 'leaveRequestReply':
 		leaveRequest(jsobj);
@@ -68,6 +62,12 @@ function onMessage(evt) {
 	case 'error':
 		errorRes(jsobj);
 		break;
+	case 'requestAlert':
+		manRequestAlert(jsobj);
+		break;
+
+	case 'default':
+		console.log("NoHeader");
 	}
 
 }
@@ -80,25 +80,17 @@ function ManHideShow(chosen) {
 	$('.hidable').each(function(index) {
 		if ($(this).attr("id") === chosen) {
 			$(this).show();
-//			$(this).attr("style", "visibility: visible");
 		} else {
-//			$(this).attr("style", "visibility: collapse");
 			$(this).hide();
 		}
 	});
 }
 function divhide() {
 	ManHideShow('mainMan');
-	// $('.hidable').attr("style", "visibility: visible");
 }
 
-
-
-
-/*function capitalize() {
-	// setTimeout(function() {
-	$("input[type=text]").onblure(function() {
-		$(this).val($(this).val().toUpperCase());
-	});
-	// }, 3000)
-}*/
+/*
+ * function capitalize() { // setTimeout(function() {
+ * $("input[type=text]").onblure(function() {
+ * $(this).val($(this).val().toUpperCase()); }); // }, 3000) }
+ */

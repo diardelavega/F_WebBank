@@ -1,4 +1,5 @@
 function telSeverClientTupeling() {
+//	alert("AAAAA");
 	var reg = {
 		head : "coordinate",
 		empId : telId
@@ -22,6 +23,7 @@ function telAccountStatus() {
 	var accNr = $("#telAccountNr").val();
 	var req = {
 		head : "accountStatus",
+		empId : telId,
 		accuntNr : accNr
 	};
 	doSend(JSON.stringify(req));
@@ -30,6 +32,7 @@ function telAccountCoo() {
 	var accNr = $("#telAccountNr").val();
 	var req = {
 		head : "accountCoowners",
+		empId : telId,
 		accuntNr : accNr
 	};
 	doSend(JSON.stringify(req));
@@ -38,6 +41,7 @@ function telClientAccounts() {
 	var persId = $("#telPersonalId").val();
 	var req = {
 		head : "clientAccounts",
+		empId : telId,
 		personalId : persId
 	};
 	doSend(JSON.stringify(req));
@@ -46,6 +50,7 @@ function telClientAccounts() {
 function deleteClient() {
 	clientData = {
 		head : 'deleteClient',
+		empId : telId,
 		id : $('[name=id]').val()
 	}
 	doSend(JSON.stringify(clientData));
@@ -199,7 +204,8 @@ function searchReply(jsobj) {
 			}// for key
 		}// for i
 	} else {
-		mainAlertDisplay(jsobj.msg);
+		ret = mainAlertDisplay(jsobj.msg, "warning");
+		fadeOut(ret);
 	}
 }
 
@@ -216,6 +222,7 @@ function retriveTrContent(event) {
 }
 
 function clientAccounts(jsobj) {
+	console.log(jsobj);
 	var tb = $("#telClientAccounts tbody");
 	var trh = $("#telClientAccounts thead tr");
 	trh.empty();
@@ -256,7 +263,8 @@ function clientAccounts(jsobj) {
 			console.log(acc)
 		}
 	} else {
-		mainAlertDisplay(jsobj.msg)
+		ret = mainAlertDisplay(jsobj.msg, "warning");
+		fadeOut(ret);
 	}
 }
 
@@ -331,11 +339,8 @@ function accCoownHeader() {
 }
 
 function errorRes(jsobj) {
-	// var alerter = $('#mainMsgAlert');
-	// alerter.addClass("alerter");
-	// $(alerter).addClass("alert alert-warning");
-	// alerter.innerHTML = jsobj.msg;
-	mainAlertDisplay(jsobj.msg);
+	ret = mainAlertDisplay(jsobj.msg, "warning");
+	fadeOut(ret);
 }
 
 /* END AFTER RESPONSE FUNCTION */
@@ -356,7 +361,6 @@ function mainAlertDisplay(msg, alertType) {
 	var div = $("#telMainMsgAlert");
 	clearTimeout(telTimeOut);
 	div.empty();
-	// div.text(msg);
 	if (alertType === 'info') {
 		$(div).addClass("alert alert-info");
 	} else {
@@ -368,7 +372,7 @@ function mainAlertDisplay(msg, alertType) {
 	span.style.padding = "230px";
 
 	var a = document.createElement("a");
-	a.innerHTML = "x";
+	a.innerHTML = "&times;";
 	$(a).attr("href", "#");
 	$(a).attr("onclick", "closeThis(event)");
 	var br = document.createElement("br");
@@ -388,6 +392,9 @@ function fadeOut(div) {
 		$(div).hide(1000);
 	}, 5000);
 }
+
+
+
 
 function closeThis(event) {
 	var div = $(event.target).parent().parent();

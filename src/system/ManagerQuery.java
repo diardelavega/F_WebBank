@@ -143,22 +143,24 @@ public class ManagerQuery {
 		for (int i = 0; i < persId.size(); i++) {
 			q.setParameter("id" + i, persId.get(i));
 		}
+		logger.info("--------------->" + q.toString());
 		List<Transaction> tl = q.list();
+		if (tl.size() == 0)
+			return null;
+		
 		return tl;
 	}
 
-	
 	public Account getAccount(String accId) {
 		GeneralFunctions gf = new GeneralFunctions();
 		return gf.getAccount(accId);
 	}
 
-	public  Customers getCustomer(String persId){
+	public Customers getCustomer(String persId) {
 		GeneralFunctions gf = new GeneralFunctions();
 		return gf.getCustomer(persId);
 	}
-	
-	
+
 	public void upSession() {
 		if (!s.isConnected() || !s.isOpen()) {
 			s = DBHandler.getSessionFactory().openSession();

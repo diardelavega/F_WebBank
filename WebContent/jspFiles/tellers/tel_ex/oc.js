@@ -1,5 +1,6 @@
 function openAccount() {
 	var persIdList = {
+			empId:telId,
 		head : "openAccountRequest",
 		pId1 : $("[name=telOpenId1]").val(),
 		pId2 : $("[name=telOpenId2]").val(),
@@ -12,6 +13,7 @@ function openAccount() {
 
 function tellCloseAcc() {
 	var persIdList = {
+			empId:telId,
 		head : "closeAccountRequest",
 		pId1 : $("[name=telCloseId1]").val(),
 		pId2 : $("[name=telCloseId2]").val(),

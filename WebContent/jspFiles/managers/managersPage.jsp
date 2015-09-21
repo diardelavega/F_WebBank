@@ -17,28 +17,24 @@
 <link href="../../bootstrap/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
 
-<!-- <link href="../../jquery-ui/jquery-ui.min.css" rel="stylesheet">
-<link href="../../jquery-ui/jquery-ui.theme.min.css" rel="stylesheet">
-<link href="../../jquery-ui/jquery-ui.structure.min.css"
-	rel="stylesheet"> -->
-
-<!-- flot charts -->
-<link href="../../flot_f/examples.css" rel="stylesheet" type="text/css">
+<!-- flot charts
+<link href="../../flot_f/examples.css" rel="stylesheet" type="text/css"> -->
 <title>Manager</title>
 <%
 	HttpSession ses = request.getSession();
 %>
 
 <script type="text/javascript">
-window bigEmpId="<%=ses.getAttribute("primeKey")%>"
+window.manEmpId="<%=ses.getAttribute("primeKey")%>"
+
+function eid(){
+	alert(manEmpId);
+}
 </script>
 </head>
 <body onload="divhide(); capitalize(); ">
-	<input type="hidden" id="manEmpId"
-		value="<%=ses.getAttribute("primeKey")%>">
 
 	<div id="wrapper">
-
 		<!-- Navigation -->
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
@@ -50,7 +46,7 @@ window bigEmpId="<%=ses.getAttribute("primeKey")%>"
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#" onclick="manseverClientTupeling();">Manager</a>
+				<a class="navbar-brand" href="#" onclick="manSeverClientTupeling(); eid();">Manager</a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<!--  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -71,34 +67,36 @@ window bigEmpId="<%=ses.getAttribute("primeKey")%>"
 					data-toggle="dropdown"> <i class="fa fa-envelope"></i> <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu message-dropdown">
-						<li class="message-preview"><a href="#"> <!--<div class="media">-->
-								<span class="pull-left"> <img class="media-object"
-									src="http://placehold.it/50x50" alt="fing placee holder">
-							</span>
-								<div class="media-body">
-									<h5 class="media-heading">
-										<strong>John Smith</strong>
+						<li class="message-preview"><a href="#"
+							style="background-color: rgb(248, 248, 248);"
+							onclick="manColorToNorm();">
+								<div id="manMsgPanel" style="background-color: white;">
+									<h5
+										style="background-color: rgb(210, 210, 210); padding: 10px;">
+										<strong></strong>
 									</h5>
-									<p class="small text-muted">
-										<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+									<!-- <p class="divider"></li> -->
+									<p style="font-size: 13pt;"></p>
+									<p style="font-size: 9pt;"></p>
+									<p class="small text-muted"
+										style="font-size: 8pt; background-color: rgb(240, 240, 225);">
+										<i> </i>
 									</p>
-									<p>Lorem ipsum dolor sit amet, consectetur...</p>
-								</div> <!--</div>-->
+								</div>
 						</a></li>
-						<li class="message-footer"><a href="#">Read All New
-								Messages</a></li>
+						<li class="message-footer"><a href="#" onclick="goGetReqs();">Go Get Requests</a></li>
 					</ul></li>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown"><i class="fa fa-arrow-up"></i> <b
-						class="caret"></b></a>
-					<ul class="dropdown-menu alert-dropdown">
-						<li><a href="#">Alert Name <span
+					data-toggle="dropdown" onclick="manColorToNorm();"><i
+						class="fa fa-arrow-up"></i> <b class="caret"></b></a>
+					<ul class="dropdown-menu alert-dropdown" id="manHeadNotify">
+						<!-- <li><a href="#">Alert Name <span
 								class="label label-default">Alert Badge</span></a></li>
 
 						<li><a href="#">Alert Name <span
 								class="label label-danger">Alert Badge</span></a></li>
 						<li class="divider"></li>
-						<li><a href="#">View All</a></li>
+						<li><a href="#">View All</a></li> -->
 					</ul></li>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown"><i class="fa fa-user"></i>
@@ -131,17 +129,13 @@ window bigEmpId="<%=ses.getAttribute("primeKey")%>"
 
 				<!-- import manager main details -->
 				<jsp:include page="./mainPageManPart.jsp"></jsp:include>
-				<!-- import employee details -->
 				<jsp:include page="./reqPartManPage.jsp"></jsp:include>
-
 
 			</div>
 		</div>
 		<!-- /#page-content-wrapper -->
-
 	</div>
 	<!-- /#wrapper -->
-
 
 	<!-- jQuery -->
 	<script src="../../bootstrap/js/jquery.js"></script>
@@ -149,23 +143,19 @@ window bigEmpId="<%=ses.getAttribute("primeKey")%>"
 	<!-- manager scripts -->
 	<script src="./man_ex/manInit.js"></script>
 	<script src="./man_ex/man.js"></script>
+	<script src="./man_ex/manMain.js"></script>
 	<script src="./man_ex/request.js"></script>
-
-	<!-- flot charts -->
-	<!-- <script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.min.js"></script>
-	<script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.pie.min.js"></script>
-	<script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.categories.min.js"></script> -->
+	<script src="../js/general.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<!-- jquery-ui -->
 	<script src="../../jquery-ui/jquery-ui.min.js"></script>
-	<script type="text/javascript">
-		window.onload = "severClientTupeling();"
-	</script>
+
+
 </body>
+<!-- <script type="text/javascript">
+		manSeverClientTupeling();
+	</script> -->
 </html>

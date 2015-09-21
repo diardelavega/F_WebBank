@@ -17,6 +17,7 @@ ws.onerror = function(evt) {
 };
 
 ws.onopen = function(evt) {
+	telSeverClientTupeling();
 };
 
 function doSend(msg) {
@@ -50,7 +51,7 @@ function onMessage(evt) {
 	case 'searchReply':
 		searchReply(jsobj);
 		break;
-		//-------------------page 1
+	// -------------------page 1
 	case 'registerClientReply':
 		registerClientReply(jsobj);
 		break;
@@ -60,7 +61,7 @@ function onMessage(evt) {
 	case 'deleteClientReply':
 		deleteClientReply(jsobj);
 		break;
-		//------------------page 1.1
+	// ------------------page 1.1
 	case 'depositeReply':
 		depositeReply(jsobj);
 		break;
@@ -70,11 +71,11 @@ function onMessage(evt) {
 	case 'transferReply':
 		transferReply(jsobj);
 		break;
-		//----------------page 2
+	// ----------------page 2
 	case 'requestReply':
 		reqReplyAlert(jsobj);
 		break;
-		
+
 	case 'ocRequestReply':
 		ocRequestReply(jsobj);
 		break;

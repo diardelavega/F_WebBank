@@ -12,8 +12,11 @@ import javax.websocket.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
+
 import sun.security.action.GetLongAction;
 import comon.OCRequest;
+import comon.StaticVars;
 import comon.TupleEntityFuncWS;
 import entity.Employee;
 import functions.CustomerFunctions;
@@ -34,7 +37,7 @@ import functions.TellerFunctions;
  */
 public class Coordinator {
 
-	public static Logger logger=LoggerFactory.getLogger(Coordinator.class);
+	public static Logger logger = LoggerFactory.getLogger(Coordinator.class);
 	private static List<OCRequest> ocr = new ArrayList<>();
 	private static Map<Integer, ManagerFunctions> managers = new HashMap<>();
 	private static Map<Integer, TellerFunctions> tellers = new HashMap<>();
@@ -45,97 +48,116 @@ public class Coordinator {
 		tellers.put(telf.getEmpId(), telf);
 	}
 
-	public static  void addTellSession(int id, Session session) {
+	public static void addTellSession(int id, Session session) {
 		tellers.get(id).setWsSession(session);
 	}
 
-	public static  void deleteTeller(int id) {
+	public static void deleteTeller(int id) {
 		tellers.remove(id);
 	}
 
-	public static  Session getTellerSession(int id) {
+	public static Session getTellerSession(int id) {
 		return tellers.get(id).getWsSession();
 	}
 
-	public static  TellerFunctions getTellerFunc(int id) {
+	public static TellerFunctions getTellerFunc(int id) {
 		return tellers.get(id);
 	}
 
 	/* MANAGER */
-	public static  void addManagerFunc(ManagerFunctions telf) {
+	public static void addManagerFunc(ManagerFunctions telf) {
 		managers.put(telf.getEmpId(), telf);
 	}
 
-	public static  void addManagerSession(int id, Session session) {
+	public static void addManagerSession(int id, Session session) {
 		managers.get(id).setWsSession(session);
 	}
 
-	public static  void deleteManager(int id) {
+	public static void deleteManager(int id) {
 		managers.remove(id);
 	}
 
-	public static  Session getManagerSession(int id) {
+	public static Session getManagerSession(int id) {
 		return managers.get(id).getWsSession();
 	}
 
-	public static  ManagerFunctions getManagerFunc(int id) {
+	public static ManagerFunctions getManagerFunc(int id) {
 		return managers.get(id);
 	}
 
 	/* DIRECTOR */
-	public static  void addDirectorFunc(DirectorFunctions telf) {
+	public static void addDirectorFunc(DirectorFunctions telf) {
 		directors.put(telf.getEmpId(), telf);
 	}
 
-	public static  void addDirectorSession(int id, Session session) {
+	public static void addDirectorSession(int id, Session session) {
 		directors.get(id).setWsSession(session);
 	}
 
-	public static  void deleteDirector(int id) {
+	public static void deleteDirector(int id) {
 		directors.remove(id);
 	}
 
-	public static  Session getDirectorSession(int id) {
+	public static Session getDirectorSession(int id) {
 		return directors.get(id).getWsSession();
 	}
 
-	public static  DirectorFunctions getDirectorFunc(int id) {
+	public static DirectorFunctions getDirectorFunc(int id) {
 		return directors.get(id);
 	}
 
 	/* CLIENTS */
-	public static  void addCustomerFunc(CustomerFunctions cf) {
+	public static void addCustomerFunc(CustomerFunctions cf) {
 		clients.put(cf.getPersonalId(), cf);
 	}
 
-	public static  CustomerFunctions getCustomerFunctions(String id) {
+	public static CustomerFunctions getCustomerFunctions(String id) {
 		return clients.get(id);
 	}
 
-	public static  void addCustomerSession(String id, Session session) {
+	public static void addCustomerSession(String id, Session session) {
 		clients.get(id).setSession(session);
 	}
 
-	public static  Session getCustomerSession(String id) {
+	public static Session getCustomerSession(String id) {
 		return clients.get(id).getSession();
 	}
 
-	public static  void deleteCustomer(String persId) {
+	public static void deleteCustomer(String persId) {
 		clients.remove(persId);
 	}
 
 	/* OCR */
-	public static  void addOCR(OCRequest req){
+	public static void addOCR(OCRequest req) {
 		ocr.add(req);
 		logger.info("OCR addet to Coordinator");
-		scatterAlertNewOCR();
+		switch (req.getReqType()) {
+		case StaticVars.OPEN:
+		case StaticVars.PLUS_6_ACC:
+			scatterAlertNewOCR(req.getReqType(), req.getClientIdsList().get(0),
+					"");
+		case StaticVars.CLOSE:
+			scatterAlertNewOCR(req.getClientIdsList().get(0),
+					req.getAccFromNr(), String.valueOf(req.getAccType()));
+			break;
+		case StaticVars.PLUS_1K_DEP:
+		case StaticVars.PLUS_1K_TRANS:
+		case StaticVars.PLUS_1K_WITH:
+			scatterAlertNewOCR(req.getReqType(), req.getAccFromNr(),
+					String.valueOf(req.getAmount()));
+			break;
+		default:
+			logger.warn("Unexpected request arrived");
+			break;
+		}
+
 	}
 
-	public static  void deleteOCR(OCRequest req) {
+	public static void deleteOCR(OCRequest req) {
 		ocr.remove(req);
 	}
 
-	public static  OCRequest getNextOCR(int manId) {
+	public static OCRequest getNextOCR(int manId) {
 		for (int i = 0; i < ocr.size(); i++) {
 			if (ocr.get(i).isPin())
 				continue;
@@ -146,38 +168,38 @@ public class Coordinator {
 		return null;
 	}
 
-	public static  OCRequest getForceNextOCR() {
+	public static OCRequest getForceNextOCR() {
 		for (int i = 0; i < ocr.size(); i++) {
 			if (ocr.get(i).isPin())
 				continue;
-			ocr.get(i).pin();
+			// ocr.get(i).pin();
 			return ocr.get(i);
 		}
 		return null;
 	}
 
-	public static  void leaveOCR(OCRequest req) {
+	public static void leaveOCR(OCRequest req) {
 		ocr.get(ocr.indexOf(req)).unPin();
 	}
 
-	private static void scatterAlertNewOCR() {
+	private static void scatterAlertNewOCR(String reqType, String d2, String ed) {
 		for (Integer key : managers.keySet()) {
-			getManagerFunc(key).alert();
+			getManagerFunc(key).alert(reqType, d2, ed);
 		}
 	}
 
-	public static  void reviewedOCR(OCRequest req) throws IOException {
+	public static void reviewedOCR(OCRequest req) throws IOException {
 		if (req.isStatus()) {
 			tellers.get(req.getTellerId()).alert(req);
 		}
 	}
 
-	public static String ocrListSize(){
-		return ocr.size()+"";
+	public static String ocrListSize() {
+		return ocr.size() + "";
 	}
 
-	public static void printAll(){
-		for(OCRequest re:ocr){
+	public static void printAll() {
+		for (OCRequest re : ocr) {
 			re.print();
 		}
 	}

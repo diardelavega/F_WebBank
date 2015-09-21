@@ -27,14 +27,19 @@ public class TelMsgHandler {
 
 	// private Gson gson = new GsonBuilder().serializeNulls().create();
 	// ---------client to server side
-	private TellerFunctions tf = new TellerFunctions();
+	private TellerFunctions tf;
 
 	public String switchit(JsonObject jobj, String head) throws ParseException {
 		logger.info("SWITCHING IT");
-		// JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
-		// String head = jobj.get("head").getAsString();
 
-		// JsonObject jo = new JsonObject();
+		int empId;
+		try {
+			empId = jobj.get("empId").getAsInt();
+			tf = Coordinator.getTellerFunc(empId);
+		} catch (Exception e) {
+			tf = new TellerFunctions();
+			e.printStackTrace();
+		}
 
 		switch (head) {
 		case "newClientReg":
@@ -61,10 +66,10 @@ public class TelMsgHandler {
 			return closeAccountReq(jobj);
 		case "openAccountRequest":
 			return openAccountReq(jobj);
-		case "closeAccountDefinite":
-			return closeAccountDef(jobj);
-		case "openAccountDefinite":
-			return openAccountDef(jobj);
+			// case "closeAccountDefinite":
+			// return closeAccountDef(jobj);
+			// case "openAccountDefinite":
+			// return openAccountDef(jobj);
 		case "testOcr":
 			return ocrTest(jobj);
 
@@ -79,15 +84,6 @@ public class TelMsgHandler {
 	 * final action. Open account definitive and close account definitive. Maybe
 	 * the closure should be done automatically in case of approval
 	 * */
-	private String openAccountDef(JsonObject jobj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private String closeAccountDef(JsonObject jobj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	private String openAccountReq(JsonObject jobj) {
 
@@ -105,6 +101,7 @@ public class TelMsgHandler {
 			pidList.add(jobj.get("pId4").getAsString());
 		}
 		char accType = jobj.get("accType").getAsCharacter();
+
 		logger.info("OPENING Account with {}, {}, {}, {}, {}", pidList.get(0),
 				accType);
 		List<String> problemIds = tf.openAccountReq(pidList, accType);
@@ -201,13 +198,17 @@ public class TelMsgHandler {
 	private String deposite(JsonObject jobj) {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
-		jo.addProperty("head", "withdrawReply");
+		jo.addProperty("head", "depositeReply");
 
 		String account = jobj.get("accNr").getAsString();
+		if(account .equalsIgnoreCase("")){
+			jo.addProperty("msg", "Invalid Account Nr.");
+			return (gson.toJson(jo));
+		}
 		String note = jobj.get("note").getAsString();
 		double amount = 0;
 		try {
-			amount = jobj.get("amount").getAsDouble();
+			amount = Double.parseDouble(jobj.get("amount").getAsString());
 		} catch (Exception e) {
 			jo.addProperty("msg", "incorrect ammount value");
 			return (gson.toJson(jo));
@@ -324,8 +325,7 @@ public class TelMsgHandler {
 			jo.addProperty("head", "error");
 			jo.addProperty("msg", "personal Id was not provided");
 		}
-		String jsonResp = gson.toJson(jo);
-		return jsonResp;
+		return gson.toJson(jo);
 	}
 
 	private String accountStatus(JsonObject jobj) {
@@ -426,18 +426,14 @@ public class TelMsgHandler {
 		 * sessionId and hold it on stand by
 		 */
 
-		logger.info("in coord EMP id is--- []", empId);
+		logger.info("in coord EMP id is--- {}", empId);
 		// Coordinator co = new Coordinator();
 		tf = Coordinator.getTellerFunc(empId);
-		tf.setWsSession(ses);
-	}
-
-	public TellerFunctions getTf() {
-		return tf;
-	}
-
-	public void setTf(TellerFunctions tf) {
-		this.tf = tf;
+		if (tf == null) {
+			logger.info("Not Registered Teller, should log In again");
+		} else {
+			tf.setWsSession(ses);
+		}
 	}
 
 	private String ocrTest(JsonObject jobj) {

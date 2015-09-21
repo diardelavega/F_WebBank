@@ -134,21 +134,22 @@ public class ManagerFunctions extends EmployeeFunctions {
 		}
 	}
 
-	public void alert()  {
+	public void alert(String reqType, String d2, String ed) {
 		// to be summoned in every ocr addition
-		System.out.println("MANAGER !!! A NEW REQUEST ARIVED IN LINE");
+		logger.info("MANAGER !!! A NEW REQUEST ARIVED IN LINE");
+		// System.out.println("MANAGER !!! A NEW REQUEST ARIVED IN LINE");
 		// TODO send an alert msg to the client side manager
 		// AI choice
 		// artificialChoise();
-		ManMsgPusher mmp = new ManMsgPusher ();
-		mmp.requestNotifyer(wsSession);
+		ManMsgPusher mmp = new ManMsgPusher();
+		mmp.requestNotifyer(wsSession, reqType, d2, ed);
 	}
 
 	public void getNextOCR() {
 		req = Coordinator.getNextOCR(empId);
 
 		if (req == null) {
-			logger.info("NO REQUEST AVAILABLE");
+			logger.info("NO NEW REQUEST AVAILABLE");
 		} else {
 			req.setLastManagerToConsiderIt(empId);
 			req.pin();
@@ -159,16 +160,24 @@ public class ManagerFunctions extends EmployeeFunctions {
 
 	public void getForceOCR() {
 		req = Coordinator.getForceNextOCR();
-
+		req.setLastManagerToConsiderIt(empId);
+		req.pin();
 	}
 
 	public void getOCR() {
+		if (req != null) {
+			req.unPin();
+		}
 		getNextOCR();
 		if (req == null) {
 			getForceOCR();
 		}
-		if (req == null)
+		if (req == null) {
 			logger.warn("NO OCRS AQUIRED, PROBABLY THERE ISNT ONE");
+		} else {
+			logger.info("Manager empId is : {}",empId);
+			req.setLastManagerToConsiderIt(empId);
+		}
 	}
 
 	public void checkClients() {
@@ -319,10 +328,13 @@ public class ManagerFunctions extends EmployeeFunctions {
 
 	public List<Account> getClientAccounts(String personalId) {
 		GeneralFunctions gf = new GeneralFunctions();
-		List<Account> acl = new ArrayList<>();
+		List<Account> acl = null;
 		List<String> cids = gf.clientsAccounts(personalId);
-		for (String s : cids) {
-			acl.add(gf.getAccount(s));
+		if (cids != null) {
+			acl = new ArrayList<>();
+			for (String s : cids) {
+				acl.add(gf.getAccount(s));
+			}
 		}
 		return acl;
 	}

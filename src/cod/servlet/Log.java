@@ -90,8 +90,7 @@ public class Log extends HttpServlet {
 			if (domain == null) {
 				session.setAttribute("validity", "not_ok");
 			} else {
-				logger.info("------------------------>usr :{} and psw:{}", usr,
-						psw);
+				logger.info("------------------>usr :{} and psw:{}", usr, psw);
 //				Coordinator co = new Coordinator();
 
 				LogIn log = new LogIn();

@@ -31,7 +31,7 @@ function telWriteAllMsgs(req) {
 
 	var table = $("#allReplays");
 	var tr = document.createElement("tr");
-	tr.setAttribute("class", "border_bottom");
+	//tr.setAttribute("class", "border_bottom");
 
 	var tr1 = document.createElement("tr");
 	var tr2 = document.createElement("tr");
@@ -46,7 +46,7 @@ function telWriteAllMsgs(req) {
 			continue;
 
 		var td1 = document.createElement("td");
-		td1.setAttribute("align", "center");
+		//td1.setAttribute("align", "center");
 		td1.innerHTML = key;
 		tr1.appendChild(td1);
 
@@ -59,14 +59,14 @@ function telWriteAllMsgs(req) {
 			}
 
 			var td2 = document.createElement("td");
-			td2.setAttribute("align", "center");
+		//	td2.setAttribute("align", "center");
 			td2.appendChild(sel);
 			tr2.appendChild(td2);
 			continue;
 		}
 
 		var td2 = document.createElement("td");
-		td2.setAttribute("align", "center");
+		//td2.setAttribute("align", "center");
 		td2.innerHTML = req[key];
 		tr2.appendChild(td2);
 	}
@@ -119,10 +119,7 @@ function testOcrReciver(jsobj) {
 	}
 }
 function lunch() {
-	// telMsgPanelAlert("AAAAAAa AAAAAaaaa AAAaaaaaAAaaaa aaaaa", " ghou!! hek,
-	// hem! ok! TaRzANN king of the jungle");
 	console.log("on lunch");
-	// alert("on lunch");
 	var obj = {
 		head : "testOcr",
 		att : "ocr"

@@ -95,6 +95,8 @@ public class GeneralFunctions {
 						"SELECT accountId FROM CustomersAccount WHERE personalId=:personalId")
 				.setParameter("personalId", personalId).list();
 		// s.close();
+		if (accounts.size() == 0)
+			return null;
 		return accounts;
 	}
 
@@ -274,25 +276,39 @@ public class GeneralFunctions {
 		return error;
 	}
 
-	public String valAmmount(String ammount) {
-		String[] temp = ammount.split(".");
+	public String valAmmount(String amount) {
+		String[] temp = null;
+		boolean flag = false;
+		if (amount.contains(".")) {
+			flag = true;
+			temp = amount.split("\\.");
+		}
+		System.out.println("ammount " + amount);
+		System.out.println("flag " + flag);
+		
+		System.out.println("temp[0] " + temp[0]);
+		
 		String error = null;
+
 		if (temp[0].length() > 5) {
 			error = " ammount value is too big, integer part max 5 digits! ";
-		} else if (temp[1].length() > 7) {
-			error = " ammount precision is exciding the limit, max 7 digits! ";
-		} else {
-			for (int i = 0; i < temp[0].length(); i++) {
-				if (!Character.isDigit(temp[0].charAt(i))) {
-					return "not valid ammount entry! ";
-				}
+		}
+		for (int i = 0; i < temp[0].length(); i++) {
+			if (!Character.isDigit(temp[0].charAt(i))) {
+				return "not valid ammount entry!, try float point number ";
+			}
+		}
+		if (flag) {
+			if (temp[1].length() > 7) {
+				error = " ammount precision is exciding the limit, max 7 digits! ";
 			}
 			for (int i = 0; i < temp[1].length(); i++) {
 				if (!Character.isDigit(temp[1].charAt(i))) {
-					return "not valid ammount entry! ";
+					return "not valid ammount entry!, try float point number ";
 				}
 			}
 		}
+		System.out.println("ammount " + amount);
 		return error;
 	}
 

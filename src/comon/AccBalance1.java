@@ -1,6 +1,6 @@
 package comon;
 
-public class AccBalance {
+public class AccBalance1 {
 
 	String AccountId;
 	int integerBalance;

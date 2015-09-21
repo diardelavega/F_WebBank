@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <div id="reqMan" class="hidable">
 	<div id="reqManField"></div>
 	<h1>Evaluate your requests</h1>
@@ -8,20 +9,27 @@
 	<button onclick="manGetRequest();">GET</button>
 	<button onclick="manLeaveRequest();">LEAVE</button>
 	<br> <br>
-	<div id="requestDetails">
-		<p id="requestType"></p>
-		<p id="clients"></p>
-		<p id="accountType"></p>
-		<p id="accountFrom"></p>
-		<p id="accountTo"></p>
-		<p id="ammount"></p>
-	</div>
-	<div id="responseDetails" style="visibility: collapse;">
+
+	<div id="requestDetails" >
+		<span>Curent Request</span>
+		<table id="curentRequest" class="alertTab">
+			<tbody>
+				<tr></tr>
+			</tbody>
+		</table>
+		<div>
+			<button class="btn btn-success">APPROVE</button>
+			<span class="space"></span>
+			<button class="btn btn-danger">DENNIE</button>
+			<br> Note:
+			<textarea rows="" cols=""></textarea>
+		</div>
+
 		<hr>
-		<label>Decision :</label><select>
-			<option value="APPROVE">APPROVE</option>
-			<option value="DENIE">DENIE</option>
-		</select> <label>Note :</label>
-		<textarea rows="" cols=""></textarea>
+		<table id="allRequests" class="alertTab">
+			<tbody>
+				<tr></tr>
+			</tbody>
+		</table>
 	</div>
 </div>

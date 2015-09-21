@@ -1,6 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<style>
+tr.border_bottom td {
+	border-bottom: 1pt solid black;
+	border-top: 1pt solid black;
+}
+
+table.alertTab td {
+	padding-left: 15px;
+	padding-right: 15px;
+	text-align: center;
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+table.alertTab th {
+	text-align: center;
+}
+
+table.alertTab tr {
+	border-bottom: 1pt solid black;
+	border-top: 1pt solid black;
+}
+</style>
+
+
 <div id="mainMan" class="hidable">
 	<table>
 		<thead>
@@ -13,9 +39,10 @@
 		<tbody>
 			<tr>
 				<td><label>Personal Id:&nbsp;</label><input type="text"
-					id="manPersonalId"></td>
-				<td><label>Account Nr.:&nbsp;</label><input type="text"
-					id="manAccountNr"></td>
+					id="manPersonalId" class="pesrId" style="margin-right: 20px;"></td>
+				<td><label style="margin-left: 20px">Account Nr.:&nbsp;</label><input
+					type="text" id="manAccountNr" class="accNr"></td><td><div id="manMainMsgAlert"
+						style="width: 270px; height: 50px;"></div></td>
 			</tr>
 		</tbody>
 	</table>
@@ -51,17 +78,12 @@
 							<div id="accs" class="tab-pane fade ">
 								<h3>Account's Status :</h3>
 								<!-- table with the response Account Status -->
-								<table id="manAccountStatus">
+								<table id="manAccountStatus" class="alertTab">
 									<thead>
 										<tr>
-											<!-- <th>Account Id</th>
-											<th>Open Date</th>
-											<th>Balance</th>
-											<th>Account Type</th>
-											<th>Account Status</th> -->
 										</tr>
 									</thead>
-									<tbody id="manAccountStatus">
+									<tbody id="manAccount">
 										<tr></tr>
 									</tbody>
 								</table>
@@ -74,7 +96,8 @@
 
 							<div id="cli_a" class="tab-pane fade">
 								<h3>Client's Accounts</h3>
-								<table id="manClientAccounts" border="1" bordercolor="olive">
+								<table id="manClientAccounts" border="1" bordercolor="olive"
+									class="alertTab">
 									<thead>
 										<tr>
 										</tr>
@@ -88,21 +111,25 @@
 
 							<div id="accTrans" class="tab-pane fade">
 								<h3>Account Transactions:</h3>
-								<table id="manAccTrans">
-								<thead> <tr></tr></thead>
-								<tbody>
-								<tr></tr>
-								</tbody>
+								<table id="manAccTrans" class="alertTab">
+									<thead>
+										<tr></tr>
+									</thead>
+									<tbody>
+										<tr></tr>
+									</tbody>
 								</table>
 							</div>
 
 							<div id="cliTrans" class="tab-pane fade">
 								<h3>Client Transactions:</h3>
-								<table id="manClientTrans">
-								<thead> <tr></tr></thead>
-								<tbody>
-								<tr></tr>
-								</tbody>
+								<table id="manClientTrans" class="alertTab">
+									<thead>
+										<tr></tr>
+									</thead>
+									<tbody>
+										<tr></tr>
+									</tbody>
 								</table>
 							</div>
 
