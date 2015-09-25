@@ -8,9 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.websocket.Session;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import system.Coordinator;
 import system.DirectorQuery;
 
 import com.google.gson.Gson;
@@ -21,6 +24,7 @@ import comon.StaticVars;
 import entity.Employee;
 import entity.Transaction;
 import functions.DirectorFunctions;
+import functions.ManagerFunctions;
 
 public class DirMsgWsHandler {
 
@@ -28,11 +32,22 @@ public class DirMsgWsHandler {
 			.getLogger(DirMsgWsHandler.class);
 	private static Gson gson = new GsonBuilder().serializeNulls().create();
 
-	public static String switchit(String msg) {
-		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
-		String head = jobj.get("head").getAsString();
-		DirectorFunctions df = new DirectorFunctions();
-		JsonObject jo = new JsonObject();
+	private static DirectorFunctions df;
+
+	public static String switchit(JsonObject jobj, String head) {
+		// JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
+		// String head = jobj.get("head").getAsString();
+		// JsonObject jo = new JsonObject();
+
+		int empId;
+		try {
+			empId = Integer.parseInt(jobj.get("empId").getAsString());
+			df = Coordinator.getDirectorFunc(empId);
+		} catch (Exception e) {
+			logger.warn("EMP ID WAS NOt FOUND");
+			df = new DirectorFunctions();
+			e.printStackTrace();
+		}
 
 		switch (head) {
 		case "new":
@@ -55,11 +70,30 @@ public class DirMsgWsHandler {
 			// break;
 		case "empAct":
 			break;
+		case "logout":
+			return logout(jobj);
+			// case "coordinate":
+			// coordinate(jobj);
+			// break;
 		default:
 			logger.info("invalid switch criterias");
 		}
-
 		return null;
+	}
+
+	private static String logout(JsonObject jobj) {
+
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "logoutReplay");
+		jo.addProperty("response", "OK!");
+		try {
+			Coordinator.deleteDirector(jobj.get("empId").getAsInt());
+		} catch (Exception e) {
+			e.printStackTrace();
+			jo.addProperty("response", "Something Whent Wrong");
+		}
+		return gson.toJson(jo);
 	}
 
 	private static String deleteEmployee(DirectorFunctions df, JsonObject jobj) {
@@ -290,6 +324,17 @@ public class DirMsgWsHandler {
 		// TODO check values
 		logger.info("--------------- >>>>>>>>>>" + jsonResp);
 		return jsonResp;
+	}
+
+	public String coordRegister(int empId, Session ses) {
+		logger.info("in coordRegister EMP id is--- {}", empId);
+		// Coordinator co = new Coordinator();
+		df = Coordinator.getDirectorFunc(empId);
+		if (df == null) {
+			return "The Manager Is Not Registerd";
+		}
+		df.setWsSession(ses);
+		return null;
 	}
 
 }

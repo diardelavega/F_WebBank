@@ -1,5 +1,6 @@
 package utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,14 +28,10 @@ public class ManMsgHandler {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ManMsgHandler.class);
-	// private static Gson gson = new GsonBuilder().create();
-
-	// ManagerWS mws = new ManagerWS();
 	private ManagerFunctions mf;
 
 	public String switchit(JsonObject jobj, String head) {
 		logger.info(jobj.toString());
-		logger.info(head);
 
 		int empId;
 		try {
@@ -47,6 +44,10 @@ public class ManMsgHandler {
 		}
 
 		switch (head) {
+		case "approve":
+			return approveRequest(jobj);
+		case "dennie":
+			return dennieRequest(jobj);
 		case "getRequest":
 			return getRequest(jobj);
 		case "leaveRequest":
@@ -61,10 +62,60 @@ public class ManMsgHandler {
 			return accountCoowners(jobj);
 		case "accountStatus":
 			return accountStatus(jobj);
+		case "logout":
+			return logout(jobj);
 		default:
 			logger.info("invalid switch criterias");
 		}
 		return null;
+	}
+
+	private String logout(JsonObject jobj) {
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "logoutReplay");
+		jo.addProperty("response", "OK!");
+		try {
+			Coordinator.deleteManager(jobj.get("empId").getAsInt());
+		} catch (Exception e) {
+			e.printStackTrace();
+			jo.addProperty("response", "Something Whent Wrong");
+		}
+		return gson.toJson(jo);
+	}
+
+	private String dennieRequest(JsonObject jobj) {
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "dennieRequestReply");
+		jo.addProperty("msg", "OK!");
+
+		String note = jobj.get("note").getAsString();
+		try {
+			mf.decision("DENNIED", note);
+		} catch (IOException e) {
+			logger.warn("Some Error While Trying to Dennie The Request");
+			jo.addProperty("msg", "A Problem Occurred");
+			// e.printStackTrace();
+		}
+		return gson.toJson(jo);
+	}
+
+	private String approveRequest(JsonObject jobj) {
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "approveRequestReply");
+		jo.addProperty("msg", "OK!");
+
+		String note = jobj.get("note").getAsString();
+		try {
+			mf.decision("ACCEPTED", note);
+		} catch (IOException e) {
+			logger.warn("Some Error While Trying to Approve The Request");
+			jo.addProperty("msg", "A Problem Occurred");
+			// e.printStackTrace();
+		}
+		return gson.toJson(jo);
 	}
 
 	private String accountStatus(JsonObject jobj) {
@@ -94,12 +145,12 @@ public class ManMsgHandler {
 
 		String persId = jobj.get("accountNr").getAsString();
 		if (persId.equals("")) {
-			jo.addProperty("msg", "No Clients Where Found For This Account");
+			jo.addProperty("msg", "No Clients Where Found");
 		} else {
 			List<Customers> ret = mf.getAccountClients(jobj.get("accountNr")
 					.getAsString());
 			if (ret == null) {
-				jo.addProperty("msg", "No Clients Where Found For This Account");
+				jo.addProperty("msg", "No Clients Where Found");
 			} else {
 				jo.add("ownersList", gson.toJsonTree(ret));
 			}
@@ -114,13 +165,11 @@ public class ManMsgHandler {
 
 		String persId = jobj.get("personalId").getAsString();
 		if (persId.equals("")) {
-			jo.addProperty("msg",
-					"No Accounts Where Found Involving This Clients");
+			jo.addProperty("msg", "No Accounts Where Found");
 		} else {
 			List<Account> ret = mf.getClientAccounts(persId);
 			if (ret == null) {
-				jo.addProperty("msg",
-						"No Accounts Where Found For This Clients");
+				jo.addProperty("msg", "No Accounts Where Found");
 			} else {
 				jo.add("accountsList", gson.toJsonTree(ret));
 			}
@@ -135,15 +184,13 @@ public class ManMsgHandler {
 
 		String persId = jobj.get("personalId").getAsString();
 		if (persId.equals("")) {
-			jo.addProperty("msg",
-					"No Transactions Where Found Involving This Clients");
+			jo.addProperty("msg", "No Transactions Involve This Clients");
 		} else {
 			List<String> ls = new ArrayList<String>();
 			ls.add(persId);
 			List<Transaction> ret = mf.clientInvolvedTransactionsAll(ls);
 			if (ret == null) {
-				jo.addProperty("msg",
-						"No Transactions Where Found Involving This Clients");
+				jo.addProperty("msg", "No Transaction Involve This Clients");
 			} else {
 				jo.add("clientTransList", gson.toJsonTree(ret));
 			}
@@ -177,13 +224,11 @@ public class ManMsgHandler {
 
 		String accNr = jobj.get("accountNr").getAsString();
 		if (accNr.equals("")) {
-			jo.addProperty("msg",
-					"No Transactions Where Found Involving This Account");
+			jo.addProperty("msg", "No Transactions nvolve This Account");
 		} else {
 			List<Transaction> ret = mf.accountInvolvedTransactions(accNr);
 			if (ret == null) {
-				jo.addProperty("msg",
-						"No Transactions Where Found Involving This Account");
+				jo.addProperty("msg", "No TransactionsInvolve This Account");
 			} else {
 				jo.add("accountTransList", gson.toJsonTree(ret));
 			}
@@ -196,27 +241,29 @@ public class ManMsgHandler {
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "leaveRequestReply");
 		try {
-			mf.getReq().unPin();
+			mf.leaveOCR();
 		} catch (Exception e) {
-			e.printStackTrace();
-			jo.addProperty("msg", "No Request Was Found For This Manager");
+			// e.printStackTrace();
+			logger.warn("Some Error while trying to leave OCR");
+			jo.addProperty("msg",
+					"No Request Was Found For This Manager At This Time");
 			return gson.toJson(jo);
 		}
-		jo.addProperty("msg", "Done");
+		jo.addProperty("msg", "Request Is Out");
 		return gson.toJson(jo);
 	}
 
 	private String getRequest(JsonObject jobj) {
-		logger.info("in man msg handler function get request");
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().create();
 		jo.addProperty("head", "requestRequestReply");
 
-		mf.getOCR();
-		if (mf.getReq() == null) {
-			jo.addProperty("msg", "No New Request Available");
-		} else {
+		String resp = mf.getOCR();
+		logger.info("RRRRRRRResp " + resp);
+		if (resp == "") {
 			jo.add("requestDetails", gson.toJsonTree(mf.getReq()));
+		} else {
+			jo.addProperty("msg", "No New Request Available--");
 		}
 		logger.info(gson.toJson(jo));
 		return gson.toJson(jo);

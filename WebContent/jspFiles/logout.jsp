@@ -8,6 +8,7 @@
 <%
 	HttpSession ses = request.getSession();
 	if (!ses.isNew()) {
+		
 		ses.invalidate();
 	}
 %>

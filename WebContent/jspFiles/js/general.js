@@ -159,5 +159,15 @@ function popUp(inp) {
 	if ($(inp).data('bs.popover')) {
 		$(inp).popover('destroy');
 	}
+}
 
+function logOutReplay(jsobj) {
+	//to be called upon logout
+	if (jsobj.hasOwnProperty('response')) {
+		if (jsobj.response === 'OK!') {
+			window.location.href = "../logout.jsp";
+		}
+	} else if (jsobj.hasOwnProperty('msg')) {
+		console.log("on log out  " + jsobj.msg);
+	}
 }

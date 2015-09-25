@@ -51,21 +51,41 @@ public class ManagerFunctions extends EmployeeFunctions {
 		this.empId = 000;
 	}
 
-	public void confirmOpen(String response, String note) {
-		// the coordinator should delete OCR
-		String accNr = "";
-		// String msgResponse = "";
+	// Manager request responses
+
+	public void decision(String respone, String note) throws IOException {
+		// get the managers decision and act upon it
+		switch (req.getReqType()) {
+		case StaticVars.OPEN:
+		case StaticVars.PLUS_6_ACC:
+			confirmOpen(respone, note);
+			break;
+		case StaticVars.CLOSE:
+			confirmClose(respone, note);
+			break;
+		case StaticVars.PLUS_1K_DEP:
+		case StaticVars.PLUS_1K_TRANS:
+		case StaticVars.PLUS_1K_WITH:
+			confirmTransaction(respone, note);
+			break;
+		default:
+			logger.warn("Unexpected request arrived");
+			break;
+		}
+	}
+
+	public void confirmOpen(String response, String note) throws IOException {
 		if (response.equals(StaticVars.ACCEPT)) {
-			// accNr = accm.openAccount(req.getAccType(),
-			// req.getClientIdsList());
-			logger.info("ACCOUNT {}. is oppen", accNr);
+			logger.info("ACCOUNT {}. is oppen", req.getAccFromNr());
 			req.setResponse(StaticVars.ACCEPT);
 			req.setNote(note);
 			req.setStatusComplete();
 			req.unPin();
 			// ----------------------------
-			EmployeeAction ea = new EmployeeAction(accNr, StaticVars.CNF_OPEN,
-					"", empId);
+			EmployeeAction ea = new EmployeeAction();
+			ea.setActionType(req.getReqType());
+			ea.setEmpId(req.getLastManagerToConsiderIt());
+			ea.setCustomerId(req.getClientIdsList());
 			super.confirmOpenAcc(ea);
 			// ----------------------------
 		} else {
@@ -76,15 +96,10 @@ public class ManagerFunctions extends EmployeeFunctions {
 			req.unPin();
 
 		}
-		try {
-			Coordinator.reviewedOCR(req);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Coordinator.reviewedOCR(req);
 	}
 
-	public void confirmClose(String response, String note) {
+	public void confirmClose(String response, String note) throws IOException {
 		if (response.equals(StaticVars.ACCEPT)) {
 			logger.info("CLOSE ACCOUNT {}. REQEST WAS APPROVED",
 					req.getAccFromNr());
@@ -93,8 +108,11 @@ public class ManagerFunctions extends EmployeeFunctions {
 			req.setNote(note);
 			req.setStatusComplete();
 			// ----------------------------
-			EmployeeAction ea = new EmployeeAction(req.getAccFromNr(),
-					StaticVars.CNF_CLOSE, "", empId);
+			EmployeeAction ea = new EmployeeAction();
+			ea.setActionType(req.getReqType());
+			ea.setAccountId1(req.getAccFromNr());
+			ea.setEmpId(req.getLastManagerToConsiderIt());
+			ea.setCustomerId(req.getClientIdsList());
 			super.confirmCloseAcc(ea);
 			// ----------------------------
 		} else {
@@ -104,12 +122,7 @@ public class ManagerFunctions extends EmployeeFunctions {
 			req.setNote(note);
 			req.setStatusComplete();
 		}
-		try {
-			Coordinator.reviewedOCR(req);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Coordinator.reviewedOCR(req);
 	}
 
 	public void confirmTransaction(String response, String note)
@@ -117,6 +130,20 @@ public class ManagerFunctions extends EmployeeFunctions {
 		if (response.equals(StaticVars.ACCEPT)) {
 			logger.info("TRANSACTION {} WAS ACCEPTED", req.getReqType());
 			req.setResponse(StaticVars.ACCEPT);
+			// ----------------------------
+			EmployeeAction ea = new EmployeeAction();
+			ea.setActionType(req.getReqType());
+			ea.setAccountId1(req.getAccFromNr());
+			ea.setAmount(req.getAmount());
+			ea.setEmpId(req.getLastManagerToConsiderIt());
+			ea.setCustomerId(req.getClientIdsList());
+			try {
+				ea.setAccountId2(req.getAccToNr());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			super.confirmCloseAcc(ea);
+			// ----------------------------
 		} else {
 			logger.info("TRANSACTION {} WAS DENNIED", req.getReqType());
 			req.setResponse(StaticVars.DENIE);
@@ -127,64 +154,150 @@ public class ManagerFunctions extends EmployeeFunctions {
 	}
 
 	// ------------------
-	public void returnRequest() {
-		if (req != null) {
-			req.unPin();
-			req.setStatusInComplete();
-		}
-	}
+	/*
+	 * push msg to manager
+	 */
 
 	public void alert(String reqType, String d2, String ed) {
 		// to be summoned in every ocr addition
 		logger.info("MANAGER !!! A NEW REQUEST ARIVED IN LINE");
-		// System.out.println("MANAGER !!! A NEW REQUEST ARIVED IN LINE");
-		// TODO send an alert msg to the client side manager
-		// AI choice
-		// artificialChoise();
 		ManMsgPusher mmp = new ManMsgPusher();
 		mmp.requestNotifyer(wsSession, reqType, d2, ed);
 	}
 
-	public void getNextOCR() {
-		req = Coordinator.getNextOCR(empId);
-
-		if (req == null) {
-			logger.info("NO NEW REQUEST AVAILABLE");
-		} else {
-			req.setLastManagerToConsiderIt(empId);
-			req.pin();
-		}
-		// TODO send OCR data
-
+	public void updateRequests(int nr) {
+		logger.info("MANAGER !!! A NEW REQUEST Number");
+		ManMsgPusher mmp = new ManMsgPusher();
+		mmp.reqNrNotifyer(wsSession, nr);
 	}
 
-	public void getForceOCR() {
-		req = Coordinator.getForceNextOCR();
-		req.setLastManagerToConsiderIt(empId);
-		req.pin();
-	}
-
-	public void getOCR() {
+	// ----------------------------------------------------
+	public void leaveOCR() {
+		// set a previously engaged request available to other managers
 		if (req != null) {
 			req.unPin();
+			Coordinator.ppReqCounter();
 		}
-		getNextOCR();
-		if (req == null) {
-			getForceOCR();
+	}
+
+	public boolean getNextOCR() {
+		// unexpected null return
+		if (Coordinator.getNextOCR(empId) != null) {
+			req = Coordinator.getNextOCR(empId);
+			return true;
 		}
-		if (req == null) {
-			logger.warn("NO OCRS AQUIRED, PROBABLY THERE ISNT ONE");
-		} else {
-			logger.info("Manager empId is : {}",empId);
+		return false;
+	}
+
+	public boolean getForceOCR(OCRequest req2) {
+		req = Coordinator.getForceNextOCR(req2);
+		if (req != null) {
 			req.setLastManagerToConsiderIt(empId);
+			req.pin();
+			return true;
+		} else {
+			logger.warn("There Are Not Even Old Requets Available");
+			return false;
 		}
+	}
+
+	public String getOCR() {
+		if (Coordinator.getReqCounter() == 0) {
+			logger.warn("There Are No Requets Available");
+			return "There Are No Requets Available1";
+		} else {
+			if (req == null) {// ~ get first request
+				getNextOCR();
+				if (req == null) {// ->requests have been served by others
+					logger.warn("First Request And Null -> there are no more  unserved requests");
+					return "All Request Are Gone";
+				} else {
+					req.pin();
+					req.setLastManagerToConsiderIt(empId);
+					Coordinator.mmReqCounter();
+					assert (req != null);
+					return "";
+				}
+			} else {// has a request but wants to change it
+				req.unPin();
+				
+				if (!getNextOCR()) {
+					logger.warn("there are no NEW unserved requests for YOU");
+					// ???? iff req== null how to compare it
+					if (!getForceOCR(req)) {
+						logger.warn("there are no more unserved requests");
+						return "No Request Available";
+					}
+				}
+				req.pin();
+				req.setLastManagerToConsiderIt(empId);
+				assert (req != null);
+				return "";
+
+			}// else change request
+		}
+
+	}
+
+	public String getOCR0() {
+		// get a request from the availables list
+		if (Coordinator.getReqCounter() == 0) {
+			logger.warn("There Are No Requets Available");
+			return "There Are No Requets Available1";
+		} else {
+			if (req == null) {
+				// if is the first time that the manager gets a request
+				getNextOCR();
+				if (req == null) {
+					logger.info("First Request Was Null");
+					getForceOCR(req);
+					if (req == null) {
+						logger.warn("All Request Are Gone");
+						return "All Requests Where Reviewed4";
+					} else {
+						req.pin();
+						req.setLastManagerToConsiderIt(empId);
+						assert (req != null);
+						return "";
+					}
+				} else {
+					logger.info("Got the first request");
+					req.pin();
+					req.setLastManagerToConsiderIt(empId);
+					Coordinator.mmReqCounter();
+					assert (req != null);
+					return "";
+				}
+			} else {
+				req.unPin();
+				getNextOCR();
+				if (req == null) {
+					logger.warn("There Are Only Old Requests Available3");
+					getForceOCR(req);
+					if (req == null) {
+						logger.warn("All Request Are Gone");
+						return "All Requests Where Reviewed4";
+					} else {
+						req.pin();
+						req.setLastManagerToConsiderIt(empId);
+						assert (req != null);
+						return "";
+					}
+				} else {
+					req.pin();
+					req.setLastManagerToConsiderIt(empId);
+					assert (req != null);
+					return "";
+				}
+			}
+		}
+		// TODO notify manager for requests nr.
 	}
 
 	public void checkClients() {
 		GeneralFunctions gf = new GeneralFunctions();
 		for (String s : req.getClientIdsList()) {
 			System.out.println(s);
-			// gf.getCustomer(s).print();
 			if (gf.getCustomer(s).getAccountsNr() >= 6) {
 				System.out.println("ACCOUNTS MORE THAN ALLOWED");
 			}
@@ -219,32 +332,37 @@ public class ManagerFunctions extends EmployeeFunctions {
 			} else {
 				response = StaticVars.DENIE;
 			}
+			try {
+				switch (req.getReqType()) {
 
-			switch (req.getReqType()) {
-			case StaticVars.OPEN:
-				confirmOpen(response, response);
-				break;
-			case StaticVars.CLOSE:
-				confirmClose(response, response);
-				break;
-			case StaticVars.PLUS_1K_DEP:
-				confirmClose(response, response);
-				break;
-			case StaticVars.PLUS_1K_TRANS:
-				confirmClose(response, response);
-				break;
-			case StaticVars.PLUS_1K_WITH:
-				confirmClose(response, response);
-				break;
-			case StaticVars.PLUS_6_ACC:
-				confirmClose(response, response);
-				break;
+				case StaticVars.OPEN:
+					confirmOpen(response, response);
+					break;
+				case StaticVars.CLOSE:
+					confirmClose(response, response);
+					break;
+				case StaticVars.PLUS_1K_DEP:
+					confirmClose(response, response);
+					break;
+				case StaticVars.PLUS_1K_TRANS:
+					confirmClose(response, response);
+					break;
+				case StaticVars.PLUS_1K_WITH:
+					confirmClose(response, response);
+					break;
+				case StaticVars.PLUS_6_ACC:
+					confirmClose(response, response);
+					break;
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 			if (req.getReqType() == (StaticVars.OPEN)) {
-				confirmOpen(response, req.getNote());
+				// confirmOpen(response, req.getNote());
 			} else if (req.getReqType() == (StaticVars.CLOSE)) {
-				confirmClose(response, req.getNote());
+				// confirmClose(response, req.getNote());
 			} else {
 				// lists.getTellerFunc(req.getTellerId()).alert(null,
 				// "UNDEFINED ERROR OCOURED", null, "");

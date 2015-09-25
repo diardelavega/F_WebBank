@@ -35,6 +35,9 @@ function onMessage(evt) {
 	var head = jsobj.head;
 
 	switch (head) {
+	case 'requestNumber':
+		requestNumber(jsobj);
+		break;
 	case 'clientAccountsReply':
 		manClientAccountsReply(jsobj);
 		break;
@@ -65,7 +68,16 @@ function onMessage(evt) {
 	case 'requestAlert':
 		manRequestAlert(jsobj);
 		break;
-
+	case 'approveRequestReply':
+		approveRequestReply(jsobj);
+		break;
+	case 'dennieRequestReply':
+		dennieRequestReply(jsobj);
+		break;
+	case 'logoutReplay':
+		logOutReplay(jsobj);
+		break;
+		
 	case 'default':
 		console.log("NoHeader");
 	}

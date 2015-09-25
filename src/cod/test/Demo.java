@@ -8,7 +8,7 @@ public class Demo {
 
 		String msg="{'head':'info','id':'2'}";
 //			{"head":"info","id":"12","fname":"Mario","lname":"Rista","address":"Kolonje Lushnje","possition":"DIRECTOR","eMail":"mr@hua.gr"}
-		DirMsgWsHandler.switchit(msg);
+//		DirMsgWsHandler.switchit(msg);
 		
 	}
 

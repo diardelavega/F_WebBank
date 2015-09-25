@@ -33,6 +33,7 @@ ws.onerror = function(evt) {
 };
 
 ws.onopen = function(evt) {
+	dirSeverClientTupeling();
 };
 
 function doSend(msg) {
@@ -68,9 +69,10 @@ function onMessage(evt) {
 		transactionHandler(jsobj);
 		break;
 	case 'dirBalance':
-//		alert("BALANCEEEEE"+jsobj.balist)
-//		console.log(jsobj.balist);
 		balanceHandler(jsobj);
+		break;
+	case 'logoutReplay':
+		logOutReplay(jsobj);
 		break;
 	case 'error':
 		errorRes(jsobj);

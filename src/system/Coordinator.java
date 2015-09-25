@@ -44,6 +44,8 @@ public class Coordinator {
 	private static Map<Integer, DirectorFunctions> directors = new HashMap<>();
 	private static Map<String, CustomerFunctions> clients = new HashMap<>();
 
+	private static int reqCounter = 0;
+
 	public static void addTellerFunc(TellerFunctions telf) {
 		tellers.put(telf.getEmpId(), telf);
 	}
@@ -131,30 +133,34 @@ public class Coordinator {
 	public static void addOCR(OCRequest req) {
 		ocr.add(req);
 		logger.info("OCR addet to Coordinator");
-		switch (req.getReqType()) {
-		case StaticVars.OPEN:
-		case StaticVars.PLUS_6_ACC:
-			scatterAlertNewOCR(req.getReqType(), req.getClientIdsList().get(0),
-					"");
-		case StaticVars.CLOSE:
-			scatterAlertNewOCR(req.getClientIdsList().get(0),
-					req.getAccFromNr(), String.valueOf(req.getAccType()));
-			break;
-		case StaticVars.PLUS_1K_DEP:
-		case StaticVars.PLUS_1K_TRANS:
-		case StaticVars.PLUS_1K_WITH:
-			scatterAlertNewOCR(req.getReqType(), req.getAccFromNr(),
-					String.valueOf(req.getAmount()));
-			break;
-		default:
-			logger.warn("Unexpected request arrived");
-			break;
-		}
-
+		 switch (req.getReqType()) {
+		 case StaticVars.OPEN:
+		 case StaticVars.PLUS_6_ACC:
+		 scatterAlertNewOCR(req.getReqType(), req.getClientIdsList().get(0),
+		 "accType_" + req.getAccType());
+		 break;
+		 case StaticVars.CLOSE:
+		 scatterAlertNewOCR(req.getReqType(), req.getAccFromNr(), req
+		 .getClientIdsList().get(0));
+		 break;
+		 case StaticVars.PLUS_1K_DEP:
+		 case StaticVars.PLUS_1K_TRANS:
+		 case StaticVars.PLUS_1K_WITH:
+		 scatterAlertNewOCR(req.getReqType(), req.getAccFromNr(),
+		 String.valueOf(req.getAmount()));
+		 break;
+		 default:
+		 logger.warn("Unexpected request arrived");
+		 break;
+		 }
+		ppReqCounter();
+		// TODO notify manager for requests nr.
 	}
 
 	public static void deleteOCR(OCRequest req) {
+		mmReqCounter();
 		ocr.remove(req);
+		// TODO notify manager for requests nr.
 	}
 
 	public static OCRequest getNextOCR(int manId) {
@@ -168,13 +174,29 @@ public class Coordinator {
 		return null;
 	}
 
-	public static OCRequest getForceNextOCR() {
-		for (int i = 0; i < ocr.size(); i++) {
-			if (ocr.get(i).isPin())
-				continue;
-			// ocr.get(i).pin();
-			return ocr.get(i);
+	public static OCRequest getForceNextOCR(OCRequest req2) {
+		boolean flag = false;
+		int i = ocr.indexOf(req2);
+
+		for (; i < ocr.size(); i++) {
+			if (flag == false) {
+				if (ocr.size() - 1 <= i) {
+					i = 0;
+					flag = true;
+				} else {
+					i++;
+					if (ocr.get(i).isPin())
+						continue;
+					return ocr.get(i);
+				}
+
+			} else {// flag==true
+				if (ocr.get(i).isPin())
+					continue;
+				return ocr.get(i);
+			}
 		}
+
 		return null;
 	}
 
@@ -185,6 +207,12 @@ public class Coordinator {
 	private static void scatterAlertNewOCR(String reqType, String d2, String ed) {
 		for (Integer key : managers.keySet()) {
 			getManagerFunc(key).alert(reqType, d2, ed);
+		}
+	}
+
+	private static void scatterAlertOCRNr() {
+		for (Integer key : managers.keySet()) {
+			getManagerFunc(key).updateRequests(reqCounter);
 		}
 	}
 
@@ -203,4 +231,21 @@ public class Coordinator {
 			re.print();
 		}
 	}
+
+	public static int getReqCounter() {
+		return reqCounter;
+	}
+
+	public static void ppReqCounter() {
+		reqCounter++;
+		 scatterAlertOCRNr();
+		// TODO alert manager for the available reqs
+	}
+
+	public static void mmReqCounter() {
+		reqCounter--;
+		 scatterAlertOCRNr();
+		// TODO alert manager for the available reqs
+	}
+
 }

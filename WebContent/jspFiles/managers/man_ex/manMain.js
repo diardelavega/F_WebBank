@@ -3,7 +3,7 @@ function manAccountStatus() {
 	var accStat = {
 		head : "accountStatus",
 		accountNr : accNr,
-		empId : bigEmpId
+		empId : manEmpId
 	}
 	doSend(JSON.stringify(accStat));
 }
@@ -13,7 +13,7 @@ function manAccountCoo() {
 	var cliAcc = {
 		head : "accountCoowners",
 		accountNr : accNr,
-		empId : bigEmpId
+		empId : manEmpId
 	}
 	doSend(JSON.stringify(cliAcc));
 }
@@ -23,7 +23,7 @@ function manClientAccounts() {
 	var cliAcc = {
 		head : "clientAccounts",
 		personalId : persId,
-		empId : bigEmpId
+		empId : manEmpId
 	}
 	doSend(JSON.stringify(cliAcc));
 }
@@ -33,7 +33,7 @@ function manAccountTrans() {
 	var accTrans = {
 		head : "accountTransactions",
 		accountNr : accNr,
-		empId : bigEmpId
+		empId : manEmpId
 	}
 	doSend(JSON.stringify(accTrans));
 }
@@ -43,7 +43,7 @@ function manClientTrans() {
 	var cliTrans = {
 		head : "clientTransactions",
 		personalId : persId,
-		empId : bigEmpId
+		empId : manEmpId
 	}
 	doSend(JSON.stringify(cliTrans));
 }
@@ -59,7 +59,6 @@ function manAccountStatusReply(jsobj) {
 	trd.empty();
 	if (jsobj.hasOwnProperty("account")) {
 		var acc = jsobj.account;
-		console.log(acc);
 
 		for ( var key in acc) {
 			// -----------header creation
@@ -72,11 +71,11 @@ function manAccountStatusReply(jsobj) {
 			var t = document.createTextNode(acc[key]); // Create a text node
 			td.appendChild(t);
 			trd.append(td);
-			console.log(acc[key])
 		}
-		console.log(acc);
 	} else if (jsobj.hasOwnProperty("msg")) {
-		alert(jsobj.msg);
+		// alert(jsobj.msg);
+		var d = $("#manMsgAlertMain");
+		manMainAlertDisplay(jsobj.msg, "info", d);
 	}
 }
 
@@ -85,13 +84,11 @@ function manAccountCooReply(jsobj) {
 	writeDiv.empty();
 	if (jsobj.hasOwnProperty("ownersList")) {
 		var owners = jsobj.ownersList;
-		console.log(owners);
 
 		for (var i = 0; i < owners.length; i++) {
 			var p = document.createElement('p');
 
 			for (key in owners[i]) {
-				console.log(owners[i]);
 				if (key === 'personalId') {
 					var a = document.createElement("a");
 					$(a).attr("href", "#");
@@ -107,8 +104,7 @@ function manAccountCooReply(jsobj) {
 							+ (bd.getMonth() + 1) + "/" + bd.getFullYear()
 							+ ", ");
 					p.appendChild(t);
-				}
-				else {
+				} else {
 					$(p).append(owners[i][key]);
 					$(p).append(", ");
 				}
@@ -116,8 +112,9 @@ function manAccountCooReply(jsobj) {
 			writeDiv.append(p);
 		}
 	} else if (jsobj.hasOwnProperty("msg")) {
-		alert(jsobj.msg);
-		console.log(jsobj.msg)
+		// alert(jsobj.msg);
+		var d = $("#manMsgAlertMain");
+		manMainAlertDisplay(jsobj.msg, "info", d);
 	}
 }
 
@@ -154,15 +151,26 @@ function manClientAccountsReply(jsobj) {
 				}
 				// -----------body creation
 				var td = document.createElement('td');
-				var t = document.createTextNode(acc[key]);
-				td.appendChild(t);
+				if (key === 'accountId') {
+					var a = document.createElement('a');
+					$(a).attr("href", "#");
+					a.onclick = function(event) {
+						onAccId(event);
+					};
+					a.innerHTML = acc[key];
+					$(td).append(a);
+				} else {
+					var t = document.createTextNode(acc[key]);
+					td.appendChild(t);
+				}
 				tr.appendChild(td);
 				tb.append(tr);
 			}
-			console.log(acc)
 		}
 	} else {
-		alert(jsobj.msg)
+		// alert(jsobj.msg)
+		var d = $("#manMsgAlertMain");
+		manMainAlertDisplay(jsobj.msg, "info", d);
 	}
 }
 
@@ -186,15 +194,50 @@ function manAccountTransRply(jsobj) {
 				}
 				// -----------body creation
 				var td = document.createElement('td');
-				var t = document.createTextNode(tra[key]);
-				td.appendChild(t);
+
+				var txt;
+				if (tra[key] === null) {
+					txt = '-';
+				} else {
+					txt = tra[key];
+				}
+
+				if (key === 'clientId') {
+					var aa = document.createElement("a");
+					$(aa).attr("href", "#");
+					aa.onclick = function(event) {
+						onPersId(event);
+					};
+					aa.innerHTML = txt;
+					$(td).append(aa);
+				} else if (key === 'account1') {
+					var aa = document.createElement("a");
+					$(aa).attr("href", "#");
+					aa.onclick = function(event) {
+						onAccId(event);
+					};
+					aa.innerHTML = txt;
+					$(td).append(aa);
+				} else if (key === 'account2') {
+					var aa = document.createElement("a");
+					$(aa).attr("href", "#");
+					aa.onclick = function(event) {
+						onAccId(event);
+					};
+					aa.innerHTML = txt;
+					$(td).append(aa);
+				} else {
+					var t = document.createTextNode(tra[key]);
+					td.appendChild(t);
+				}
 				tr.appendChild(td);
 				tbody.append(tr);
 			}
-			console.log(tra)
 		}
 	} else if (jsobj.hasOwnProperty("msg")) {
-		alert(jsobj.msg);
+		// alert(jsobj.msg);
+		var d = $("#manMsgAlertMain");
+		manMainAlertDisplay(jsobj.msg, "info", d);
 	}
 
 }
@@ -219,21 +262,57 @@ function manClientTransReply(jsobj) {
 				}
 				// -----------body creation
 				var td = document.createElement('td');
-				var t = document.createTextNode(tra[key]);
-				td.appendChild(t);
+				var txt;
+				if (tra[key] === null) {
+					txt = '-';
+				} else {
+					txt = tra[key];
+				}
+
+				if (key === 'clientId') {
+					var aa = document.createElement("a");
+					$(aa).attr("href", "#");
+					aa.onclick = function(event) {
+						onPersId(event);
+					};
+					aa.innerHTML = txt;
+					$(td).append(aa);
+				} else if (key === 'account1') {
+					var aa = document.createElement("a");
+					$(aa).attr("href", "#");
+					aa.onclick = function(event) {
+						onAccId(event);
+					};
+					aa.innerHTML = txt;
+					$(td).append(aa);
+				} else if (key === 'account2') {
+					var aa = document.createElement("a");
+					$(aa).attr("href", "#");
+					aa.onclick = function(event) {
+						onAccId(event);
+					};
+					aa.innerHTML = txt;
+					$(td).append(aa);
+				} else {
+					var t = document.createTextNode(tra[key]);
+					td.appendChild(t);
+				}
 				tr.appendChild(td);
 				tbody.append(tr);
 			}
-			console.log(tra)
 		}
 	} else if (jsobj.hasOwnProperty("msg")) {
-		alert(jsobj.msg);
+		// alert(jsobj.msg);
+		var d = $("#manMsgAlertMain");
+		manMainAlertDisplay(jsobj.msg, "info", d);
 	}
 
 }
 
-function manManyClientTransReply(jsobj) {
+function mainManAlertDelegate() {
+	var d = $("#manMsgAlertMain");
+	manMainAlertDisplay(msg, "info", d);
 }
 
-//-------functional Help
+// -------functional Help
 

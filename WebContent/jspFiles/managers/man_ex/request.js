@@ -1,7 +1,7 @@
 function manGetRequest() {
 	var getter = {
 		head : "getRequest",
-		empId : $("#manEmpId").val()
+		empId : window.manEmpId
 	};
 	doSend(JSON.stringify(getter));
 }
@@ -9,41 +9,64 @@ function manGetRequest() {
 function manLeaveRequest() {
 	var leaver = {
 		head : "leaveRequest",
-		empId : $("#manEmpId").val()
+		empId : window.manEmpId
 	};
-	doSend(JSON.stringify(getter));
+	doSend(JSON.stringify(leaver));
 
+}
+
+function approve() {
+	var res = {
+		head : "approve",
+		note : $("#manReqNote").val(),
+		empId : window.manEmpId
+	}
+	doSend(JSON.stringify(res));
+}
+
+function denie() {
+	var res = {
+		head : "dennie",
+		note : $("#manReqNote").val(),
+		empId : window.manEmpId
+	}
+	doSend(JSON.stringify(res));
 }
 
 /* AFTER RESPONSE FUNCTIONS */
+
 function requestRequestReply(jsobj) {
 	console.log(jsobj);
-	var request = jsobj.requestDetails;
+	if (jsobj.hasOwnProperty('requestDetails')) {
+		var request = jsobj.requestDetails;
 
-	var reqType = request['reqType'];
-	manWriteAllMsgs(request);
-	console.log(reqType);
-	console.log(request);
+		var reqType = request['reqType'];
+		manWriteAllMsgs(request);
+	} else {
+		reqAlertDelegate(jsobj.msg);
+	}
+}
 
-	// var clients = request['clientIdsList'];
-	// var accType = request['accType']
-	// var accFrom = request['accFromNr']
-	// var accTo = request['accToNr']
-	// var amount = request['amount']
-	// console.log(request);
-	// console.log(clients);
-	// console.log(accFrom);
+function reqAlertDelegate(msg) {
+	// call msg alert for request page alerts
+	var d = $("#manMsgAlertReq");
+	manMainAlertDisplay(msg, "info", d);
 }
 
 function leaveRequest(jsobj) {
-	alert(jsobj.get('msg'));
+	// alert(jsobj.get('msg'));
+	reqAlertDelegate(jsobj.msg);
+}
+
+function approveRequestReply(jsobj) {
+	reqAlertDelegate(jsobj.msg);
+}
+function dennieRequestReply(jspbj) {
+	reqAlertDelegate(jsobj.msg);
 }
 
 function manWriteAllMsgs(req) {
-	// go to the page where all the last responses of the requests that require
-	// confirmation are
-	// if (jsobj.hasOwnProperty("ocr")) {
-	// var req = jsobj.ocr;
+
 	var date = new Date();
 	req['time'] = date.getHours() + ":" + date.getMinutes() + ":"
 			+ date.getSeconds();
@@ -90,4 +113,13 @@ function manWriteAllMsgs(req) {
 		tr2.appendChild(td2);
 	}
 	table.prepend(tr);
+	// ----Append current request----
+	var curTab = $("#curentRequest");
+	$(curTab).empty();
+	curTab.append(tr);
+	// ------------------------------
+}
+
+function clearReviewedRequesrs(){
+	$("#allRequests tbody").empty();
 }

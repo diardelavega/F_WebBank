@@ -131,6 +131,7 @@ function registerClientReply(jobj) {
 }
 
 function alterClientReply(jobj) {
+	console.log(jsobj);
 	if (jobj.hasOwnProperty("response")) {
 		ret = mainAlertDisplay(jobj.response, "info");
 		fadeOut(ret);
@@ -392,9 +393,6 @@ function fadeOut(div) {
 		$(div).hide(1000);
 	}, 5000);
 }
-
-
-
 
 function closeThis(event) {
 	var div = $(event.target).parent().parent();

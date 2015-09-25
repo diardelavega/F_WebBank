@@ -66,17 +66,28 @@ public class TelMsgHandler {
 			return closeAccountReq(jobj);
 		case "openAccountRequest":
 			return openAccountReq(jobj);
-			// case "closeAccountDefinite":
-			// return closeAccountDef(jobj);
-			// case "openAccountDefinite":
-			// return openAccountDef(jobj);
 		case "testOcr":
 			return ocrTest(jobj);
-
+		case "logout":
+			return logout(jobj);
 		default:
 			logger.info("invalid switch criterias");
 		}
 		return null;
+	}
+
+	private String logout(JsonObject jobj) {
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		jo.addProperty("head", "logoutReplay");
+		jo.addProperty("response", "OK!");
+		try {
+			Coordinator.deleteTeller(jobj.get("empId").getAsInt());
+		} catch (Exception e) {
+			e.printStackTrace();
+			jo.addProperty("response", "Something Whent Wrong");
+		}
+		return gson.toJson(jo);
 	}
 
 	/**
@@ -201,7 +212,7 @@ public class TelMsgHandler {
 		jo.addProperty("head", "depositeReply");
 
 		String account = jobj.get("accNr").getAsString();
-		if(account .equalsIgnoreCase("")){
+		if (account.equalsIgnoreCase("")) {
 			jo.addProperty("msg", "Invalid Account Nr.");
 			return (gson.toJson(jo));
 		}

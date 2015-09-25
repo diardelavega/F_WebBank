@@ -19,6 +19,12 @@
 
 <!-- flot charts
 <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css"> -->
+
+<style type="text/css">
+button {
+	width: 80px;
+}
+</style>
 <title>Manager</title>
 <%
 	HttpSession ses = request.getSession();
@@ -27,9 +33,9 @@
 <script type="text/javascript">
 window.manEmpId="<%=ses.getAttribute("primeKey")%>"
 
-function eid(){
-	alert(manEmpId);
-}
+	function eid() {
+		alert(manEmpId);
+	}
 </script>
 </head>
 <body onload="divhide(); capitalize(); ">
@@ -46,7 +52,8 @@ function eid(){
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#" onclick="manSeverClientTupeling(); eid();">Manager</a>
+				<a class="navbar-brand" href="#"
+					onclick="manSeverClientTupeling(); eid();">Manager</a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<!--  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -84,19 +91,19 @@ function eid(){
 									</p>
 								</div>
 						</a></li>
-						<li class="message-footer"><a href="#" onclick="goGetReqs();">Go Get Requests</a></li>
+						<li class="message-footer"><a href="#" onclick="goGetReqs();">Go
+								Get Requests</a></li>
 					</ul></li>
+
+				<li><a href="#"> <span id="reqNrs"
+						style="font-size: 25px; font-weight: bolder;"> - </span>
+
+				</a></li>
+
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" onclick="manColorToNorm();"><i
 						class="fa fa-arrow-up"></i> <b class="caret"></b></a>
 					<ul class="dropdown-menu alert-dropdown" id="manHeadNotify">
-						<!-- <li><a href="#">Alert Name <span
-								class="label label-default">Alert Badge</span></a></li>
-
-						<li><a href="#">Alert Name <span
-								class="label label-danger">Alert Badge</span></a></li>
-						<li class="divider"></li>
-						<li><a href="#">View All</a></li> -->
 					</ul></li>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown"><i class="fa fa-user"></i>
@@ -109,7 +116,7 @@ function eid(){
 						<li><a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
 						</li>
 						<li class="divider"></li>
-						<li><a href="../logout.jsp"><i
+						<li><a href="#" onclick="logOut();"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
 					</ul></li>
 			</ul>

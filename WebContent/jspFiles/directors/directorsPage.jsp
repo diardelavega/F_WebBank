@@ -22,16 +22,29 @@
 <!-- Custom Fonts -->
 <link href="../../bootstrap/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
-	
-<link href="../../jquery-ui/jquery-ui.min.css" rel="stylesheet">	
+
+<link href="../../jquery-ui/jquery-ui.min.css" rel="stylesheet">
 <link href="../../jquery-ui/jquery-ui.theme.min.css" rel="stylesheet">
-<link href="../../jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
+<link href="../../jquery-ui/jquery-ui.structure.min.css"
+	rel="stylesheet">
 
 <!-- flot charts -->
 <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css">
 
 <script src="./dir.html/dirInit.js"></script>
 <title>Directors Page</title>
+
+<%
+	HttpSession ses = request.getSession();
+%>
+
+<script type="text/javascript">
+window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
+
+	function eid() {
+		alert(dirEmpId);
+	}
+</script>
 </head>
 <body onload="divhide(); capitalize();">
 	<div id="wrapper">
@@ -47,7 +60,8 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Director</a>
+				<a class="navbar-brand" href="#"
+					onclick="dirSeverClientTupeling(); eid();">Director</a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<!--  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -133,7 +147,7 @@
 				<!-- import employee details -->
 				<jsp:include page="./balancePageDirPart.jsp"></jsp:include>
 				<jsp:include page="./transPageDirPart.jsp"></jsp:include>
-				
+
 
 			</div>
 		</div>
@@ -144,17 +158,20 @@
 
 	<!-- jQuery -->
 	<script src="../../bootstrap/js/jquery.js"></script>
-	
+
 	<!-- director scripts -->
 	<script src="./dir.html/dir.js"></script>
 	<script src="./dir.html/balance.js"></script>
 	<script src="./dir.html/employee.js"></script>
 	<script src="./dir.html/transaction.js"></script>
-	
+
 	<!-- flot charts -->
-	<script language="javascript" type="text/javascript" src="../../flot_f/jquery.flot.min.js"></script>
-	<script language="javascript" type="text/javascript" src="../../flot_f/jquery.flot.pie.min.js"></script>
-	<script language="javascript" type="text/javascript" src="../../flot_f/jquery.flot.categories.min.js"></script>
+	<script language="javascript" type="text/javascript"
+		src="../../flot_f/jquery.flot.min.js"></script>
+	<script language="javascript" type="text/javascript"
+		src="../../flot_f/jquery.flot.pie.min.js"></script>
+	<script language="javascript" type="text/javascript"
+		src="../../flot_f/jquery.flot.categories.min.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../../bootstrap/js/bootstrap.min.js"></script>
@@ -166,7 +183,7 @@
 
 	<!-- jquery-ui -->
 	<script src="../../jquery-ui/jquery-ui.min.js"></script>
-	
+
 
 </body>
 </html>

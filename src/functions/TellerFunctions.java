@@ -138,13 +138,15 @@ public class TellerFunctions extends EmployeeFunctions {
 			if (gf.accountsCountCheck(personalIds).size() == 0) {
 				req = new OCRequest(empId, personalIds, StaticVars.OPEN,
 						accType);
-				logger.info("{} requires submited ", StaticVars.OPEN);
+				logger.info("----------->{} requires submited ", StaticVars.OPEN);
 			} else {// accounts count check
 				req = new OCRequest(empId, personalIds, StaticVars.PLUS_6_ACC,
 						accType);
-				logger.info("{} requires man confirmation",
+				logger.info("----------->{} requires man confirmation",
 						StaticVars.PLUS_6_ACC);
 			}
+			logger.info("on open req TellFunc, reqCheck type ={} ",req.getReqType());
+			
 			Coordinator.addOCR(req);
 			return null;
 		}

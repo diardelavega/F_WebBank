@@ -18,11 +18,13 @@ table.alertTab td {
 
 table.alertTab th {
 	text-align: center;
+	min-width: 80px;
 }
 
 table.alertTab tr {
 	border-bottom: 1pt solid black;
 	border-top: 1pt solid black;
+	/* min-width: 300px; */
 }
 </style>
 
@@ -41,8 +43,9 @@ table.alertTab tr {
 				<td><label>Personal Id:&nbsp;</label><input type="text"
 					id="manPersonalId" class="pesrId" style="margin-right: 20px;"></td>
 				<td><label style="margin-left: 20px">Account Nr.:&nbsp;</label><input
-					type="text" id="manAccountNr" class="accNr"></td><td><div id="manMainMsgAlert"
-						style="width: 270px; height: 50px;"></div></td>
+					type="text" id="manAccountNr" class="accNr" style="margin-right: 20px;"></td>
+					<td><div id="manMsgAlertMain"
+						style="width: 270px; height: 60px;"></div></td>
 			</tr>
 		</tbody>
 	</table>
@@ -96,7 +99,7 @@ table.alertTab tr {
 
 							<div id="cli_a" class="tab-pane fade">
 								<h3>Client's Accounts</h3>
-								<table id="manClientAccounts" border="1" bordercolor="olive"
+								<table id="manClientAccounts" 
 									class="alertTab">
 									<thead>
 										<tr>

@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 //import java.util.logging.Logger;
 
+import java.util.Scanner;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -31,6 +32,7 @@ import system.TellerQuery;
 import utils.AccGenerator;
 import utils.DirMsgWsHandler;
 import utils.GeneralFunctions;
+import utils.ManMsgHandler;
 import utils.TelMsgHandler;
 import db.DBHandler;
 import entity.Account;
@@ -67,14 +69,9 @@ public class Run {
 		// e.print();
 		// log.closeSession();
 		// logger.info(resp);
-		
-		
-		
-//		Session ses = DBHandler.getSessionFactory().openSession();
 
-		
-		
-		
+		// Session ses = DBHandler.getSessionFactory().openSession();
+
 		// TellerFunctions tf = new TellerFunctions(1);
 		// tf.register("1111111116", "ARMANDO", "Delavega", "delavega@that.com",
 		// "12/01/1990", "under the bridge", "+355...", "321");
@@ -177,25 +174,54 @@ public class Run {
 		// .println("--------***********------------" + b.getAccount2());
 		// // }
 		// }
-		 ManagerFunctions mf = new ManagerFunctions(31);
-		 Coordinator.addManagerFunc(mf);
+		ManagerFunctions mf = new ManagerFunctions(31);
+		Coordinator.addManagerFunc(mf);
 		TellerFunctions tf = new TellerFunctions(2);
 		Coordinator.addTellerFunc(tf);
-		 List<String> sl = new ArrayList<>();
-//		 sl.add("1111111111");
-//		 sl.add("1111111112");
-		 sl.add("1234567890");
-//		 tf.openAccountReq(sl, 'b');
-		 tf.closeAccountReq(sl, "68427666EXELD92");
-		 
-//		 OCRequest ocr = new OCRequest(2, sl, StaticVars.OPEN, 'b');
-		 
-//		 Coordinator.addOCR(ocr);
+		List<String> sl = new ArrayList<>();
+		// sl.add("1111111111");
+		// sl.add("1111111112");
+		sl.add("1234567890");
+		// tf.openAccountReq(sl, 'b');
+		// tf.closeAccountReq(sl, "68427666EXELD92");
+		Scanner sc = new Scanner(System.in);
 
+		ManMsgHandler mmh = new ManMsgHandler();
+
+		int x = 1;
+		while (x > 0) {
+			if (x == 1) {
+				OCRequest ocr = new OCRequest(2, sl, StaticVars.OPEN, 'b');
+				Coordinator.addOCR(ocr);
+			} else if (x == 2) {
+				OCRequest ocr = new OCRequest(2, sl, StaticVars.CLOSE,
+						"68427666EXELD92");
+				Coordinator.addOCR(ocr);
+			} else if (x == 3) {
+				sl.add("1111111112");
+				OCRequest ocr = new OCRequest(2, sl, StaticVars.PLUS_1K_TRANS,
+						"70913919GVVTP98", "68427666EXELD92", 1200, "Just A try");
+				// String accNr1, String accNr2, double amount, String note2
+				Coordinator.addOCR(ocr);
+			} else if (x == 4) {
+				mf.getOCR();
+			} else if (x == 5) {
+				mf.leaveOCR();
+			} else if (x == 6) {
+				mf.decision("ACCEPTED", "YEsss");
+			} else if (x == 6) {
+				mf.decision("DENNIED", "Noooo");
+			}
+			System.out.println("-----> " + x);
+			System.out.println("ocrs " + Coordinator.ocrListSize());
+			System.out.println("ocrs " + Coordinator.getReqCounter());
+
+			x = sc.nextInt();
+		}
 		// ocr.print();
 
-//		TellerQuery tq = new TellerQuery();
-//		tq.checkDepositeRegularity("1233dsdd3", 123.44);
+		// TellerQuery tq = new TellerQuery();
+		// tq.checkDepositeRegularity("1233dsdd3", 123.44);
 
 		// sl = new ArrayList<>();
 		// sl.add("1111111111");

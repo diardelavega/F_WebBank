@@ -7,10 +7,10 @@ function manSeverClientTupeling() {
 }
 
 // HEPL FUNCTIONALITY
-function telNotifyMsg(msgHead, msgContent, extra) {
+function manNotifyMsg(msgHead, msgContent, extra) {
 	// write the new msg in the horizontal top panel
 	var msg_li = $("#manMsgPanel");
-	console.log($(msg_li).find('h5').text());
+	// console.log($(msg_li).find('h5').text());
 	$(msg_li).find('h5 strong').text("req: " + msgHead);
 
 	var date = new Date();
@@ -23,7 +23,7 @@ function telNotifyMsg(msgHead, msgContent, extra) {
 function manNotifyColor(request) {
 	// Visual signal for the arrival of a new msg
 	$(".fa-arrow-up").css("color", "orange");
-
+	console.log("color notify " + request);
 	var ddp = $("#manHeadNotify");
 	if ($(ddp).children().length >= 5) {
 		$($(ddp).children()[4]).remove();
@@ -43,15 +43,21 @@ function manNotifyColor(request) {
 function manColorToNorm() {
 	// return the visual signal to normal
 	$(".fa-arrow-up").removeAttr("style");
+	// $("#reqNrAvailable").removeAttr("style:color");
 }
 
 function manRequestAlert(jsobj) {
+	/*
+	 * get the notification for the arrival of a new request and call
+	 * appropriate functions
+	 */
 	console.log("manRequestAlert");
 	if (jsobj.hasOwnProperty('reqType')) {
 		reqType = jsobj.reqType;
+		console.log(reqType);
 		d2 = jsobj.d2;
 		ed = jsobj.ed;
-		telNotifyMsg(reqType, d2, ed);
+		manNotifyMsg(reqType, d2, ed);
 	} else {
 		console.log(jsobj.msg);
 		alert(jsobj.msg);
@@ -59,57 +65,87 @@ function manRequestAlert(jsobj) {
 	manNotifyColor(reqType);
 }
 
-function goGetReqs(){
+function goGetReqs() {
 	ManHideShow('reqMan');
 }
-// ---------------------
-function openAcc(jsobj) {
-	console.log(jsobj);
+// --------------notification popup
+
+var manTimeOut;
+function manMainAlertDisplay(msg, alertType, div) {
+
+	// var divs = $(".manMsgAlert");
+	// for (var i = 0; i < divs.length; i++) {
+	// var div = divs[i];
+	clearTimeout(manTimeOut);
+	$(div).empty();
+	if (alertType === 'info') {
+		$(div).addClass("alert alert-info");
+	} else {
+		$(div).addClass("alert alert-warning");
+	}
+	// $(div).attr("style:padding", "5px");
+
+	var span = document.createElement("span");
+	$(span).attr("align", "left");
+	span.style.padding = "230px";
+
+	var a = document.createElement("a");
+	a.innerHTML = "&times;";
+	$(a).attr("href", "#");
+	$(a).attr("onclick", "closeThis(event)");
+
+	var t = document.createTextNode(msg);
+	var p = document.createElement("p");
+	p.appendChild(t);
+
+	span.appendChild(a);
+	$(span).append(p);
+	$(div).append(span);
+
+	$(div).show();
+	fadeOut(div);
 }
 
-function closeAcc(jsobj) {
-	console.log(jsobj);
+function fadeOut(div) {
+	manTimeOut = setTimeout(function() {
+		$(div).hide(1000);
+	}, 5000);
 }
 
-function p1kDep(jsobj) {
-	console.log(jsobj);
+function closeThis(event) {
+	var div = $(event.target).parent().parent();
+	$(div).hide(1000);
 }
 
-function p1kWith(jsobj) {
-	console.log(jsobj);
+function requestNumber(jsobj) {
+	if (jsobj.hasOwnProperty('number')) {
+		var num = jsobj.number;
+		var displayNr = 9311 + num;
+		var displayVar = "&#" + displayNr + ";";
+		var span = $("#reqNrs");
+		$(span).html(displayVar);
+	} else {
+
+	}
 }
 
-function p_1k_trans(jsobj) {
-	console.log(jsobj);
+function logOut() {
+	var logout = {
+		head : "logout",
+		empId : window.manEmpId
+	};
+	doSend(JSON.stringify(logout));
 }
-
-function p6Acc(jsobj) {
-	console.log(jsobj);
-}
-
-function newReq(jsobj) {
-	console.log(jsobj);
-}
-
-function manClientAccounts(jsobj) {
-	console.log(jsobj);
-}
-
-function ManAccountStatus(jsobj) {
-	console.log(jsobj);
-}
-function clearAccountStatus(jsobj) {
-	console.log(jsobj);
-}
-
-function balanceReply(jsobj) {
-	console.log(jsobj);
-}
-
-function transactionReply(jsobj) {
-	console.log(jsobj);
-}
-
-function errorRes(jsobj) {
-	console.log(jsobj.msg)
-}
+//
+//function logOutReplay(jsobj) {
+//	if (jsobj.hasOwnProperty('response')) {
+//		if (jsobj.response === 'OK') {
+//			window.location.href = "../logout.jsp";
+//		}
+//	} else if (jsobj.hasOwnProperty('msg')) {
+//		// reqAlertDelegate(jsobj.msg);
+//		// var d = $("#manMsgAlertMain");
+//		// manMainAlertDisplay(jsobj.msg, "info", d);
+//		console.log("on log out  " + jsobj.msg);
+//	}
+//}

@@ -9,18 +9,23 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import utils.DirMsgWsHandler;
+import utils.ManMsgHandler;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 @ServerEndpoint("/dir")
 public class DirectorWS {
+	Logger logger = LoggerFactory.getLogger(ManagerWS.class);
 
 	@OnOpen
 	public void open(Session ses) {
 		System.out.println("ses opened");
-		//TODO add web socket session to a new array 
+		// TODO add web socket session to a new array
 		// sessions.add(ses);
 	}
 
@@ -33,10 +38,37 @@ public class DirectorWS {
 	@OnMessage
 	public void recMsg(String msg, Session ses) throws IOException {
 		// System.out.println("received msg from: " + ses.getId());
-		System.out.println("received msg seas : " + msg);
-		String webResponse = DirMsgWsHandler.switchit(msg);
+//		System.out.println("received msg seas : " + msg);
+//		String webResponse = DirMsgWsHandler.switchit(msg);
+//
+//		sendMsg(webResponse, ses);
 
-		sendMsg(webResponse, ses);
+		logger.info("ON DIRECTOR :received msg seas : " + msg);
+		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
+		String head = jobj.get("head").getAsString();
+
+		DirMsgWsHandler dmh = new DirMsgWsHandler();
+		logger.info("HEAD  is {}", head);
+		if (head.equalsIgnoreCase("coordinate")) {
+			int empId = 0;
+			try {
+				empId = jobj.get("empId").getAsInt();
+				logger.info("EmpId  is {}", empId);
+				String res = dmh.coordRegister(empId, ses);
+				if (res != null) {
+					sendMsg(res, ses);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				sendMsg("Operation Failed ", ses);
+			}
+
+		} else {
+			String webResponse = dmh.switchit(jobj, head);
+			// if (webResponse != null)
+			sendMsg(webResponse, ses);
+		}
+
 	}
 
 	public void sendMsg(String msg, Session ses) throws IOException {

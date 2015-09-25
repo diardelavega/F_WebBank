@@ -14,7 +14,8 @@ import comon.OCRequest;
 
 public class ManMsgPusher {
 
-	public void requestNotifyer(Session ses, String reqType, String d2, String ed) {
+	public void requestNotifyer(Session ses, String reqType, String d2,
+			String ed) {
 		ManagerWS mws = new ManagerWS();
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().create();
@@ -27,6 +28,19 @@ public class ManMsgPusher {
 			mws.sendMsg(gson.toJson(jo), ses);
 		} catch (IOException e) {
 			System.out.println("in ManMsgPusher  with errors");
+			e.printStackTrace();
+		}
+	}
+
+	public void reqNrNotifyer(Session ses, int nr) {
+		ManagerWS mws = new ManagerWS();
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().create();
+		jo.addProperty("head", "requestNumber");
+		jo.addProperty("number", nr);
+		try {
+			mws.sendMsg(gson.toJson(jo), ses);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

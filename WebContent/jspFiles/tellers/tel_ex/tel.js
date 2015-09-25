@@ -31,7 +31,7 @@ function telWriteAllMsgs(req) {
 
 	var table = $("#allReplays");
 	var tr = document.createElement("tr");
-	//tr.setAttribute("class", "border_bottom");
+	// tr.setAttribute("class", "border_bottom");
 
 	var tr1 = document.createElement("tr");
 	var tr2 = document.createElement("tr");
@@ -46,7 +46,7 @@ function telWriteAllMsgs(req) {
 			continue;
 
 		var td1 = document.createElement("td");
-		//td1.setAttribute("align", "center");
+		// td1.setAttribute("align", "center");
 		td1.innerHTML = key;
 		tr1.appendChild(td1);
 
@@ -59,14 +59,14 @@ function telWriteAllMsgs(req) {
 			}
 
 			var td2 = document.createElement("td");
-		//	td2.setAttribute("align", "center");
+			// td2.setAttribute("align", "center");
 			td2.appendChild(sel);
 			tr2.appendChild(td2);
 			continue;
 		}
 
 		var td2 = document.createElement("td");
-		//td2.setAttribute("align", "center");
+		// td2.setAttribute("align", "center");
 		td2.innerHTML = req[key];
 		tr2.appendChild(td2);
 	}
@@ -140,27 +140,27 @@ $(function() {
 	var addresses = $(".address").focusout(function() {
 		nameCtrl(this);
 	});
-	
+
 	var paswords = $(".password").focusout(function() {
 		pswCtrl(this);
 	});
-	
+
 	var names = $(".name").focusout(function() {
 		nameCtrl(this);
 	});
-	
+
 	var phones = $(".phone").focusout(function() {
 		phoneCtrl(this);
 	});
-	
+
 	var notes = $(".note").focusout(function() {
 		noteCtrl(this);
 	});
-	
+
 	var emails = $(".mail").focusout(function() {
 		emailCtrl(this);
 	});
-	
+
 	var amts = $(".amount").focusout(function() {
 		amountCtrl(this);
 	});
@@ -168,3 +168,21 @@ $(function() {
 		$(amts[i]).attr("placeholder", "ex: 125.6787");
 	}
 });
+
+function logOut() {
+	var logout = {
+		head : "logout",
+		empId : telId,
+	};
+	doSend(JSON.stringify(logout));
+}
+//
+//function logOutReplay(jsobj) {
+//	if (jsobj.hasOwnProperty('response')) {
+//		if (jsobj.response === 'OK') {
+//			window.location.href = "../../logout.jsp";
+//		}
+//	} else if (jsobj.hasOwnProperty('msg')) {
+//		console.log("on log out  " + jsobj.msg);
+//	}
+//}

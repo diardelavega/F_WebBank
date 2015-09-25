@@ -16,7 +16,7 @@ public class StaticVars {
 	public static final String ALTER_EMPLOYEE = "ALT_EMPLOY";
 
 	public static final String ACCEPT = "ACCEPTED";
-	public static final String DENIE = "DENIED";
+	public static final String DENIE = "DENNIED";
 
 	public static final String ACTIVE = "ACTIVE";
 	public static final String NOT_ACTIVE = "INACTIVE";

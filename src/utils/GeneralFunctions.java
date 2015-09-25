@@ -220,11 +220,13 @@ public class GeneralFunctions {
 		String error = "";
 		if (mail.length() > 40) {
 			error = " email too long, max 40 char! ";
+		} else if (mail.length() < 5) {
+			error = " invalid email! ";
 		} else {
 			String tab[] = mail.split("[@.]");
 			for (int i = 0; i < 3; i++) {
 				if (tab[i].equals("") || tab[i] == null) {
-					error = " iregular email! ";
+					error = " invalid email! ";
 				}
 			}
 		}
@@ -241,6 +243,8 @@ public class GeneralFunctions {
 		String error = "";
 		if (name.length() > 30) {
 			error = " name too long, max 30 char! ";
+		} else if (name.length() < 5) {
+			error = " name too short, min 5 char! ";
 		}
 		return error;
 	}
@@ -250,6 +254,9 @@ public class GeneralFunctions {
 		if (psw.length() > 24) {
 			error = " psw too long, max 24 char! ";
 		}
+		if (psw.length() < 5) {
+			error = " psw too short, min 5 char! ";
+		}
 		return error;
 	}
 
@@ -258,6 +265,9 @@ public class GeneralFunctions {
 		if (address.length() > 50) {
 			error = " address too long, max 50 char! ";
 		}
+		if (address.length() > 6) {
+			error = " address too short ";
+		}
 		return error;
 	}
 
@@ -265,6 +275,8 @@ public class GeneralFunctions {
 		String error = "";
 		if (phone.length() > 10) {
 			error = " phone too long, max 10 char! ";
+		} else if (phone.length() < 10) {
+			error = " incorrect phone number ";
 		} else {
 			for (int i = 0; i < phone.length(); i++) {
 				if (!Character.isDigit(phone.charAt(i))) {
@@ -277,18 +289,18 @@ public class GeneralFunctions {
 	}
 
 	public String valAmmount(String amount) {
+		String error = null;
 		String[] temp = null;
 		boolean flag = false;
-		if (amount.contains(".")) {
+
+		if (amount.length() == 0) {
+			error = "Not a valid amount";
+		} else if (amount.contains("-")) {
+			error = "Not a valid amount";
+		} else if (amount.contains(".")) {
 			flag = true;
 			temp = amount.split("\\.");
 		}
-		System.out.println("ammount " + amount);
-		System.out.println("flag " + flag);
-		
-		System.out.println("temp[0] " + temp[0]);
-		
-		String error = null;
 
 		if (temp[0].length() > 5) {
 			error = " ammount value is too big, integer part max 5 digits! ";

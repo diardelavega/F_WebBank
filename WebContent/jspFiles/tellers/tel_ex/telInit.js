@@ -82,7 +82,9 @@ function onMessage(evt) {
 	case 'transRequestReply':
 		transRequestReply(jsobj);
 		break;
-
+	case 'logoutReplay':
+		logOutReplay(jsobj);
+		break;
 	case 'error':
 		errorRes(jsobj);
 		break;
