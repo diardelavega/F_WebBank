@@ -284,6 +284,7 @@ public class TelMsgHandler {
 			jo.addProperty("msg", "could not parse client data");
 		}
 		String jsonResp = gson.toJson(jo);
+		logger.info(jsonResp);
 		return jsonResp;
 	}
 

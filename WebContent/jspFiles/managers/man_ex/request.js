@@ -12,7 +12,6 @@ function manLeaveRequest() {
 		empId : window.manEmpId
 	};
 	doSend(JSON.stringify(leaver));
-
 }
 
 function approve() {
@@ -39,9 +38,9 @@ function requestRequestReply(jsobj) {
 	console.log(jsobj);
 	if (jsobj.hasOwnProperty('requestDetails')) {
 		var request = jsobj.requestDetails;
-
-		var reqType = request['reqType'];
 		manWriteAllMsgs(request);
+		// keep requests that come from server side update
+		relRequest = request;
 	} else {
 		reqAlertDelegate(jsobj.msg);
 	}
@@ -61,17 +60,18 @@ function leaveRequest(jsobj) {
 function approveRequestReply(jsobj) {
 	reqAlertDelegate(jsobj.msg);
 }
+
 function dennieRequestReply(jspbj) {
 	reqAlertDelegate(jsobj.msg);
 }
 
 function manWriteAllMsgs(req) {
-
+	// write the acquired request to an table
 	var date = new Date();
 	req['time'] = date.getHours() + ":" + date.getMinutes() + ":"
 			+ date.getSeconds();
 
-	var table = $("#allRequests");
+	var table = $("#allRequests tbody");
 	var tr = document.createElement("tr");
 	// tr.setAttribute("class", "border_bottom");
 
@@ -95,8 +95,11 @@ function manWriteAllMsgs(req) {
 		if (key === 'clientIdsList') {
 			var sel = document.createElement("select");
 			for (k in req[key]) {
-				var opt = document.createElement("option");
+				var opt = document.createElement("opt");
+				// var a = document.createElement("a");
 				opt.innerHTML = req[key][k];
+				// a.setAttribute("href", "#");
+				// opt.appendChild(a);
 				sel.appendChild(opt);
 			}
 
@@ -120,6 +123,6 @@ function manWriteAllMsgs(req) {
 	// ------------------------------
 }
 
-function clearReviewedRequesrs(){
+function clearReviewedRequesrs() {
 	$("#allRequests tbody").empty();
 }

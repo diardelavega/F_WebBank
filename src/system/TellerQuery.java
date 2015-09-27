@@ -265,7 +265,7 @@ public class TellerQuery {
 
 	public List<Customers> getAllClients(String fname, String lname,
 			String address, String phone, String eMail, String password) {
-
+		// search the db for clients. select based on the criteria from the form
 		String condition = empQueryCondition(fname, lname, address, phone,
 				eMail, password);
 		if (condition != null) {
@@ -279,12 +279,13 @@ public class TellerQuery {
 		upSession();
 		Query q = s.createQuery("FROM Customers " + condition);
 		List<Customers> custList = q.list();
-		s.close();
+		// s.close();
 		return custList;
 	}
 
 	private String empQueryCondition(String fname, String lname,
 			String address, String phone, String eMail, String password) {
+		// prepare a string for the bd query
 		boolean flag = false;
 		String condition = " ";
 		if (!fname.equals("")) {
@@ -405,18 +406,19 @@ public class TellerQuery {
 				e1.printStackTrace();
 				return null;
 			}
-
-			Customers c = gf.getCustomer(persId);
-			c.setFname(fname);
-			c.setLname(lname);
-			c.setAddress(address);
-			c.setBdata(tdate);
-			c.seteMail(eMail);
-			c.setPhone(phone);
-			c.setPassword(password);
-
+			logger.info(sb.toString());
+			logger.info(fname);
 			upSession();
 			try {
+				Customers c = gf.getCustomer(persId);
+				c.setFname(fname);
+				c.setLname(lname);
+				c.setAddress(address);
+				c.setBdata(tdate);
+				c.seteMail(eMail);
+				c.setPhone(phone);
+				c.setPassword(password);
+
 				s.beginTransaction();
 				s.update(c);
 				s.flush();

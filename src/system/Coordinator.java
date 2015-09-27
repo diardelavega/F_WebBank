@@ -153,12 +153,24 @@ public class Coordinator {
 		 logger.warn("Unexpected request arrived");
 		 break;
 		 }
-		ppReqCounter();
+
+		// -------------Test Purposes------------------------
+//		req.setResponse(StaticVars.DENIE);
+//		req.setLastManagerToConsiderIt(-88);
+//		req.setStatusComplete();
+//		req.setNote("AutoResponse");
+//		try {
+//			reviewedOCR(req);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		// =============================
+		 ppReqCounter();
 		// TODO notify manager for requests nr.
 	}
 
 	public static void deleteOCR(OCRequest req) {
-		mmReqCounter();
+		// mmReqCounter();
 		ocr.remove(req);
 		// TODO notify manager for requests nr.
 	}
@@ -238,13 +250,13 @@ public class Coordinator {
 
 	public static void ppReqCounter() {
 		reqCounter++;
-		 scatterAlertOCRNr();
+		scatterAlertOCRNr();
 		// TODO alert manager for the available reqs
 	}
 
 	public static void mmReqCounter() {
 		reqCounter--;
-		 scatterAlertOCRNr();
+		scatterAlertOCRNr();
 		// TODO alert manager for the available reqs
 	}
 

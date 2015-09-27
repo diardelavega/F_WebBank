@@ -100,7 +100,7 @@ function nameCtrl(inp) {
 		var txt = "between 5 & 30 chars";
 		popoverAlert(inp, txt);
 	} else {
-		var re = /^[a-zA-Z]+$/;
+		var re = /^[a-zA-Z\s-]+$/;
 		if (!re.test(inp.value)) {
 			popUp(inp);
 			var txt = "not alowed chars, letters only ";

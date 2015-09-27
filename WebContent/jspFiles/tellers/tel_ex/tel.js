@@ -10,7 +10,6 @@ $(function() {
 function telNotifyMsg(msgHead, msgContent, extra) {
 	// write the new msg in the horizontal top panel
 	var msg_li = $("#telMsgPanel");
-	console.log($(msg_li).find('h5').text());
 	$(msg_li).find('h5 strong').text("resp: " + msgHead);
 
 	var date = new Date();
@@ -23,15 +22,15 @@ function telNotifyMsg(msgHead, msgContent, extra) {
 function telWriteAllMsgs(req) {
 	// go to the page where all the last responses of the requests that require
 	// confirmation are
-	// if (jsobj.hasOwnProperty("ocr")) {
-	// var req = jsobj.ocr;
+
+	console.log("Trying to write msg");
+
 	var date = new Date();
 	req['time'] = date.getHours() + ":" + date.getMinutes() + ":"
 			+ date.getSeconds();
 
-	var table = $("#allReplays");
+	var table = $("#allReplays tbody");
 	var tr = document.createElement("tr");
-	// tr.setAttribute("class", "border_bottom");
 
 	var tr1 = document.createElement("tr");
 	var tr2 = document.createElement("tr");
@@ -39,6 +38,16 @@ function telWriteAllMsgs(req) {
 	tr.appendChild(tr2);
 
 	for ( var key in req) {
+		if (key === 'response') {
+			if (req[key] === 'DENNIED') {
+				$(tr).css("background-color", "rgb(240, 200, 200);");
+				// .attr("class","danger");
+			} else {
+				$(tr).css("background-color", "rgb(200, 240, 200);");
+				// .attr("class","success");
+			}
+		}
+
 		if (key === 'amount')
 			if (req[key] <= 0.5)
 				continue;
@@ -46,7 +55,6 @@ function telWriteAllMsgs(req) {
 			continue;
 
 		var td1 = document.createElement("td");
-		// td1.setAttribute("align", "center");
 		td1.innerHTML = key;
 		tr1.appendChild(td1);
 
@@ -57,16 +65,13 @@ function telWriteAllMsgs(req) {
 				opt.innerHTML = req[key][k];
 				sel.appendChild(opt);
 			}
-
 			var td2 = document.createElement("td");
-			// td2.setAttribute("align", "center");
 			td2.appendChild(sel);
 			tr2.appendChild(td2);
 			continue;
 		}
 
 		var td2 = document.createElement("td");
-		// td2.setAttribute("align", "center");
 		td2.innerHTML = req[key];
 		tr2.appendChild(td2);
 	}
@@ -118,6 +123,7 @@ function testOcrReciver(jsobj) {
 		console.log("no req");
 	}
 }
+
 function lunch() {
 	console.log("on lunch");
 	var obj = {
@@ -138,7 +144,7 @@ $(function() {
 	 * friendly functionalities
 	 */
 	var addresses = $(".address").focusout(function() {
-		nameCtrl(this);
+		addressCtrl(this);
 	});
 
 	var paswords = $(".password").focusout(function() {
@@ -176,13 +182,17 @@ function logOut() {
 	};
 	doSend(JSON.stringify(logout));
 }
+
+function getReplys() {
+	telHideShow('alertTel');
+}
 //
-//function logOutReplay(jsobj) {
-//	if (jsobj.hasOwnProperty('response')) {
-//		if (jsobj.response === 'OK') {
-//			window.location.href = "../../logout.jsp";
-//		}
-//	} else if (jsobj.hasOwnProperty('msg')) {
-//		console.log("on log out  " + jsobj.msg);
-//	}
-//}
+// function logOutReplay(jsobj) {
+// if (jsobj.hasOwnProperty('response')) {
+// if (jsobj.response === 'OK') {
+// window.location.href = "../../logout.jsp";
+// }
+// } else if (jsobj.hasOwnProperty('msg')) {
+// console.log("on log out " + jsobj.msg);
+// }
+// }

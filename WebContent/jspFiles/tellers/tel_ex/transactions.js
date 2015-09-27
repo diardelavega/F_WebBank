@@ -39,25 +39,8 @@ function transRequestReply(jsobj) {
 	/* response for transactions with +1K */
 	if (jsobj.hasOwnProperty("replyData")) {
 		var req = jsobj.replyData;
-
-		var lastManagerToConsiderIt = req.lastManagerToConsiderIt;
-		var note = req.note;
-		var clientIdsList = req.clientIdsList;
-		var reqType = req.reqType;
-		var accType = req.accType;
-		var accFromNr = req.accFromNr;
-		var accToNr = req.accToNr;
-		var amount = req.amount;
-		var response = req.response;// accepted || denied
-
-		var txt = reqType
-		" - " + response + " " + " " + note + " ";
-
-		if (response === "APROVED") {
-			ret = transAlertDisplay(txt + " ", "info");
-		} else {
-			ret = transAlertDisplay(txt + " ", "warning");
-		}
+		telWriteAllMsgs(req);
+		ret = transAlertDisplay(req.reqType + " ", "info");
 		fadeOut(ret);
 	}
 }
@@ -76,8 +59,8 @@ function transferReply(jsobj) {
 }
 
 function errorRes(jsobj) {
-	clonsole.log(jsobj.msg);
-	ret =transAlertDisplay(jsobj.msg,"warning");
+	console.log(jsobj.msg);
+	ret = transAlertDisplay(jsobj.msg, "warning");
 	transFadeOut(ret);
 }
 
@@ -90,11 +73,11 @@ function transAlertDisplay(msg, alertType) {
 	if (alertType === 'info') {
 		$(div).addClass("alert alert-info");
 	} else {
-		$(div).addClass("alert alert-warning");
+		$(div).addClass("alert alert-danger");
 	}
 
 	var span = document.createElement("span");
-	$(span).attr("align", "right");
+	$(span).attr("align", "left");
 	span.style.padding = "230px";
 
 	var a = document.createElement("a");

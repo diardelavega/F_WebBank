@@ -17,7 +17,10 @@ ws.onerror = function(evt) {
 };
 
 ws.onopen = function(evt) {
-	telSeverClientTupeling();
+	setTimeout(function() {
+		telSeverClientTupeling();
+	}, 500);
+
 };
 
 function doSend(msg) {
@@ -62,15 +65,16 @@ function onMessage(evt) {
 		deleteClientReply(jsobj);
 		break;
 	// ------------------page 1.1
-	case 'depositeReply':
-		depositeReply(jsobj);
-		break;
-	case 'withdrawReply':
-		withdrawReply(jsobj);
-		break;
-	case 'transferReply':
-		transferReply(jsobj);
-		break;
+	 case 'depositeReply':
+	 depositeReply(jsobj);
+	 break;
+	 case 'withdrawReply':
+	 withdrawReply(jsobj);
+	 break;
+	 case 'transferReply':
+	 transferReply(jsobj);
+	 break;
+
 	// ----------------page 2
 	case 'requestReply':
 		reqReplyAlert(jsobj);

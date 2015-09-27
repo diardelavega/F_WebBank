@@ -88,7 +88,7 @@ public class ManMsgHandler {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "dennieRequestReply");
-		jo.addProperty("msg", "OK!");
+		jo.addProperty("msg", "OK");
 
 		String note = jobj.get("note").getAsString();
 		try {
@@ -105,7 +105,7 @@ public class ManMsgHandler {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "approveRequestReply");
-		jo.addProperty("msg", "OK!");
+		jo.addProperty("msg", "OK");
 
 		String note = jobj.get("note").getAsString();
 		try {
@@ -241,7 +241,14 @@ public class ManMsgHandler {
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "leaveRequestReply");
 		try {
-			mf.leaveOCR();
+			String ret = mf.leaveOCR();
+			if (ret != "") {
+				jo.addProperty("msg", ret);
+			}
+			if (ret == null) {
+				jo.addProperty("msg",
+						"No Request Was Found For This Manager At This Time");
+			}
 		} catch (Exception e) {
 			// e.printStackTrace();
 			logger.warn("Some Error while trying to leave OCR");
@@ -326,6 +333,8 @@ public class ManMsgHandler {
 			return "The Manager Is Not Registerd";
 		}
 		mf.setWsSession(ses);
+		mf.updateRequestNr(Coordinator.getReqCounter());
+		mf.updateRequest();
 		return null;
 	}
 

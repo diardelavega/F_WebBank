@@ -1,6 +1,7 @@
 package system;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -31,7 +32,9 @@ public class AccountsManagment {
 			for (String ss : customersIds) {
 				gf.accountNrDecreas(ss);
 			}
+			System.out.println("Closing accoutn accNr: "+accNr);
 		} catch (Exception e) {
+			System.out.println("Problems Closing accoutn accNr: "+accNr);
 			s.getTransaction().rollback();
 			e.printStackTrace();
 		}
@@ -48,16 +51,25 @@ public class AccountsManagment {
 
 		Session s = DBHandler.getSessionFactory().openSession();
 		try {
+			List<Customers>cl = new ArrayList<>();
 			for (String ss : clientIdsList) {
 				Customers c = gf.getCustomersAddAccountNr(ss);
-				acc.getCustomers().add(c);
+				cl.add(c);
+//				acc.getCustomers().add(c);
 			}
+			acc.setCustomers(cl);
 			s.beginTransaction();
 			s.save(acc);
+			s.flush();
 			s.getTransaction().commit();
+			System.out.println("Account opened, accNr: " + accNr);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			s.getTransaction().rollback();
 			e.printStackTrace();
+			System.out
+					.println("Account NOT opened, Problems Finalizing accNr: "
+							+ accNr);
 		}
 		s.close();
 		return accNr;

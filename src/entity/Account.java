@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,14 +27,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "account")
-public class Account implements Serializable{
+public class Account  {
 
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	@Id
 	@Column(name = "accountId")
 	private String accountId;
@@ -43,21 +42,28 @@ public class Account implements Serializable{
 	private Timestamp openDate;
 	@Column(nullable = false)
 	private double balance;
-	// private int integerBalance;
-	// @Column(nullable = false)
-	// private int decimalBalance;
-	// @Column(nullable=false )
 	private char accType;// intrest || running
 	private String accStatus; // active || passive
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "customers_account", joinColumns = { @JoinColumn(name = "accountId") }, inverseJoinColumns = { @JoinColumn(name = "personalId") })
-	private transient  List<Customers> customers = new ArrayList<Customers>();
+	private List<Customers> customers;
+	
+	public List<Customers> getCustomers() {
+		return customers;
+	}
+
+	public void setCustomers(List<Customers> customers) {
+		this.customers = customers;
+	}
+
+	// private List<Customers> customerss = new ArrayList<Customers>();
 
 	// @ManyToMany(mappedBy = "accounts")
 	// private List<Customers> customers = new ArrayList<Customers>();
 
 	public Account() {
+//		customers=new ArrayList<Customers>();
 	}
 
 	public Account(String accountId, Timestamp openDate, double balance,
@@ -68,6 +74,7 @@ public class Account implements Serializable{
 		this.balance = balance;
 		this.accType = accType;
 		this.accStatus = accStatus;
+//		customers=new ArrayList<Customers>();.
 	}
 
 	public double getBalance() {
@@ -102,14 +109,6 @@ public class Account implements Serializable{
 		this.accStatus = accStatus;
 	}
 
-	public List<Customers> getCustomers() {
-		return customers;
-	}
-
-	public void setCustomers(List<Customers> customers) {
-		this.customers = customers;
-	}
-
 	public Timestamp getOpenDate() {
 		return openDate;
 	}
@@ -120,7 +119,7 @@ public class Account implements Serializable{
 
 	public void print() {
 		System.out.print(accountId + " " + accType + " " + balance + " "
-				+ accStatus+ " "+openDate);
+				+ accStatus + " " + openDate);
 	}
 
 }

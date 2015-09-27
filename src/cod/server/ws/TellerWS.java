@@ -69,7 +69,7 @@ public class TellerWS {
 	}
 
 	public void sendMsg(String msg, Session ses) throws IOException {
-		System.out.println(msg);
+		System.out.println("telWS--:"+msg);
 		ses.getBasicRemote().sendText(msg);
 	}
 

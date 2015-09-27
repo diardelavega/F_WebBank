@@ -7,6 +7,16 @@ function manSeverClientTupeling() {
 }
 
 // HEPL FUNCTIONALITY
+function requestInit(jsobj) {
+	// get the request from the server side, to be fresh and ready after each
+	// reload
+	if (jsobj.hasOwnProperty('relRequest')) {
+		window.relRequest=jsobj.relRequest;
+	}
+	
+	
+}
+
 function manNotifyMsg(msgHead, msgContent, extra) {
 	// write the new msg in the horizontal top panel
 	var msg_li = $("#manMsgPanel");
@@ -81,13 +91,13 @@ function manMainAlertDisplay(msg, alertType, div) {
 	if (alertType === 'info') {
 		$(div).addClass("alert alert-info");
 	} else {
-		$(div).addClass("alert alert-warning");
+		$(div).addClass("alert alert-danger");
 	}
 	// $(div).attr("style:padding", "5px");
 
 	var span = document.createElement("span");
 	$(span).attr("align", "left");
-	span.style.padding = "230px";
+	// span.style.padding = "230px";
 
 	var a = document.createElement("a");
 	a.innerHTML = "&times;";
@@ -136,16 +146,3 @@ function logOut() {
 	};
 	doSend(JSON.stringify(logout));
 }
-//
-//function logOutReplay(jsobj) {
-//	if (jsobj.hasOwnProperty('response')) {
-//		if (jsobj.response === 'OK') {
-//			window.location.href = "../logout.jsp";
-//		}
-//	} else if (jsobj.hasOwnProperty('msg')) {
-//		// reqAlertDelegate(jsobj.msg);
-//		// var d = $("#manMsgAlertMain");
-//		// manMainAlertDisplay(jsobj.msg, "info", d);
-//		console.log("on log out  " + jsobj.msg);
-//	}
-//}

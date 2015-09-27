@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.JsonObject;
 
 import cod.test.HQLTest;
+import system.AccountsManagment;
 import system.Coordinator;
 import system.ManagerQuery;
 import system.TellerQuery;
@@ -111,15 +112,19 @@ public class Run {
 		// fh.init();
 		// fh.filePlacementControl();
 
-		// ManagerFunctions mf1 = new ManagerFunctions(5);
-		// Coordinator list = new Coordinator();
-		// list.addMenager(mf1);
-		// TellerFunctions tf = new TellerFunctions(1);
-		// List<String> sl = new ArrayList<>();
-		// sl.add("1234567890");
-		// sl.add("1234567800");
-		// sl.add("1111111112");
-		// tf.openAccount(sl, AccountType.BASIC_CHECKING);
+//		 ManagerFunctions mf1 = new ManagerFunctions(5);
+//		 Coordinator list = new Coordinator();
+//		 list.addManagerFunc(mf1);
+//		 TellerFunctions tf = new TellerFunctions(1);
+//		 List<String> sl = new ArrayList<>();
+//		 sl.add("1234567890");
+//		 sl.add("1234567800");
+//		 sl.add("1111111111");
+//		 AccountsManagment am = new AccountsManagment ();
+//		 am.openAccount(StaticVars.BASICS_CHECKING, sl);
+//		 tf.openAccountReq(sl, StaticVars.BASICS_CHECKING);
+		 
+		 //.openAccount(sl, AccountType.BASIC_CHECKING);
 		// tf.closeAccount(sl, "72418514LUCGU34");
 
 		// GeneralFunctions gf = new GeneralFunctions();
@@ -174,14 +179,14 @@ public class Run {
 		// .println("--------***********------------" + b.getAccount2());
 		// // }
 		// }
-		ManagerFunctions mf = new ManagerFunctions(31);
+		/*ManagerFunctions mf = new ManagerFunctions(31);
 		Coordinator.addManagerFunc(mf);
 		TellerFunctions tf = new TellerFunctions(2);
 		Coordinator.addTellerFunc(tf);
 		List<String> sl = new ArrayList<>();
 		// sl.add("1111111111");
 		// sl.add("1111111112");
-		sl.add("1234567890");
+		sl.add("1122334455");
 		// tf.openAccountReq(sl, 'b');
 		// tf.closeAccountReq(sl, "68427666EXELD92");
 		Scanner sc = new Scanner(System.in);
@@ -209,7 +214,7 @@ public class Run {
 				mf.leaveOCR();
 			} else if (x == 6) {
 				mf.decision("ACCEPTED", "YEsss");
-			} else if (x == 6) {
+			} else if (x == 7) {
 				mf.decision("DENNIED", "Noooo");
 			}
 			System.out.println("-----> " + x);
@@ -217,7 +222,20 @@ public class Run {
 			System.out.println("ocrs " + Coordinator.getReqCounter());
 
 			x = sc.nextInt();
-		}
+		}*/
+		
+		
+		//-----------------------------------------------------------------------
+		
+		TellerFunctions tf= new TellerFunctions ();
+		tf.getClientAccounts("1122334455");
+		//-----------------------------------------------------------------------
+		
+		
+		
+		
+		
+		
 		// ocr.print();
 
 		// TellerQuery tq = new TellerQuery();

@@ -17,7 +17,7 @@ table.alertTab td {
 }
 
 table.alertTab th {
-	text-align: center;
+	 text-align: center; 
 	min-width: 80px;
 }
 
@@ -25,6 +25,14 @@ table.alertTab tr {
 	border-bottom: 1pt solid black;
 	border-top: 1pt solid black;
 	/* min-width: 300px; */
+}
+
+.artAlert{
+ position: fixed;
+    bottom: -30;
+    right: 0;
+    width: 300px;
+    /* border: 3px solid #8AC007; */
 }
 </style>
 
@@ -45,7 +53,7 @@ table.alertTab tr {
 				<td><label style="margin-left: 20px">Account Nr.:&nbsp;</label><input
 					type="text" id="manAccountNr" class="accNr" style="margin-right: 20px;"></td>
 					<td><div id="manMsgAlertMain"
-						style="width: 270px; height: 60px;"></div></td>
+						class="artAlert" ></div></td>
 			</tr>
 		</tbody>
 	</table>
@@ -79,7 +87,7 @@ table.alertTab tr {
 						<div class="tab-content">
 
 							<div id="accs" class="tab-pane fade ">
-								<h3>Account's Status :</h3>
+								<!-- <h3>Account's Status :</h3> -->
 								<!-- table with the response Account Status -->
 								<table id="manAccountStatus" class="alertTab">
 									<thead>
@@ -93,12 +101,12 @@ table.alertTab tr {
 							</div>
 
 							<div id="a_coo" class="tab-pane fade">
-								<h3>Account's Co-owners:</h3>
+								<!-- <h3>Account's Co-owners:</h3> -->
 								<div id="manAccCoo"></div>
 							</div>
 
 							<div id="cli_a" class="tab-pane fade">
-								<h3>Client's Accounts</h3>
+								<!-- <h3>Client's Accounts</h3> -->
 								<table id="manClientAccounts" 
 									class="alertTab">
 									<thead>
@@ -113,7 +121,7 @@ table.alertTab tr {
 							</div>
 
 							<div id="accTrans" class="tab-pane fade">
-								<h3>Account Transactions:</h3>
+								<!-- <h3>Account Transactions:</h3> -->
 								<table id="manAccTrans" class="alertTab">
 									<thead>
 										<tr></tr>
@@ -125,7 +133,7 @@ table.alertTab tr {
 							</div>
 
 							<div id="cliTrans" class="tab-pane fade">
-								<h3>Client Transactions:</h3>
+								<!-- <h3>Client Transactions:</h3> -->
 								<table id="manClientTrans" class="alertTab">
 									<thead>
 										<tr></tr>

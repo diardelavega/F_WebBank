@@ -16,7 +16,7 @@ div.scrollReqs {
 			<tr>
 				<td><h1>Evaluate your requests</h1></td>
 				<td align="right" width="30px"><div
-						style="text-align: left; width: 270px; height: 60px;"
+						class="artAlert"
 						id="manMsgAlertReq"></div></td>
 			</tr>
 		</tbody>

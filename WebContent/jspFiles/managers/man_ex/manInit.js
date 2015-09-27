@@ -16,7 +16,9 @@ ws.onerror = function(evt) {
 };
 
 ws.onopen = function(evt) {
-	manSeverClientTupeling();
+	setTimeout(function() {
+		manSeverClientTupeling();
+	}, 500);
 };
 
 function doSend(msg) {
@@ -61,6 +63,8 @@ function onMessage(evt) {
 		break;
 	case 'requestRequestReply':
 		requestRequestReply(jsobj);
+	case 'requestInit':
+		requestInit(jsobj);
 		break;
 	case 'error':
 		errorRes(jsobj);
@@ -77,7 +81,7 @@ function onMessage(evt) {
 	case 'logoutReplay':
 		logOutReplay(jsobj);
 		break;
-		
+
 	case 'default':
 		console.log("NoHeader");
 	}
@@ -100,9 +104,3 @@ function ManHideShow(chosen) {
 function divhide() {
 	ManHideShow('mainMan');
 }
-
-/*
- * function capitalize() { // setTimeout(function() {
- * $("input[type=text]").onblure(function() {
- * $(this).val($(this).val().toUpperCase()); }); // }, 3000) }
- */

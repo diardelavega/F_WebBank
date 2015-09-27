@@ -104,11 +104,22 @@ public class GeneralFunctions {
 		Account acc = null;
 		upSession();
 		try {
-			acc = (Account) s.get(Account.class, accNr);
+//			List<Account> accl = s
+//					.createQuery(
+//							"SELECT accountId, accStatus, accType,balance,openDate From Account WHERE accountId=:accId")
+//					.setParameter("accId", accNr).list();
+//			if (accl.size() == 0)
+//				return null;
+//			else {
+//				acc = (Account) accl.get(0);
+//				 acc= new Account(accl.get(0)[0].,accl.get(0)[4],accl.get(0)[3],accl.get(0)[2],accl.get(0)[1]);
+//			}
+			 acc = (Account) s.get(Account.class, accNr);
+			 acc.setCustomers(null);//we don't need the customers
 		} catch (Exception e) {
 			e.printStackTrace();
-			s.close();
 		}
+		s.close();
 		return acc;
 	}
 
@@ -265,7 +276,7 @@ public class GeneralFunctions {
 		if (address.length() > 50) {
 			error = " address too long, max 50 char! ";
 		}
-		if (address.length() > 6) {
+		if (address.length() < 6) {
 			error = " address too short ";
 		}
 		return error;

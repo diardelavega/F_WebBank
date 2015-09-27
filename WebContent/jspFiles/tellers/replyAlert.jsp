@@ -25,7 +25,7 @@ table.alertTab tr {
 
 	<h1>ALERT!!!!!</h1>
 
-	<button onclick="lunch();">LUNCH</button>
+	<button onclick="lunch();"  style="visibility: collapse;" >LUNCH</button>
 	<table id="allReplays" class="alertTab">
 		<tbody>
 			<tr></tr>

@@ -45,4 +45,18 @@ public class ManMsgPusher {
 		}
 	}
 
+	public void reqNotifyer(Session ses, OCRequest req) {
+		ManagerWS mws = new ManagerWS();
+		JsonObject jo = new JsonObject();
+		Gson gson = new GsonBuilder().create();
+		jo.addProperty("head", "requestInit");
+		jo.add("relRequest", gson.toJsonTree(req));
+		try {
+			mws.sendMsg(gson.toJson(jo), ses);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 }

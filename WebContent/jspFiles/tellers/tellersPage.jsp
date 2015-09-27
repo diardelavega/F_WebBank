@@ -76,13 +76,12 @@ window.telId="<%=ses.getAttribute("primeKey")%>"
                 </ul>
             </div>-->
 			<ul class="nav navbar-right top-nav">
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
+				<li class="dropdown"><a href="#" class="dropdown-toggle" onclick="colorToNorm();"
 					data-toggle="dropdown"> <i class="fa fa-envelope"></i> <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu message-dropdown">
-						<li class="message-preview"><a href="#"
-							style="background-color: rgb(248, 248, 248);"
-							onclick="colorToNorm();">
+						<li class="message-preview" ><a href="#" 
+							style="background-color: rgb(248, 248, 248);">
 								<div id="telMsgPanel" style="background-color: white;">
 									<h5
 										style="background-color: rgb(210, 210, 210); padding: 10px;">
@@ -97,7 +96,7 @@ window.telId="<%=ses.getAttribute("primeKey")%>"
 									</p>
 								</div>
 						</a></li>
-						<li class="message-footer"><a href="#" onclicl="gtReply();">Read
+						<li class="message-footer"><a href="#" onclick="getReplys();">Read
 								All New Messages</a></li>
 					</ul></li>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"

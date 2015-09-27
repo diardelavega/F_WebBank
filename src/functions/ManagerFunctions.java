@@ -78,9 +78,6 @@ public class ManagerFunctions extends EmployeeFunctions {
 		if (response.equals(StaticVars.ACCEPT)) {
 			logger.info("ACCOUNT {}. is oppen", req.getAccFromNr());
 			req.setResponse(StaticVars.ACCEPT);
-			req.setNote(note);
-			req.setStatusComplete();
-			req.unPin();
 			// ----------------------------
 			EmployeeAction ea = new EmployeeAction();
 			ea.setActionType(req.getReqType());
@@ -91,11 +88,11 @@ public class ManagerFunctions extends EmployeeFunctions {
 		} else {
 			logger.info("OPEN ACCOUNT REQEST WAS DENNIED");
 			req.setResponse(StaticVars.DENIE);
-			req.setNote(note);
-			req.setStatusComplete();
-			req.unPin();
-
 		}
+		req.setNote(note);
+		req.setStatusComplete();
+		req.unPin();
+
 		Coordinator.reviewedOCR(req);
 	}
 
@@ -165,19 +162,34 @@ public class ManagerFunctions extends EmployeeFunctions {
 		mmp.requestNotifyer(wsSession, reqType, d2, ed);
 	}
 
-	public void updateRequests(int nr) {
+	public void updateRequestNr(int nr) {
 		logger.info("MANAGER !!! A NEW REQUEST Number");
 		ManMsgPusher mmp = new ManMsgPusher();
 		mmp.reqNrNotifyer(wsSession, nr);
 	}
+	
+	public void updateRequest() {
+		logger.info("MANAGER !!! A NEW REQUEST Number");
+		
+		if(req.isPin()){
+			ManMsgPusher mmp = new ManMsgPusher();
+		mmp.reqNotifyer(wsSession, req);
+		
+		}
+	}
 
 	// ----------------------------------------------------
-	public void leaveOCR() {
+	public String leaveOCR() {
 		// set a previously engaged request available to other managers
-		if (req != null) {
-			req.unPin();
-			Coordinator.ppReqCounter();
-		}
+		if (req != null)
+			if (req.isPin()) {
+				req.unPin();
+				Coordinator.ppReqCounter();
+				return "";
+			} else {
+				return "currently you don't have a request";
+			}
+		return null;
 	}
 
 	public boolean getNextOCR() {
@@ -220,7 +232,7 @@ public class ManagerFunctions extends EmployeeFunctions {
 				}
 			} else {// has a request but wants to change it
 				req.unPin();
-				
+
 				if (!getNextOCR()) {
 					logger.warn("there are no NEW unserved requests for YOU");
 					// ???? iff req== null how to compare it

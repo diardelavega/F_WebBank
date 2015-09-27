@@ -37,7 +37,7 @@ button {
 								<h3>Confirmation Actions:</h3>
 							</td>
 							<td align="right" width="30px">
-								<div style="width: 300px;" align="right" id="telOcMsgAlert"></div>
+								<div class="artAlert"  id="telOcMsgAlert"></div>
 							</td>
 						</tr>
 					</table>

@@ -58,6 +58,8 @@ public class TellerFunctions extends EmployeeFunctions {
 				// open acc, +1 to the customers accounts number they poses
 				String accNr = am.openAccount(req.getAccType(),
 						req.getClientIdsList());
+				req.setAccFromNr(accNr);
+				logger.info("Account {} is Opened", accNr);
 				ea.setAccountId1(accNr);
 				ea.setCustomerId(req.getClientIdsList());
 				super.requestOpenAcc(ea);
@@ -66,6 +68,7 @@ public class TellerFunctions extends EmployeeFunctions {
 				AccountsManagment am = new AccountsManagment();
 				// close account and decrease accounts number customers poses
 				am.closeAccount(req.getAccFromNr());
+				logger.info("Account {} is Closed", req.getAccFromNr());
 				ea.setAccountId1(req.getAccFromNr());
 				ea.setCustomerId(req.getClientIdsList());
 				super.requestCloseAcc(ea);
@@ -138,15 +141,17 @@ public class TellerFunctions extends EmployeeFunctions {
 			if (gf.accountsCountCheck(personalIds).size() == 0) {
 				req = new OCRequest(empId, personalIds, StaticVars.OPEN,
 						accType);
-				logger.info("----------->{} requires submited ", StaticVars.OPEN);
+				logger.info("----------->{} requires submited ",
+						StaticVars.OPEN);
 			} else {// accounts count check
 				req = new OCRequest(empId, personalIds, StaticVars.PLUS_6_ACC,
 						accType);
 				logger.info("----------->{} requires man confirmation",
 						StaticVars.PLUS_6_ACC);
 			}
-			logger.info("on open req TellFunc, reqCheck type ={} ",req.getReqType());
-			
+			logger.info("on open req TellFunc, reqCheck type ={} ",
+					req.getReqType());
+
 			Coordinator.addOCR(req);
 			return null;
 		}

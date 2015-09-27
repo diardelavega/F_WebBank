@@ -1,6 +1,6 @@
 function openAccount() {
 	var persIdList = {
-			empId:telId,
+		empId : telId,
 		head : "openAccountRequest",
 		pId1 : $("[name=telOpenId1]").val(),
 		pId2 : $("[name=telOpenId2]").val(),
@@ -13,7 +13,7 @@ function openAccount() {
 
 function tellCloseAcc() {
 	var persIdList = {
-			empId:telId,
+		empId : telId,
 		head : "closeAccountRequest",
 		pId1 : $("[name=telCloseId1]").val(),
 		pId2 : $("[name=telCloseId2]").val(),
@@ -27,6 +27,7 @@ function tellCloseAcc() {
 /* AFTER RESPONSE FUNCTIONS */
 
 function reqReplyAlert(jsobj) {
+	// get response with problems detected fon server side
 	if (jsobj.hasOwnProperty("problematicId")) {
 		var problemIds = jsobj.problematicId;
 
@@ -62,6 +63,7 @@ function reqReplyAlert(jsobj) {
 // ----------Extra Functionality
 var telTimeOut;
 function ocAlertDisplay(msg, alertType) {
+	// display the interactive msg alert
 	var div = $("#telOcMsgAlert");
 	clearTimeout(telTimeOut);
 	div.empty();
@@ -69,7 +71,7 @@ function ocAlertDisplay(msg, alertType) {
 	if (alertType === 'info') {
 		$(div).addClass("alert alert-info");
 	} else {
-		$(div).addClass("alert alert-warning");
+		$(div).addClass("alert alert-danger");
 	}
 
 	var span = document.createElement("span");
@@ -119,27 +121,19 @@ function tellClearClose() {
 }
 
 function ocRequestReply(jsobj) {
-	//TODO signal the msg-s tab in the tellers page
-	console.log(jsobj);
+	console.log("ocRequestReply");
 	if (jsobj.hasOwnProperty("replyData")) {
-		// TODO to be considered more regarding its performance and
-		// functionality
 		var req = jsobj.replyData;
+		console.log(req);
+		// weite respone at replys
+		telWriteAllMsgs(req);
+		// write three arg @ head panel envelope
+		telNotifyMsg(req.response, req.reqType, req.clientIdsList);
+		// up arroc color notify
+		telNotifyColor(req.response);
 
-		var lastManagerToConsiderIt = req.lastManagerToConsiderIt;
-		var note = req.note;
-		var clientIdsList = req.clientIdsList;
-		var reqType = req.reqType;
-		var accType = req.accType;
-		var accFromNr = req.accFromNr;
-		var accToNr = req.accToNr;
-		var amount = req.amount;
-		var response = req.response;// accepted || denied
-
-		var txt = reqType
-		" - " + response + " " + " " + note + " ";
-
-		ret = ocAlertDisplay(txt + " ", "info");
+	} else {
+		ret = ocAlertDisplay(jsobj.msg, "info");
 		fadeOut(ret);
 	}
 

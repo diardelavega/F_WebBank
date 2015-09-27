@@ -1,5 +1,5 @@
 function telSeverClientTupeling() {
-//	alert("AAAAA");
+	// alert("AAAAA");
 	var reg = {
 		head : "coordinate",
 		empId : telId
@@ -28,6 +28,7 @@ function telAccountStatus() {
 	};
 	doSend(JSON.stringify(req));
 }
+
 function telAccountCoo() {
 	var accNr = $("#telAccountNr").val();
 	var req = {
@@ -37,6 +38,7 @@ function telAccountCoo() {
 	};
 	doSend(JSON.stringify(req));
 }
+
 function telClientAccounts() {
 	var persId = $("#telPersonalId").val();
 	var req = {
@@ -55,6 +57,7 @@ function deleteClient() {
 	}
 	doSend(JSON.stringify(clientData));
 }
+
 function newClientReg() {
 	clientData = {
 		head : 'newClientReg',
@@ -70,20 +73,26 @@ function newClientReg() {
 	}
 	doSend(JSON.stringify(clientData));
 }
+
 function alterClient() {
-	clientData = {
-		head : 'alterClient',
-		empId : telId,
-		id : $('[name=id]').val(),
-		fname : $('[name=fname1]').val(),
-		lname : $('[name=lname1]').val(),
-		bdate : $('[name=bdate]').val(),
-		address : $('[name=address1]').val(),
-		phone : $('[name=phone]').val(),
-		eMail : $('[name=email1]').val(),
-		password : $('[name=psw1]').val()
+	if ($('[name=id]').val() != window.initialPersId) {
+		ret = mainAlertDisplay("ID Can Not Be Altere", "warning");
+		fadeOut(ret);
+	} else {
+		clientData = {
+			head : 'alterClient',
+			empId : telId,
+			id : $('[name=id]').val(),
+			fname : $('[name=fname1]').val(),
+			lname : $('[name=lname1]').val(),
+			bdate : $('[name=bdate]').val(),
+			address : $('[name=address1]').val(),
+			phone : $('[name=phone]').val(),
+			eMail : $('[name=email1]').val(),
+			password : $('[name=psw1]').val()
+		}
+		doSend(JSON.stringify(clientData));
 	}
-	doSend(JSON.stringify(clientData));
 }
 
 // -----------TRANSACTIONS
@@ -130,29 +139,30 @@ function registerClientReply(jobj) {
 	}
 }
 
-function alterClientReply(jobj) {
+function alterClientReply(jsobj) {
 	console.log(jsobj);
-	if (jobj.hasOwnProperty("response")) {
-		ret = mainAlertDisplay(jobj.response, "info");
+	if (jsobj.hasOwnProperty("response")) {
+		ret = mainAlertDisplay(jsobj.response, "info");
 		fadeOut(ret);
 	} else {
-		ret = mainAlertDisplay(jobj.msg, "warning");
+		ret = mainAlertDisplay(jsobj.msg, "warning");
 		fadeOut(ret);
 	}
 }
 
-function deleteClientReply(jobj) {
-	if (jobj.hasOwnProperty("response")) {
-		ret = mainAlertDisplay(jobj.response, "info");
+function deleteClientReply(jsobj) {
+	if (jsobj.hasOwnProperty("response")) {
+		ret = mainAlertDisplay(jsobj.response, "info");
 		fadeOut(ret);
 	} else {
-		ret = mainAlertDisplay(jobj.msg, "warning");
+		ret = mainAlertDisplay(jsobj.msg, "warning");
 		fadeOut(ret);
 	}
 }
 // ---------------
 
 function searchReply(jsobj) {
+	// display the client search results in a table
 	console.log(jsobj);
 	if (jsobj.hasOwnProperty("customerList")) {
 		var custList = jsobj.customerList;
@@ -172,8 +182,12 @@ function searchReply(jsobj) {
 				// -----------header creation
 				if (i == 0) {
 					var th = document.createElement('th');
-					th.setAttribute("align", "center");
-					var t = document.createTextNode(key);
+					// th.setAttribute("align", "center");
+					if (key === 'customerStatus') {
+						var t = document.createTextNode("cStastus");
+					} else {
+						var t = document.createTextNode(key);
+					}
 					th.appendChild(t);
 					tableHead.append(th);
 				}
@@ -211,6 +225,7 @@ function searchReply(jsobj) {
 }
 
 function retriveTrContent(event) {
+
 	var tds = $(event.target).parent().find('td');
 	$('[name=fname1]').val(tds.eq(3).text());
 	$('[name=lname1]').val(tds.eq(4).text());
@@ -220,6 +235,7 @@ function retriveTrContent(event) {
 	$('[name=email1]').val(tds.eq(2).text());
 	$('[name=psw1]').val(tds.eq(8).text());
 	$('[name=id]').val(tds.eq(0).text());
+	window.initialPersId = tds.eq(0).text();
 }
 
 function clientAccounts(jsobj) {
@@ -234,6 +250,9 @@ function clientAccounts(jsobj) {
 			var acc = accs[i];
 			var tr = document.createElement('tr');
 			for ( var key in acc) {
+				if (key === 'customers')
+					continue;
+				// }
 				// -----------header creation
 				if (i == 0) {
 					var th = document.createElement('th');
@@ -277,6 +296,9 @@ function accountStatus(jsobj) {
 	if (jsobj.hasOwnProperty("Account")) {
 		var acc = jsobj.Account;
 		for ( var key in acc) {
+			if (key === 'customers')
+				continue;
+			// } else {
 			// -----------header creation
 			var th = document.createElement('th');
 			var t = document.createTextNode(key);
@@ -284,9 +306,10 @@ function accountStatus(jsobj) {
 			trh.append(th);
 			// -----------body creation
 			var td = document.createElement('td');
-			var t = document.createTextNode(acc[key]); // Create a text node
+			var t = document.createTextNode(acc[key]);
 			td.appendChild(t);
 			trd.append(td);
+			// }
 			console.log(acc[key])
 		}
 		console.log(acc);
@@ -365,7 +388,7 @@ function mainAlertDisplay(msg, alertType) {
 	if (alertType === 'info') {
 		$(div).addClass("alert alert-info");
 	} else {
-		$(div).addClass("alert alert-warning");
+		$(div).addClass("alert alert-danger");
 	}
 
 	var span = document.createElement("span");

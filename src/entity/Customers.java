@@ -10,14 +10,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -27,11 +23,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "customers")
-public class Customers implements Serializable{
+public class Customers  {
 
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = 1L;
 	@Id
 	@Column(name = "personalId")
@@ -45,16 +42,27 @@ public class Customers implements Serializable{
 	private Timestamp bdata;
 	private String address;
 	private String phone;
-	@Column(name="psw")
+	@Column(name = "psw")
 	private String password;
 	private int customerStatus;// OK-0, onHold(frozen acc)-1, something else ??
+	
+	// @ManyToMany(cascade = CascadeType.ALL)
+	// @JoinTable(name = "customers_account", joinColumns = { @JoinColumn(name =
+	// "personalId") }, inverseJoinColumns = { @JoinColumn(name = "accId") })
+	// private List<Account> accounts = new ArrayList<Account>();
 
-//	@ManyToMany(cascade = CascadeType.ALL)
-//	@JoinTable(name = "customers_account", joinColumns = { @JoinColumn(name = "personalId") }, inverseJoinColumns = { @JoinColumn(name = "accId") })
-//	private List<Account> accounts = new ArrayList<Account>();
+	@ManyToMany(mappedBy = "customers")
+	private transient List<Account> accounts;
+	
+	public List<Account> getAccounts() {
+		return accounts;
+	}
 
-	 @ManyToMany(mappedBy = "customers")
-	 private transient List<Account> accounts = new ArrayList<>();
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
+	}
+
+	// private List<Account> accountss = new ArrayList<>();
 
 	/*
 	 * @OneToMany(cascade = CascadeType.ALL, mappedBy="customers" ) private
@@ -62,6 +70,7 @@ public class Customers implements Serializable{
 	 */
 
 	public Customers() {
+//		accounts=new ArrayList<Account>();
 	}
 
 	public Customers(String personalId, int accountsNr, String eMail,
@@ -78,14 +87,7 @@ public class Customers implements Serializable{
 		this.phone = phone;
 		this.password = password;
 		this.customerStatus = customerStatus;
-	}
-
-	public List<Account> getAccounts() {
-		return accounts;
-	}
-
-	public void setAccounts(List<Account> accounts) {
-		this.accounts = accounts;
+//		accounts=new ArrayList<Account>();
 	}
 
 	// public List<Transaction> getTransactions() {

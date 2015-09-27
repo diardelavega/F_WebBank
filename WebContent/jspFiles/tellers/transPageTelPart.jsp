@@ -50,8 +50,8 @@ body {
 							<td>
 								<h3>Transactions</h3>
 							</td>
-							<td align="right" width="30px">
-								<div style="width: 300px;" align="right" id="telTransMsgAlert"></div>
+							<td align="left" width="30px">
+								<div class="artAlert" id="telTransMsgAlert"></div>
 							</td>
 						</tr>
 					</table>
