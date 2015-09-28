@@ -125,10 +125,3 @@ function telDivhide() {
 	// $('.hidable').attr("style", "visibility: visible");
 }
 
-// function capitalize() {
-// // setTimeout(function() {
-// $("input[type=text]").focusout(function() {
-// $(this).val($(this).val().toUpperCase());
-// });
-// }, 3000)
-// }

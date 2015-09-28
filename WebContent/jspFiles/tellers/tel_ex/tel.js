@@ -190,13 +190,5 @@ function logOut() {
 function getReplys() {
 	telHideShow('alertTel');
 }
-//
-// function logOutReplay(jsobj) {
-// if (jsobj.hasOwnProperty('response')) {
-// if (jsobj.response === 'OK') {
-// window.location.href = "../../logout.jsp";
-// }
-// } else if (jsobj.hasOwnProperty('msg')) {
-// console.log("on log out " + jsobj.msg);
-// }
-// }
+
+

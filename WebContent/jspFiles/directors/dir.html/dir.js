@@ -8,24 +8,19 @@ function dirSeverClientTupeling() {
 
 function disableid() {
 	$('#trid').attr("style", "visibility: collapse");
-	// $('#butid').attr('value', 'SAVEss');
-	// $('#butid').attr('onclick', '');
 }
 
 function enableId() {
 	$('#trid').attr("style", "visibility: visible");
-	// $('#butid').attr('value', 'SEARCHzzz');
-	// $('#butid').val('snitcheszzz');
-	// document.getElementById("butid").onclick = function() { getEmpInfo(); }
 }
 
-function capitalize() {
-	// setTimeout(function() {
-	$("input[type=text]").keyup(function() {
-		$(this).val($(this).val().toUpperCase());
-	});
-	// }, 3000)
-}
+//function capitalize() {
+//	// setTimeout(function() {
+//	$("input[type=text]").keyup(function() {
+//		$(this).val($(this).val().toUpperCase());
+//	});
+//	// }, 3000)
+//}
 
 $(function() {
 	/*
@@ -39,6 +34,44 @@ $(function() {
 	});
 });
 
+$(function() {
+	/*
+	 * initiating the different classes
+	 * "amount,name,phone,address,email,password" to be ready to display user
+	 * friendly functionalities
+	 */
+	var addresses = $(".address").focusout(function() {
+		addressCtrl(this);
+	});
+
+	var paswords = $(".password").focusout(function() {
+		pswCtrl(this);
+	});
+
+	var names = $(".name").focusout(function() {
+		nameCtrl(this);
+	});
+
+	var phones = $(".phone").focusout(function() {
+		phoneCtrl(this);
+	});
+
+	var notes = $(".note").focusout(function() {
+		noteCtrl(this);
+	});
+
+	var emails = $(".mail").focusout(function() {
+		emailCtrl(this);
+	});
+
+	var amts = $(".amount").focusout(function() {
+		amountCtrl(this);
+	});
+	for (var i = 0; i < amts.length; i++) {
+		$(amts[i]).attr("placeholder", "ex: 125.6787");
+	}
+});
+
 function logOut() {
 	var logout = {
 		head : "logout",
@@ -46,13 +79,3 @@ function logOut() {
 	};
 	doSend(JSON.stringify(logout));
 }
-
-//function logOutReplay(jsobj) {
-//	if (jsobj.hasOwnProperty('response')) {
-//		if (jsobj.response === 'OK!') {
-//			window.location.href = "../../logout.jsp";
-//		}
-//	} else if (jsobj.hasOwnProperty('msg')) {
-//		console.log("on log out  " + jsobj.msg);
-//	}
-//}

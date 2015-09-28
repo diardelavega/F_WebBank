@@ -23,8 +23,9 @@ function balanceHandler(jsobj) {
 
 		var bal = jsobj.balist;
 		var tbody = $("#balTableList").find("tbody");
-		
-		var prevCum=0;
+		// console.log(bal);
+
+		var prevCum = 0;
 		for (var i = 0; i < bal.length; i++) {
 			var tr = document.createElement('tr');
 			tbody.append(tr);
@@ -43,15 +44,23 @@ function balanceHandler(jsobj) {
 
 			d = new Date(bal[i][0]);// create a new date with the db date
 			dates.push(d.ddmmyyy());// format to yy_mm_dd and store
-			 withdraw.push(bal[i][1]);
-			 deposite.push(bal[i][2]);
-
-			 prevCum += deposite[i] - withdraw[i];
+			if (bal[i][1] == null) {
+				withdraw.push(0);
+			} else {
+				withdraw.push(bal[i][1]);
+			}
+			if (bal[i][2] == null) {
+				deposite.push(0);
+			} else {
+				deposite.push(bal[i][2]);
+			}
 			
+
+			prevCum += deposite[i] - withdraw[i];
+
 			// append the analog cumulative val
-			 var td = document.createElement('td');
-			var t = document
-					.createTextNode(prevCum);
+			var td = document.createElement('td');
+			var t = document.createTextNode(prevCum);
 			td.appendChild(t);
 			tr.appendChild(td);
 
@@ -129,8 +138,6 @@ function search() {
 	// $("#content").attr("style", "visibility: visible");
 }
 
-
-
 $(function() {
 	/*
 	 * get date JS object from a string based date and format it as dd_mm_yy
@@ -158,17 +165,31 @@ function plot() {
 	var _withdraw = [];
 	var cumulative = [];
 
+	console.log("on plot");
 	for (var i = 0; i < dates.length; i++) {
+		console.log(i + " - " + dates[i]);
 		/* fill the chart data according to its doc. */
 		_deposite.push([ dates[i], deposite[i] ]);
 		_withdraw.push([ dates[i], -withdraw[i] ]);
-		if (i <= 0) {
+		if (i <= 0) {// the first cumulative var
 			cumulative.push([ dates[i], deposite[i] - withdraw[i] ]);
 		} else {
 			cumulative.push([ dates[i],
 					deposite[i] - withdraw[i] + cumulative[i - 1][1] ]);
 		}
 	}// for
+
+	for (var j = 0; j < _deposite.length; j++) {
+		console.log(_deposite[j]);
+	}
+	console.log("");
+	for (var j = 0; j < _withdraw.length; j++) {
+		console.log(_withdraw[j]);
+	}
+	console.log("");
+	for (var j = 0; j < cumulative.length; j++) {
+		console.log(cumulative[j]);
+	}
 
 	$.plot("#placeholderBal", [ {
 		label : "deposite",

@@ -180,7 +180,7 @@ function onAccId(event) {
 }
 
 function clearReviewedRequesrs() {
-	 $("#allRequests tbody").empty();
+	 $("#reviewedRequests tbody").empty();
 //	writeReviewedRequests("");
 }
 

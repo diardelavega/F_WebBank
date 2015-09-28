@@ -46,7 +46,7 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 	}
 </script>
 </head>
-<body onload="divhide(); capitalize();">
+<body onload="divhide();">
 	<div id="wrapper">
 
 		<!-- Navigation -->
@@ -141,7 +141,7 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 			<div class="container-fluid">
 
 				<!-- import director main details -->
-				<jsp:include page="./mainPageDirPart.jsp"></jsp:include>
+				<%-- <jsp:include page="./mainPageDirPart.jsp"></jsp:include> --%>
 				<!-- import employee details -->
 				<jsp:include page="./empPageDirPart.jsp"></jsp:include>
 				<!-- import employee details -->
@@ -160,6 +160,7 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 	<script src="../../bootstrap/js/jquery.js"></script>
 
 	<!-- director scripts -->
+	<script src="../js/general.js"></script>
 	<script src="./dir.html/dir.js"></script>
 	<script src="./dir.html/balance.js"></script>
 	<script src="./dir.html/employee.js"></script>
@@ -176,10 +177,6 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../../bootstrap/js/bootstrap.min.js"></script>
 
-	<!-- Morris Charts JavaScript -->
-	<!-- <script src="../../bootstrap/js/plugins/morris/raphael.min.js"></script>
-	<script src="../../bootstrap/js/plugins/morris/morris.min.js"></script>
-	<script src="../../bootstrap/js/plugins/morris/morris-data.js"></script> -->
 
 	<!-- jquery-ui -->
 	<script src="../../jquery-ui/jquery-ui.min.js"></script>

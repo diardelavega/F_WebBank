@@ -10,7 +10,7 @@ function hideShow(chosen) {
 	});
 }
 function divhide() {
-	hideShow('mainDir');
+	hideShow('empDir');
 	// $('.hidable').attr("style", "visibility: visible");
 }
 

@@ -1,10 +1,10 @@
-function capitalize() {
-	// setTimeout(function() {
-	$("input[type=text]").focusout(function() {
-		$(this).val($(this).val().toUpperCase());
-	});
-	// }, 3000)
-}
+//function capitalize() {
+//	// setTimeout(function() {
+//	$("input[type=text]").focusout(function() {
+//		$(this).val($(this).val().toUpperCase());
+//	});
+//	// }, 3000)
+//}
 
 $(function() {
 	$("input[type=text]").focusout(function() {
@@ -167,10 +167,11 @@ function logOutReplay(jsobj) {
 	console.log(jsobj);
 	if (jsobj.hasOwnProperty('response')) {
 		if (jsobj.response === 'OK') {
-			window.location.href = "../logout.jsp";
+//			window.location.href = "../logout.jsp";
 		}
 	} else if (jsobj.hasOwnProperty('msg')) {
 		console.log("on log out  " + jsobj.msg);
-		window.location.href = "../logout.jsp";
+//		window.location.href = "../logout.jsp";
 	}
+	window.location.href = "../logout.jsp";
 }

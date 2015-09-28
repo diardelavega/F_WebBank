@@ -22,11 +22,8 @@
 
 <link href="../../jquery-ui/jquery-ui.min.css" rel="stylesheet">
 <link href="../../jquery-ui/jquery-ui.theme.min.css" rel="stylesheet">
-<link href="../../jquery-ui/jquery-ui.structure.min.css"
-	rel="stylesheet">
+<link href="../../jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
 
-<!-- flot charts -->
-<!-- <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css"> -->
 <style>
 body {
 	font-family: Verdana, Arial, sans-serif;

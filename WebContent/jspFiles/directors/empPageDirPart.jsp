@@ -45,7 +45,7 @@ td {
 								style="margin: 30px; margin-left: 10px; padding: 10px;">
 								<tr>
 									<td><label> F. Name &nbsp;</label></td>
-									<td><input type="text" name="fname1"></td>
+									<td><input type="text" name="fname1" class="name"></td>
 									<td><div id=extrabutton>
 											<button id="clearbut" onclick="clear1();">
 												<span class="glyphicon glyphicon-erase"></span>
@@ -54,20 +54,20 @@ td {
 								</tr>
 								<tr>
 									<td><label> L. Name &nbsp;</label></td>
-									<td><input type="text" name="lname1"></td>
+									<td><input type="text" name="lname1" class="name" ></td>
 								</tr>
 								<tr>
 									<td><label> Address&nbsp;</label></td>
-									<td><input type="text" name="address1"></td>
+									<td><input type="text" name="address1" class="address"></td>
 								</tr>
 								<tr>
 									<td><label> E-mail&nbsp;</label></td>
-									<td><input id="email" onkeyup="addemail(this);"
-										type="text" name="email1"></td>
+									<td><input id="email" 
+										type="text" name="email1" class="mail"></td>
 								</tr>
 								<tr>
 									<td><label> Password&nbsp;</label></td>
-									<td><input type="text" name="psw1"></td>
+									<td><input type="text" name="psw1" class="password"></td>
 								</tr>
 								<tr>
 									<td><label> Possition&nbsp;</label></td>
@@ -110,7 +110,7 @@ td {
 								</tr>
 								<tr>
 									<td><label> E-mail&nbsp;</label></td>
-									<td><input id="email2" onkeyup="addemail(this);"
+									<td><input id="email2" 
 										type="text" name="email2"></td>
 								</tr>
 								<tr>
