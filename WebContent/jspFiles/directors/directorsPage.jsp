@@ -31,7 +31,16 @@
 <!-- flot charts -->
 <link href="../../flot_f/examples.css" rel="stylesheet" type="text/css">
 
-<script src="./dir.html/dirInit.js"></script>
+<style type="text/css">
+.artdAlert {
+	position: fixed;
+	bottom: 30;
+	right: 0;
+	width: 300px;
+	/* border: 3px solid #8AC007;  */
+}
+</style>
+
 <title>Directors Page</title>
 
 <%
@@ -49,6 +58,9 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 <body onload="divhide();">
 	<div id="wrapper">
 
+
+
+
 		<!-- Navigation -->
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
@@ -63,6 +75,7 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 				<a class="navbar-brand" href="#"
 					onclick="dirSeverClientTupeling(); eid();">Director</a>
 			</div>
+
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<!--  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
@@ -126,6 +139,7 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
 					</ul></li>
 			</ul>
+			<div id="dirMsgAlert" class="artdAlert"></div>
 			<!-- /.navbar-collapse -->
 		</div>
 		<!-- /.container --> </nav>
@@ -161,6 +175,7 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 
 	<!-- director scripts -->
 	<script src="../js/general.js"></script>
+	<script src="./dir.html/dirInit.js"></script>
 	<script src="./dir.html/dir.js"></script>
 	<script src="./dir.html/balance.js"></script>
 	<script src="./dir.html/employee.js"></script>

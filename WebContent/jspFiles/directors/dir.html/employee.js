@@ -1,45 +1,56 @@
 function alterEmpRes(jsobj) {
-	// todoconfirm the action
-	// console.log(jsobj.newId);
-	alert("All DONE" + jsobj.newId);
+	// alert("All DONE" + jsobj.newId);
+	// dispalyMsg(jsobj.newId);
+	console.log(jsobj);
+	if (jsobj.hasOwnProperty('alt')) {
+		dispalyMsg(jsobj.alt);
+	} else {
+		dispalyMsg(jsobj.msg);
+	}
 }
 
 function deleteEmpRes(jsobj) {
-	// todoconfirm the action
-	// console.log(jsobj.newId);
-	alert("All DONE" + jsobj.newId);
+	console.log(jsobj);
+	if (jsobj.hasOwnProperty('del')) {
+		dispalyMsg(jsobj.del);
+	} else {
+		dispalyMsg(jsobj.msg);
+	}
 }
 
 function newEmpRes(jsobj) {
-	// todoconfirm the action
-	// console.log(jsobj.newId);
-	alert("All DONE" + jsobj.newId);
+	console.log(jsobj);
+	if (jsobj.hasOwnProperty('reg')) {
+		dispalyMsg(jsobj.reg);
+	} else {
+		dispalyMsg(jsobj.msg);
+	}
+
 }
 
 function errorRes(jsobj) {
-	// todoconfirm the action
-	// console.log(jsobj.msg);
-	alert("Error MSG  " + jsobj.msg);
+	// alert("Error MSG " + jsobj.msg);
+	dispalyMsg(jsobj.msg);
 }
 
+// ---------------Structural help
 function empInfoHandler(jsobj) {
 	// initiate and create the table
 	if (jsobj.hasOwnProperty("employees")) {
 		deleteContent();
 		var emps = jsobj.employees;
-		// console.log("-----: ");
 		for (var i = 0; i < emps.length; i++) {
 			var line = emps[i];
 			empTableTr(i);
 			for ( var key in line) {
 				if (i == 0) {
 					empTableListHead(key);
-					// empTableListBody(line[key]);
 				}
 				empTableListBody(line[key]);
-				// console.log(i + " --- " + key + " --- " + line[key]);
 			}
 		}
+	} else {
+		dispalyMsg(jsobj.msg);
 	}
 }
 
@@ -70,8 +81,6 @@ function empTableTr(i) {
 	tr.id = i;
 
 	tr.onclick = function(event) {
-		/* event.target get the element that started the event */
-		// var tds = $(event.target).parent().find('td');
 		retriveTrContent(event);
 	}
 	tbody.append(tr);
@@ -123,12 +132,15 @@ function clear1() {
 	$('[name=email1]').val("");
 	$('[name=psw1]').val("");
 }
+// -----------------------
 
+// --------Requests
 function alterEmployee() {
 	var emp = getEmpData("alter");
 	doSend(JSON.stringify(emp));
 	clear2();
 }
+
 function deleteEmployee() {
 	var emp = getEmpData("delete");
 	doSend(JSON.stringify(emp));
@@ -138,7 +150,7 @@ function deleteEmployee() {
 function newEmployee() {
 	var emp = {
 		head : "new",
-		// dirId: '${sessionScope.empId}',
+		empId : dirEmpId,
 		id : $('[name=id1]').val(),
 		fname : $('[name=fname1]').val(),
 		lname : $('[name=lname1]').val(),
@@ -160,7 +172,7 @@ function getEmpInfo() {
 function getEmpData(headVal) {
 	var emp = {
 		head : headVal,
-		//dirId : ${sessionScope.empId},
+		empId : dirEmpId,
 		id : $('[name=id2]').val(),
 		fname : $('[name=fname2]').val(),
 		lname : $('[name=lname2]').val(),

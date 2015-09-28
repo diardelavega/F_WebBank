@@ -21,6 +21,7 @@ import functions.DirectorFunctions;
 public class AddEmployee extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(Log.class);
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -48,20 +49,22 @@ public class AddEmployee extends HttpServlet {
 		Integer primeKey = null;
 		logger.info("Adding new Employee");
 		try {
-			primeKey = (Integer) request.getSession().getAttribute(
-					"primeKey");
+			primeKey = (Integer) request.getSession().getAttribute("primeKey");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (primeKey == null) {
-//			session.setAttribute("validity", "invalid credentials ");
+			// session.setAttribute("validity", "invalid credentials ");
 			response.sendRedirect("jspFiles/Test.jsp");
 		}
 		DirectorFunctions df = new DirectorFunctions(primeKey);
-		long empId = df.createEmployee(request.getParameter("fname"),
-				request.getParameter("lname"), request.getParameter("address"),
-				request.getParameter("pos"), request.getParameter("mail"),
-				request.getParameter("password"));
+		long empId = Long
+				.parseLong(df.createEmployee(request.getParameter("fname"),
+						request.getParameter("lname"),
+						request.getParameter("address"),
+						request.getParameter("pos"),
+						request.getParameter("mail"),
+						request.getParameter("password")));
 
 		if (empId == -1) {
 			response.sendRedirect("jspFiles/Error.jsp");

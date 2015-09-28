@@ -100,17 +100,13 @@ public class DirMsgWsHandler {
 		JsonObject jo = new JsonObject();
 		int id = -1;
 		try {
-			String jsonId = jobj.get("id").getAsString();
-			logger.info(" jobj id = {} ", jobj.get("id"));
-			if (jsonId != null && !jsonId.equals("")) {
-				id = jobj.get("id").getAsInt();
-			}
+			id = jobj.get("id").getAsInt();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("incorect id passage from jsomObj");
 			jo.addProperty("head", "error");
-			jo.addProperty("msg", "invalid empId");
+			jo.addProperty("msg", "Invalid Employee Id");
 		}
 
 		logger.info("into variable search");
@@ -127,7 +123,7 @@ public class DirMsgWsHandler {
 			jo.addProperty("msg", "unable to update, comit problem");
 		} else {
 			jo.addProperty("head", "deleteEmployee");
-			jo.addProperty("newId", empId);
+			jo.addProperty("del", "Deletion Completed");
 		}
 		String jsonResp = gson.toJson(jo);
 		logger.info("jsonResp ={}", jsonResp);
@@ -139,17 +135,12 @@ public class DirMsgWsHandler {
 		JsonObject jo = new JsonObject();
 		int id = -1;
 		try {
-			String jsonId = jobj.get("id").getAsString();
-			logger.info(" jobj id = {} ", jobj.get("id"));
-			if (jsonId != null && !jsonId.equals("")) {
-				id = jobj.get("id").getAsInt();
-			}
-
+			id = jobj.get("id").getAsInt();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("incorect id passage from jsomObj");
 			jo.addProperty("head", "error");
-			jo.addProperty("msg", "invalid empId");
+			jo.addProperty("msg", "Invalid Employee Id");
 		}
 
 		logger.info("into variable search");
@@ -164,22 +155,23 @@ public class DirMsgWsHandler {
 		String eMail = jobj.get("eMail").getAsString();
 		String password = jobj.get("password").getAsString();
 
-		long empId = df.alterEmployee(id, fname, lname, address, possition,
+		String ret = df.alterEmployee(id, fname, lname, address, possition,
 				eMail, password);
-		if (empId != StaticVars.ERROR) {
-			jo.addProperty("head", "alterEmployee");
-			jo.addProperty("newId", empId);
+
+		jo.addProperty("head", "alterEmployee");
+		if (ret.equals("")) {
+			jo.addProperty("alt", "Aleration Completed");
 		} else {
-			jo.addProperty("head", "error");
-			jo.addProperty("msg", "unable to update, comit problem");
+			jo.addProperty("msg", ret);
 		}
+
 		String jsonResp = gson.toJson(jo);
 		return jsonResp;
 
 	}
 
 	private static String newEmployee(DirectorFunctions df, JsonObject jobj) {
-		// TODO call Director function and create an emp.
+		// check and register a new Employee
 		JsonObject jo = new JsonObject();
 
 		String fname = jobj.get("fname").getAsString();
@@ -189,26 +181,14 @@ public class DirMsgWsHandler {
 		String eMail = jobj.get("eMail").getAsString();
 		String password = jobj.get("password").getAsString();
 
-		long newEmpId = df.createEmployee(fname, lname, address, possition,
-				eMail, password);
+		String ret = df.createEmployee(fname, lname, address, possition, eMail,
+				password);
 
-		logger.info("new mployee id-----------------: {}", newEmpId);
-
-		if (newEmpId == StaticVars.ERROR) {
-			jo.addProperty("head", "error");
-			jo.addProperty("msg", "UNABLE TP REGISTER EMPLYEE");
-		}
-		/*
-		 * else if (newEmpId != StaticVars.DUPLICATE_ENTRY) {
-		 * jo.addProperty("head", "error"); jo.addProperty("msg",
-		 * "DUPLICATE EMPLOYEE ENTRY"); }
-		 */
-		else if (newEmpId == StaticVars.NON_UNIQUE_EMAIL) {
-			jo.addProperty("head", "error");
-			jo.addProperty("msg", "NON UNIQUE EMAIL");
+		jo.addProperty("head", "newEmployee");
+		if (ret.equals("")) {
+			jo.addProperty("reg", "Registration Completed");
 		} else {
-			jo.addProperty("head", "newEmployee");
-			jo.addProperty("newId", newEmpId);
+			jo.addProperty("msg", ret);
 		}
 		String jsonResp = gson.toJson(jo);
 		logger.info(jsonResp);
@@ -223,27 +203,16 @@ public class DirMsgWsHandler {
 		int id = -1; // id from form or other data from form
 		String jsonEmps = null;
 		try {
-			String jsonId = jobj.get("id").getAsString();
-			logger.info(" jobj id = {} ", jobj.get("id"));
-			if (jsonId != null && !jsonId.equals("")) {
-				id = jobj.get("id").getAsInt();
-			}
+			id = jobj.get("id").getAsInt();
 			logger.info(" int id = {} ", id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("incorect id passage from jsomObj");
-			jo.addProperty("head", "error");
-			jo.addProperty("msg", "empId not provided");
-
-			return jsonEmps;
+			// jo.addProperty("head", "error");
+			// jo.addProperty("msg", "Employee Id Not Provided");
 		}
 
 		if (id == -1) {
-			logger.info("into variable search");
-			logger.info("DATA: fname={}  lname={},  email={}", jobj
-					.get("fname").getAsString(), jobj.get("lname")
-					.getAsString(), jobj.get("eMail").getAsString());
-
 			String fname = jobj.get("fname").getAsString();
 			String lname = jobj.get("lname").getAsString();
 			String address = jobj.get("address").getAsString();
@@ -253,11 +222,24 @@ public class DirMsgWsHandler {
 
 			emps = df.getEmployees(fname, lname, address, possition, eMail,
 					password);
+			if (emps.size() == 0) {
+				jo.addProperty("head", "empList");
+				jo.addProperty("msg", "No Employees With These Criterias");
+			} else {
+				jo.addProperty("head", "empList");
+				jo.add("employees", gson.toJsonTree(emps));
+			}
 		} else {
 			emps.add(df.getEmplyee(id));
+			if (emps.get(0) == null) {
+				jo.addProperty("head", "error");
+				jo.addProperty("msg", "There Is No Emplyee With This Id");
+			} else {
+				jo.addProperty("head", "empList");
+				jo.add("employees", gson.toJsonTree(emps));
+			}
 		}
-		jo.addProperty("head", "empList");
-		jo.add("employees", gson.toJsonTree(emps));
+
 		jsonEmps = gson.toJson(jo);
 		logger.info("JSON FORM jsonEmps ={}", jsonEmps);
 		return jsonEmps;
@@ -265,42 +247,39 @@ public class DirMsgWsHandler {
 	}
 
 	private static String getBalance(DirectorFunctions df, JsonObject jobj) {
-
+		JsonObject jo = new JsonObject();
+		jo.addProperty("head", "dirBalance");
 		DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMANY);
 
 		Date fromDate = null, toDate = null;
 		try {
 
 			java.util.Date d1 = format.parse(jobj.get("fdate").getAsString());
-			// System.out.println("d1-------:" + d1);
 			fromDate = new java.sql.Date(d1.getTime());
-			// System.out.println("-------:" + fromDate);
 
 			if (jobj.has("tdate")) {
 				java.util.Date d2 = format.parse(jobj.get("tdate")
 						.getAsString());
-				// System.out.println("d2-------:" + d2);
 				toDate = new java.sql.Date(d2.getTime());
-				// System.out.println("-------:" + toDate);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			jo.addProperty("msg", "An Error Ocoured During Data Retreival");
+			return gson.toJson(jo);
 		}
 
-		JsonObject jo = new JsonObject();
 		List<Object[]> list = df.getBalance(fromDate, toDate);
-
-		jo.addProperty("head", "dirBalance");
 		jo.add("balist", gson.toJsonTree(list));
 		String jsonResp = gson.toJson(jo);
 		logger.info("jsonResp :" + jsonResp);
-		// TODO check values
 		return jsonResp;
 
 	}
 
 	private static String getTransactions(DirectorFunctions df, JsonObject jobj) {
+		JsonObject jo = new JsonObject();
+		jo.addProperty("head", "dirTransaction");
 		DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMANY);
 		Date fromDate = null, toDate = null;
 		try {
@@ -313,15 +292,15 @@ public class DirMsgWsHandler {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			jo.addProperty("msg", "An Error Ocoured During Data Retreival");
+			return gson.toJson(jo);
 		}
 
-		JsonObject jo = new JsonObject();
 		List<Transaction> trl = df.getTransactions(fromDate, toDate);
 		jo.addProperty("head", "dirTransaction");
 
 		jo.add("translist", gson.toJsonTree(trl));
 		String jsonResp = gson.toJson(jo);
-		// TODO check values
 		logger.info("--------------- >>>>>>>>>>" + jsonResp);
 		return jsonResp;
 	}

@@ -223,10 +223,6 @@ public class GeneralFunctions {
 		}
 	}
 
-	public void customerDataValidity(Customers c) {
-		// String
-	}
-
 	public String valEMail(String mail) {
 		String error = "";
 		if (mail.length() > 40) {

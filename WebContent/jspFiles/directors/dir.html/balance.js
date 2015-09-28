@@ -54,7 +54,6 @@ function balanceHandler(jsobj) {
 			} else {
 				deposite.push(bal[i][2]);
 			}
-			
 
 			prevCum += deposite[i] - withdraw[i];
 
@@ -67,6 +66,8 @@ function balanceHandler(jsobj) {
 		}// for
 
 		plot();
+	} else {
+		dispalyMsg(jsobj.msg);
 	}
 }
 

@@ -9,15 +9,20 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.websocket.Session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import comon.StaticVars;
 import system.DirectorQuery;
+import utils.GeneralFunctions;
 import entity.Employee;
 import entity.EmployeeAction;
 import entity.Transaction;
 import fileLog.FileHandler;
 
 public class DirectorFunctions extends EmployeeFunctions {
-
+	public static Logger logger = LoggerFactory
+			.getLogger(DirectorFunctions.class);
 	private int empId;
 	private Session wsSession;
 
@@ -31,47 +36,86 @@ public class DirectorFunctions extends EmployeeFunctions {
 		this.empId = 000;
 	}
 
-	public long createEmployee(String fname, String lname, String address,
+	public String createEmployee(String fname, String lname, String address,
 			String possition, String eMail, String password) {
+
+		GeneralFunctions gf = new GeneralFunctions();
+		logger.info("IN Director QUERY");
+		StringBuilder sb = new StringBuilder();// the validation error msgs
+		sb.append(gf.valName(fname));
+		sb.append(gf.valName(lname));
+		sb.append(gf.valAddress(address));
+		sb.append(gf.valEMail(eMail));
+		sb.append(gf.valDubleMail(eMail));
+		sb.append(gf.valPsw(password));
+		if (sb.toString().length() > 0) {
+			return sb.toString();
+		}
+
 		Employee e = new Employee(fname, lname, address, possition, eMail,
 				password);
 		DirectorQuery dq = new DirectorQuery();
 		long regEmpId = dq.register(e);
-		if (regEmpId != StaticVars.ERROR
-				&& regEmpId != StaticVars.NON_UNIQUE_EMAIL) {
+		if (regEmpId != StaticVars.ERROR) {
 			EmployeeAction ea = new EmployeeAction();
 			ea.setActionType(StaticVars.REG_EMPLOYEE);
 			ea.setEmpId(empId);
-			ea.getCustomerId().add(regEmpId + "");
+			List<String> ls = new ArrayList<>();
+			ls.add(regEmpId + "");
+			ea.setCustomerId(ls);
 			super.registerEmployee(ea);
+			return "";
+		} else {
+			return "An Error Ocoured, Registration Not Completed";
 		}
-		return regEmpId;
+
 	}
 
-	public long alterEmployee(int empId, String fname, String lname,
+	public String alterEmployee(int empId, String fname, String lname,
 			String address, String possition, String eMail, String password) {
+		GeneralFunctions gf = new GeneralFunctions();
+		logger.info("IN Director QUERY");
+		StringBuilder sb = new StringBuilder();// the validation error msgs
+		sb.append(gf.valName(fname));
+		sb.append(gf.valName(lname));
+		sb.append(gf.valAddress(address));
+		sb.append(gf.valEMail(eMail));
+		sb.append(gf.valDubleMail(eMail));
+		sb.append(gf.valPsw(password));
+		if (sb.toString().length() > 0) {
+			return sb.toString();
+		}
 		DirectorQuery dq = new DirectorQuery();
 		long altEmpId = dq.alterEmp(empId, fname, lname, address, possition,
 				eMail, password);
+
+		logger.info("altEmpId = {}", altEmpId);
 		if (altEmpId != StaticVars.ERROR) {
 			EmployeeAction ea = new EmployeeAction();
 			ea.setActionType(StaticVars.ALTER_EMPLOYEE);
 			ea.setEmpId(empId);
-			ea.getCustomerId().add(altEmpId + "");
+			List<String> ls = new ArrayList<>();
+			ls.add(altEmpId + "");
+			ea.setCustomerId(ls);
 			super.alterEmployee(ea);
+			return "";
+		} else {
+			return "An Error Ocoured, Registration Not Completed";
 		}
-		return altEmpId;
 	}
 
 	public long deleteEmployee(int empId) {
 		DirectorQuery dq = new DirectorQuery();
 		long delEmpId = dq.delete(empId);
+
 		if (delEmpId != StaticVars.ERROR
 				&& delEmpId != StaticVars.DOES_NOT_EXISTS) {
 			EmployeeAction ea = new EmployeeAction();
 			ea.setActionType(StaticVars.DEL_EMPLOYEE);
 			ea.setEmpId(empId);
-			ea.getCustomerId().add(delEmpId + "");
+			List<String> ls = new ArrayList<>();
+			ls.add(delEmpId + "");
+			ea.setCustomerId(ls);
 			super.deleteEmployee(ea);
 		}
 		return delEmpId;

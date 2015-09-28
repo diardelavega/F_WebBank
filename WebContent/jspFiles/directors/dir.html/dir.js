@@ -14,13 +14,48 @@ function enableId() {
 	$('#trid').attr("style", "visibility: visible");
 }
 
-//function capitalize() {
-//	// setTimeout(function() {
-//	$("input[type=text]").keyup(function() {
-//		$(this).val($(this).val().toUpperCase());
-//	});
-//	// }, 3000)
-//}
+// ---------Dispaly MSG
+var dirTimeOut;
+function dispalyMsg(msg) {
+	clearTimeout(dirTimeOut);
+
+	console.log("Dispalying MSg");
+
+	var div = $("#dirMsgAlert");
+	$(div).empty();
+	$(div).addClass("alert alert-info");
+
+	var span = document.createElement("span");
+	$(span).attr("align", "right");
+	span.style.padding = "230px";
+
+	var a = document.createElement("a");
+	a.innerHTML = "&times;";
+	$(a).attr("href", "#");
+	$(a).attr("onclick", "closeThis(event)");
+
+	var br = document.createTextNode(br);
+
+	span.appendChild(a);
+	$(div).append(span);
+	div.append(br);
+	div.append(msg);
+
+	$(div).show();
+	fadeOut(div);
+}
+
+function fadeOut(div) {
+	dirTimeOut = setTimeout(function() {
+		$(div).hide(1000);
+	}, 5000);
+}
+
+function closeThis(event) {
+	var div = $(event.target).parent().parent();
+	$(div).hide(1000);
+}
+// ---------------------------
 
 $(function() {
 	/*
