@@ -167,21 +167,30 @@ public class ManagerFunctions extends EmployeeFunctions {
 		ManMsgPusher mmp = new ManMsgPusher();
 		mmp.reqNrNotifyer(wsSession, nr);
 	}
-	
+
 	public void updateRequest() {
 		logger.info("MANAGER !!! A NEW REQUEST Number");
-		
-		if(req.isPin()){
-			ManMsgPusher mmp = new ManMsgPusher();
-		mmp.reqNotifyer(wsSession, req);
-		
+		if (req != null) {
+			if (req.isPin()) {
+				ManMsgPusher mmp = new ManMsgPusher();
+				mmp.reqNotifyer(wsSession, req);
+			}
 		}
 	}
 
 	// ----------------------------------------------------
 	public String leaveOCR() {
 		// set a previously engaged request available to other managers
-		if (req != null)
+		
+		
+		if (req != null){
+			
+			try {
+				req.print();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			if (req.isPin()) {
 				req.unPin();
 				Coordinator.ppReqCounter();
@@ -189,13 +198,21 @@ public class ManagerFunctions extends EmployeeFunctions {
 			} else {
 				return "currently you don't have a request";
 			}
+		}
+		try {
+			req.print();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 
 	public boolean getNextOCR() {
 		// unexpected null return
-		if (Coordinator.getNextOCR(empId) != null) {
-			req = Coordinator.getNextOCR(empId);
+		OCRequest req2 = Coordinator.getNextOCR(empId);
+		if (req2 != null) {
+			req = req2;
 			return true;
 		}
 		return false;
@@ -204,8 +221,6 @@ public class ManagerFunctions extends EmployeeFunctions {
 	public boolean getForceOCR(OCRequest req2) {
 		req = Coordinator.getForceNextOCR(req2);
 		if (req != null) {
-			req.setLastManagerToConsiderIt(empId);
-			req.pin();
 			return true;
 		} else {
 			logger.warn("There Are Not Even Old Requets Available");
@@ -218,12 +233,21 @@ public class ManagerFunctions extends EmployeeFunctions {
 			logger.warn("There Are No Requets Available");
 			return "There Are No Requets Available1";
 		} else {
+
+
 			if (req == null) {// ~ get first request
 				getNextOCR();
 				if (req == null) {// ->requests have been served by others
 					logger.warn("First Request And Null -> there are no more  unserved requests");
 					return "All Request Are Gone";
 				} else {
+
+					try {
+						req.print();
+					} catch (Exception e) {
+						logger.info("EEEEEror222222222 ->req not null after get next ocr  ");
+					}
+
 					req.pin();
 					req.setLastManagerToConsiderIt(empId);
 					Coordinator.mmReqCounter();
@@ -231,15 +255,20 @@ public class ManagerFunctions extends EmployeeFunctions {
 					return "";
 				}
 			} else {// has a request but wants to change it
+				boolean flag = req.isPin();
+
 				req.unPin();
+				
 
 				if (!getNextOCR()) {
 					logger.warn("there are no NEW unserved requests for YOU");
-					// ???? iff req== null how to compare it
 					if (!getForceOCR(req)) {
 						logger.warn("there are no more unserved requests");
 						return "No Request Available";
 					}
+				}
+				if(!flag){
+					Coordinator.mmReqCounter();
 				}
 				req.pin();
 				req.setLastManagerToConsiderIt(empId);

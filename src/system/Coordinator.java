@@ -133,44 +133,44 @@ public class Coordinator {
 	public static void addOCR(OCRequest req) {
 		ocr.add(req);
 		logger.info("OCR addet to Coordinator");
-		 switch (req.getReqType()) {
-		 case StaticVars.OPEN:
-		 case StaticVars.PLUS_6_ACC:
-		 scatterAlertNewOCR(req.getReqType(), req.getClientIdsList().get(0),
-		 "accType_" + req.getAccType());
-		 break;
-		 case StaticVars.CLOSE:
-		 scatterAlertNewOCR(req.getReqType(), req.getAccFromNr(), req
-		 .getClientIdsList().get(0));
-		 break;
-		 case StaticVars.PLUS_1K_DEP:
-		 case StaticVars.PLUS_1K_TRANS:
-		 case StaticVars.PLUS_1K_WITH:
-		 scatterAlertNewOCR(req.getReqType(), req.getAccFromNr(),
-		 String.valueOf(req.getAmount()));
-		 break;
-		 default:
-		 logger.warn("Unexpected request arrived");
-		 break;
-		 }
+		switch (req.getReqType()) {
+		case StaticVars.OPEN:
+		case StaticVars.PLUS_6_ACC:
+			scatterAlertNewOCR(req.getReqType(), req.getClientIdsList().get(0),
+					"accType_" + req.getAccType());
+			break;
+		case StaticVars.CLOSE:
+			scatterAlertNewOCR(req.getReqType(), req.getAccFromNr(), req
+					.getClientIdsList().get(0));
+			break;
+		case StaticVars.PLUS_1K_DEP:
+		case StaticVars.PLUS_1K_TRANS:
+		case StaticVars.PLUS_1K_WITH:
+			scatterAlertNewOCR(req.getReqType(), req.getAccFromNr(),
+					String.valueOf(req.getAmount()));
+			break;
+		default:
+			logger.warn("Unexpected request arrived");
+			break;
+		}
 
 		// -------------Test Purposes------------------------
-//		req.setResponse(StaticVars.DENIE);
-//		req.setLastManagerToConsiderIt(-88);
-//		req.setStatusComplete();
-//		req.setNote("AutoResponse");
-//		try {
-//			reviewedOCR(req);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		// req.setResponse(StaticVars.DENIE);
+		// req.setLastManagerToConsiderIt(-88);
+		// req.setStatusComplete();
+		// req.setNote("AutoResponse");
+		// try {
+		// reviewedOCR(req);
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 		// =============================
-		 ppReqCounter();
+		ppReqCounter();
 		// TODO notify manager for requests nr.
 	}
 
 	public static void deleteOCR(OCRequest req) {
-		// mmReqCounter();
+//		mmReqCounter();
 		ocr.remove(req);
 		// TODO notify manager for requests nr.
 	}
@@ -193,7 +193,7 @@ public class Coordinator {
 		for (; i < ocr.size(); i++) {
 			if (flag == false) {
 				if (ocr.size() - 1 <= i) {
-					i = 0;
+					i = -1;
 					flag = true;
 				} else {
 					i++;
@@ -224,7 +224,7 @@ public class Coordinator {
 
 	private static void scatterAlertOCRNr() {
 		for (Integer key : managers.keySet()) {
-			getManagerFunc(key).updateRequests(reqCounter);
+			getManagerFunc(key).updateRequestNr(reqCounter);
 		}
 	}
 

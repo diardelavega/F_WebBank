@@ -179,7 +179,7 @@ public class Run {
 		// .println("--------***********------------" + b.getAccount2());
 		// // }
 		// }
-		/*ManagerFunctions mf = new ManagerFunctions(31);
+		ManagerFunctions mf = new ManagerFunctions(31);
 		Coordinator.addManagerFunc(mf);
 		TellerFunctions tf = new TellerFunctions(2);
 		Coordinator.addTellerFunc(tf);
@@ -218,17 +218,17 @@ public class Run {
 				mf.decision("DENNIED", "Noooo");
 			}
 			System.out.println("-----> " + x);
-			System.out.println("ocrs " + Coordinator.ocrListSize());
-			System.out.println("ocrs " + Coordinator.getReqCounter());
+			System.out.println("ocr list " + Coordinator.ocrListSize());
+			System.out.println("ocrs reqCount " + Coordinator.getReqCounter());
 
 			x = sc.nextInt();
-		}*/
+		}
 		
 		
 		//-----------------------------------------------------------------------
 		
-		TellerFunctions tf= new TellerFunctions ();
-		tf.getClientAccounts("1122334455");
+//		TellerFunctions tf= new TellerFunctions ();
+//		tf.getClientAccounts("1122334455");
 		//-----------------------------------------------------------------------
 		
 		

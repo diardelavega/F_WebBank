@@ -7,29 +7,54 @@ function manGetRequest() {
 }
 
 function manLeaveRequest() {
-	var leaver = {
-		head : "leaveRequest",
-		empId : window.manEmpId
-	};
-	doSend(JSON.stringify(leaver));
+	if (relRequest == null || relRequest === 'undefined') {
+		console.log("WTF is He Talking About, There Is No Request Here");
+		reqAlertDelegate("There Is No Request Under Consideration");
+	} else {
+		var curTab = $("#curentRequest");
+		$(curTab).empty();
+		relRequest = null;
+
+		var leaver = {
+			head : "leaveRequest",
+			empId : window.manEmpId
+		};
+		doSend(JSON.stringify(leaver));
+	}
 }
 
 function approve() {
-	var res = {
-		head : "approve",
-		note : $("#manReqNote").val(),
-		empId : window.manEmpId
+	if (relRequest == null || relRequest === 'undefined') {
+		console.log("WTF is He Talking About, There Is No Request Here");
+		reqAlertDelegate("There Is No Request Under Consideration");
+	} else {
+		writeReviewedRequests("app");
+		relRequest = null;
+
+		var res = {
+			head : "approve",
+			note : $("#manReqNote").val(),
+			empId : window.manEmpId
+		}
+		doSend(JSON.stringify(res));
 	}
-	doSend(JSON.stringify(res));
 }
 
 function denie() {
-	var res = {
-		head : "dennie",
-		note : $("#manReqNote").val(),
-		empId : window.manEmpId
+	if (relRequest == null || relRequest === 'undefined') {
+		console.log("WTF is He Talking About, There Is No Request Here");
+		reqAlertDelegate("There Is No Request Under Consideration");
+	} else {
+		writeReviewedRequests("den");
+		relRequest = null;
+
+		var res = {
+			head : "dennie",
+			note : $("#manReqNote").val(),
+			empId : window.manEmpId
+		}
+		doSend(JSON.stringify(res));
 	}
-	doSend(JSON.stringify(res));
 }
 
 /* AFTER RESPONSE FUNCTIONS */
@@ -61,19 +86,20 @@ function approveRequestReply(jsobj) {
 	reqAlertDelegate(jsobj.msg);
 }
 
-function dennieRequestReply(jspbj) {
+function dennieRequestReply(jsobj) {
 	reqAlertDelegate(jsobj.msg);
 }
 
 function manWriteAllMsgs(req) {
 	// write the acquired request to an table
+	console.log("TRYING TO WRITE THE CURENT REQ");
+
 	var date = new Date();
 	req['time'] = date.getHours() + ":" + date.getMinutes() + ":"
 			+ date.getSeconds();
 
-	var table = $("#allRequests tbody");
+	/* var table = $("#allRequests tbody"); */
 	var tr = document.createElement("tr");
-	// tr.setAttribute("class", "border_bottom");
 
 	var tr1 = document.createElement("tr");
 	var tr2 = document.createElement("tr");
@@ -81,6 +107,9 @@ function manWriteAllMsgs(req) {
 	tr.appendChild(tr2);
 
 	for ( var key in req) {
+		if (key === null || key === "") {
+			continue;
+		}
 		if (key === 'amount')
 			if (req[key] <= 0.5)
 				continue;
@@ -88,24 +117,41 @@ function manWriteAllMsgs(req) {
 			continue;
 
 		var td1 = document.createElement("td");
-		// td1.setAttribute("align", "center");
 		td1.innerHTML = key;
 		tr1.appendChild(td1);
 
 		if (key === 'clientIdsList') {
-			var sel = document.createElement("select");
+			var div = document.createElement("div");
+			$(div).attr("class", "dropdown");
+			var but = document.createElement("button");
+			$(but).attr("data-toggle", "dropdown");
+
+			var spa = document.createElement("span");
+			$(spa).attr("class", "caret");
+			$(but).text("clientIds");
+			$(but).append(spa);
+			$(div).append(but);
+
+			var ul = document.createElement("ul");
+			$(ul).attr("class", "dropdown-menu");
+
 			for (k in req[key]) {
-				var opt = document.createElement("opt");
-				// var a = document.createElement("a");
-				opt.innerHTML = req[key][k];
-				// a.setAttribute("href", "#");
-				// opt.appendChild(a);
-				sel.appendChild(opt);
+				var li = document.createElement("li");
+				li.onclick = function(event) {
+					onPersId(event);
+				};
+				var a = document.createElement("a");
+				$(a).attr("href", "#");
+				$(a).text(req[key][k]);
+
+				$(li).append(a);
+				$(ul).append(li);
 			}
+			$(div).append(ul);
 
 			var td2 = document.createElement("td");
 			// td2.setAttribute("align", "center");
-			td2.appendChild(sel);
+			$(td2).append(div);
 			tr2.appendChild(td2);
 			continue;
 		}
@@ -115,7 +161,7 @@ function manWriteAllMsgs(req) {
 		td2.innerHTML = req[key];
 		tr2.appendChild(td2);
 	}
-	table.prepend(tr);
+	// table.prepend(tr);
 	// ----Append current request----
 	var curTab = $("#curentRequest");
 	$(curTab).empty();
@@ -123,6 +169,29 @@ function manWriteAllMsgs(req) {
 	// ------------------------------
 }
 
+function onPersId(event) {
+	var txt = $(event.target).text();
+	$("#manPersonalId").val(txt);
+}
+
+function onAccId(event) {
+	var txt = $(event.target).text();
+	$("#manAccountNr").val(txt);
+}
+
 function clearReviewedRequesrs() {
-	$("#allRequests tbody").empty();
+	 $("#allRequests tbody").empty();
+//	writeReviewedRequests("");
+}
+
+function writeReviewedRequests(way) {
+	var rr = $("#reviewedRequests tbody");
+	var curTabLine = $("#curentRequest tbody tr");
+	if (way === 'den') {
+		$(curTabLine).css("background-color", "rgb(240, 200, 200);");
+	} else {
+		$(curTabLine).css("background-color", "rgb(200, 240, 200);");
+	}
+	$(rr).prepend(curTabLine);
+	// $(curTabLine).empty();
 }

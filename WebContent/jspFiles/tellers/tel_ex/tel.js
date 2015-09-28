@@ -38,6 +38,10 @@ function telWriteAllMsgs(req) {
 	tr.appendChild(tr2);
 
 	for ( var key in req) {
+		if(key ===null||key ===""){
+			continue;
+		}
+		
 		if (key === 'response') {
 			if (req[key] === 'DENNIED') {
 				$(tr).css("background-color", "rgb(240, 200, 200);");

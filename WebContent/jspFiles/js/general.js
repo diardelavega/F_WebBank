@@ -163,11 +163,14 @@ function popUp(inp) {
 
 function logOutReplay(jsobj) {
 	//to be called upon logout
+	
+	console.log(jsobj);
 	if (jsobj.hasOwnProperty('response')) {
-		if (jsobj.response === 'OK!') {
+		if (jsobj.response === 'OK') {
 			window.location.href = "../logout.jsp";
 		}
 	} else if (jsobj.hasOwnProperty('msg')) {
 		console.log("on log out  " + jsobj.msg);
+		window.location.href = "../logout.jsp";
 	}
 }

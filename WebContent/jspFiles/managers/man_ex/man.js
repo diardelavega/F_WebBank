@@ -7,14 +7,23 @@ function manSeverClientTupeling() {
 }
 
 // HEPL FUNCTIONALITY
+// current request in client side
+window.relRequest;
 function requestInit(jsobj) {
-	// get the request from the server side, to be fresh and ready after each
-	// reload
+	/*
+	 * in every reload get the request from the server side, to be fresh and
+	 * ready after each and if there is a req call all the functions that
+	 * display It
+	 */
 	if (jsobj.hasOwnProperty('relRequest')) {
-		window.relRequest=jsobj.relRequest;
+		relRequest = jsobj.relRequest;
+		if (relRequest != undefined) {
+			manNotifyMsg(relRequest.reqType, relRequest.clientIdsList, "");
+			manNotifyColor(relRequest);
+			manWriteAllMsgs(relRequest);
+		}
 	}
-	
-	
+
 }
 
 function manNotifyMsg(msgHead, msgContent, extra) {
@@ -83,9 +92,6 @@ function goGetReqs() {
 var manTimeOut;
 function manMainAlertDisplay(msg, alertType, div) {
 
-	// var divs = $(".manMsgAlert");
-	// for (var i = 0; i < divs.length; i++) {
-	// var div = divs[i];
 	clearTimeout(manTimeOut);
 	$(div).empty();
 	if (alertType === 'info') {
@@ -93,12 +99,8 @@ function manMainAlertDisplay(msg, alertType, div) {
 	} else {
 		$(div).addClass("alert alert-danger");
 	}
-	// $(div).attr("style:padding", "5px");
-
 	var span = document.createElement("span");
 	$(span).attr("align", "left");
-	// span.style.padding = "230px";
-
 	var a = document.createElement("a");
 	a.innerHTML = "&times;";
 	$(a).attr("href", "#");
@@ -135,7 +137,7 @@ function requestNumber(jsobj) {
 		var span = $("#reqNrs");
 		$(span).html(displayVar);
 	} else {
-
+console.log("WTF req nr");
 	}
 }
 

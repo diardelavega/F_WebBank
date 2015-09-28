@@ -24,13 +24,34 @@ public class OCRequest {
 	private boolean status = false;// true -complete, false-incomplete
 
 	public void print() {
-		System.out.println("lastManagerToConsiderIt -"
-				+ manId + "\n tellerId-" + tellerId);
-		System.out.println("reqType-" + reqType + " \n accType-" + accType);
-		System.out.println("response-" + response + "\n note-" + note);
-		System.out.println("accFromNr-" + accFromNr + " \n accToNr-" + accToNr
-				+ "\n amount-" + amount);
-		System.out.println("pin-" + pin + "\n status-" + status);
+		StringBuilder sb = new StringBuilder();
+		sb.append(reqType);
+		sb.append(", ");
+		sb.append(response);
+		sb.append(", ");
+		sb.append(accFromNr);
+		sb.append(", ");
+		sb.append(accToNr);
+		sb.append(", ");
+		sb.append(amount);
+		sb.append(", ");
+		sb.append(pin);
+		sb.append(", ");
+		sb.append(tellerId);
+		sb.append(", ");
+		sb.append(manId);
+		sb.append(", ");
+
+		System.out.println(sb.toString());
+
+		// System.out.println("lastManagerToConsiderIt -"
+		// + manId + "\n tellerId-" + tellerId);
+		// System.out.println("reqType-" + reqType + " \n accType-" + accType);
+		// System.out.println("response-" + response + "\n note-" + note);
+		// System.out.println("accFromNr-" + accFromNr + " \n accToNr-" +
+		// accToNr
+		// + "\n amount-" + amount);
+		// System.out.println("pin-" + pin + "\n status-" + status);
 		for (String s : clientIdsList) {
 			System.out.println(s);
 		}

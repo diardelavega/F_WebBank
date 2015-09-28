@@ -74,7 +74,7 @@ public class ManMsgHandler {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		jo.addProperty("head", "logoutReplay");
-		jo.addProperty("response", "OK!");
+		jo.addProperty("response", "OK");
 		try {
 			Coordinator.deleteManager(jobj.get("empId").getAsInt());
 		} catch (Exception e) {
@@ -270,7 +270,7 @@ public class ManMsgHandler {
 		if (resp == "") {
 			jo.add("requestDetails", gson.toJsonTree(mf.getReq()));
 		} else {
-			jo.addProperty("msg", "No New Request Available--");
+			jo.addProperty("msg", "No New Request Available!!");
 		}
 		logger.info(gson.toJson(jo));
 		return gson.toJson(jo);

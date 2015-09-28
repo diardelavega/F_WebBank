@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <style>
 div.scrollReqs {
-	background-color: #00FFFF;
+	/* background-color: #00FFFF; */
 	/* width: 100px; */
 	height: 300px;
 	overflow: scroll;
@@ -15,19 +15,20 @@ div.scrollReqs {
 		<tbody>
 			<tr>
 				<td><h1>Evaluate your requests</h1></td>
-				<td align="right" width="30px"><div
-						class="artAlert"
+				<td align="right" width="30px"><div class="artAlert"
 						id="manMsgAlertReq"></div></td>
 			</tr>
 		</tbody>
 	</table>
 	<hr>
 	<p>
-		<button onclick="manGetRequest();">GET</button>
+		<button onclick="manGetRequest();"
+			style="width: 150pt; margin-left: 60pt">GET A NEW REQUEST</button>
 	</p>
 	<br> <br>
-	<div id="requestDetails">
-		<span>Curent Request</span>
+	<div id="requestDetails" style="background-color: rgb(235, 240, 240);">
+		<span style="margin-left: 120px;"><strong>Curent
+				Request</strong></span> <br> <br>
 		<table id="curentRequest" class="alertTab">
 			<tbody>
 				<tr></tr>
@@ -42,21 +43,25 @@ div.scrollReqs {
 			<span class="space"></span>
 			<button onclick="manLeaveRequest();" class="btn btn-info"
 				style="width: 100px;">LEAVE</button>
-
-			<br> Note:
-			<textarea id="manReqNote" rows="5" cols="50"></textarea>
-		</div>
-
-		<hr>
-		<button onclick="clearReviewedRequesrs();">
-			Clear<span class="glyphicon glyphicon-erase"></span>
-		</button>
-		<div class="scrollReqs">
-			<table id="allRequests" class="alertTab">
-				<tbody>
-					<tr></tr>
-				</tbody>
-			</table>
+			<br> <br>
+			<textarea id="manReqNote" rows="5" cols="50"
+				placeholder="write your notes"></textarea>
+			<br> <br>
 		</div>
 	</div>
+
+	<hr>
+	<div align="right">
+	<button onclick="clearReviewedRequesrs();">
+		Clear<span class="glyphicon glyphicon-erase"></span>
+	</button>
+	</div>
+	<div class="scrollReqs">
+		<table id="reviewedRequests" class="alertTab">
+			<tbody>
+				<tr></tr>
+			</tbody>
+		</table>
+	</div>
+
 </div>
