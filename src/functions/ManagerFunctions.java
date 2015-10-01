@@ -280,60 +280,6 @@ public class ManagerFunctions extends EmployeeFunctions {
 
 	}
 
-	public String getOCR0() {
-		// get a request from the availables list
-		if (Coordinator.getReqCounter() == 0) {
-			logger.warn("There Are No Requets Available");
-			return "There Are No Requets Available1";
-		} else {
-			if (req == null) {
-				// if is the first time that the manager gets a request
-				getNextOCR();
-				if (req == null) {
-					logger.info("First Request Was Null");
-					getForceOCR(req);
-					if (req == null) {
-						logger.warn("All Request Are Gone");
-						return "All Requests Where Reviewed4";
-					} else {
-						req.pin();
-						req.setLastManagerToConsiderIt(empId);
-						assert (req != null);
-						return "";
-					}
-				} else {
-					logger.info("Got the first request");
-					req.pin();
-					req.setLastManagerToConsiderIt(empId);
-					Coordinator.mmReqCounter();
-					assert (req != null);
-					return "";
-				}
-			} else {
-				req.unPin();
-				getNextOCR();
-				if (req == null) {
-					logger.warn("There Are Only Old Requests Available3");
-					getForceOCR(req);
-					if (req == null) {
-						logger.warn("All Request Are Gone");
-						return "All Requests Where Reviewed4";
-					} else {
-						req.pin();
-						req.setLastManagerToConsiderIt(empId);
-						assert (req != null);
-						return "";
-					}
-				} else {
-					req.pin();
-					req.setLastManagerToConsiderIt(empId);
-					assert (req != null);
-					return "";
-				}
-			}
-		}
-		// TODO notify manager for requests nr.
-	}
 
 	public void checkClients() {
 		GeneralFunctions gf = new GeneralFunctions();
@@ -450,21 +396,24 @@ public class ManagerFunctions extends EmployeeFunctions {
 	}
 
 	public List<Transaction> getTransaction(Date t1, Date t2) {
-		ManagerQuery mq = new ManagerQuery();
+//		ManagerQuery mq = new ManagerQuery();
+		GeneralFunctions gf = new GeneralFunctions();
 		if (t2 == null) {
-			return mq.getTransaction(t1);
+			return gf.getTransaction(t1);
 		} else {
-			return mq.getTransaction(t1, t2);
+			return gf.getTransaction(t1, t2);
 		}
 	}
 
 	public List<Object[]> getBalance(Date t1, Date t2) {
-		ManagerQuery mq = new ManagerQuery();
+		GeneralFunctions gf = new GeneralFunctions();
+//		ManagerQuery mq = new ManagerQuery();
 
 		if (t2 == null) {
-			return mq.getBalance(t1);
+			
+			return gf.getBalance(t1);
 		} else {
-			return mq.getBalance(t1, t2);
+			return gf.getBalance(t1, t2);
 		}
 	}
 

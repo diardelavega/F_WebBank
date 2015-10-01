@@ -1,5 +1,5 @@
-<!--%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%-->
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -40,27 +40,23 @@
 }
 </style>
 
-<title>Directors Page</title>
+<title>Client's Page</title>
 
 <%
 	HttpSession ses = request.getSession();
 %>
 
 <script type="text/javascript">
-window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
-
+window.persId="<%=ses.getAttribute("primeKey")%>"
 	function eid() {
-		alert(dirEmpId);
+		alert(persId);
 	}
 </script>
 </head>
-<body onload="divhide();">
+<body onload="divhide()";>
+
 	<div id="wrapper">
 
-
-
-
-		<!-- Navigation -->
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
 			<!-- Brand and toggle get grouped for better mobile display -->
@@ -72,56 +68,43 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 						class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="#"
-					onclick="dirSeverClientTupeling(); eid();">Director</a>
+					onclick="manSeverClientTupeling(); eid();">Client</a>
 			</div>
 
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<!--  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#">About</a>
-                    </li>
-                    <li>
-                        <a href="#">Services</a>
-                    </li>
-                    <li>
-                        <a href="#">Contact</a>
-                    </li>
-                </ul>
-            </div>-->
 			<ul class="nav navbar-right top-nav">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown"> <i class="fa fa-envelope"></i> <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu message-dropdown">
-						<li class="message-preview"><a href="#"> <!--<div class="media">-->
-								<span class="pull-left"> <img class="media-object"
-									src="http://placehold.it/50x50" alt="fing placee holder">
-							</span>
-								<div class="media-body">
-									<h5 class="media-heading">
-										<strong>John Smith</strong>
+						<li class="message-preview"><a href="#"
+							style="background-color: rgb(248, 248, 248);"
+							onclick="cliColorToNorm();">
+								<div id="cliMsgPanel" style="background-color: white;">
+									<h5
+										style="background-color: rgb(210, 210, 210); padding: 10px;">
+										<strong></strong>
 									</h5>
-									<p class="small text-muted">
-										<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+									<!-- <p class="divider"></li> -->
+									<p style="font-size: 13pt;"></p>
+									<p style="font-size: 9pt;"></p>
+									<p class="small text-muted"
+										style="font-size: 8pt; background-color: rgb(240, 240, 225);">
+										<i> </i>
 									</p>
-									<p>Lorem ipsum dolor sit amet, consectetur...</p>
-								</div> <!--</div>-->
+								</div>
 						</a></li>
-						<li class="message-footer"><a href="#">Read All New
-								Messages</a></li>
+						<li class="message-footer"><a href="#" onclick="goGetReqs();">Go
+								Get Requests</a></li>
 					</ul></li>
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown"><i class="fa fa-arrow-up"></i> <b
-						class="caret"></b></a>
-					<ul class="dropdown-menu alert-dropdown">
-						<li><a href="#">Alert Name <span
-								class="label label-default">Alert Badge</span></a></li>
 
-						<li><a href="#">Alert Name <span
-								class="label label-danger">Alert Badge</span></a></li>
-						<li class="divider"></li>
-						<li><a href="#">View All</a></li>
+				<!-- <li><a href="#"> <span id="reqNrs"
+						style="font-size: 25px; font-weight: bolder;"> - </span>
+				</a></li> -->
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" onclick="cliColorToNorm();"><i
+						class="fa fa-arrow-up"></i> <b class="caret"></b></a>
+					<ul class="dropdown-menu alert-dropdown" id="cliHeadNotify">
 					</ul></li>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown"><i class="fa fa-user"></i>
@@ -134,67 +117,54 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 						<li><a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
 						</li>
 						<li class="divider"></li>
-						<li><a href="../logout.jsp"><i
+						<li><a href="#" onclick="logOut();"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
 					</ul></li>
 			</ul>
-			<div id="dirMsgAlert" class="artdAlert"></div>
 			<!-- /.navbar-collapse -->
 		</div>
 		<!-- /.container --> </nav>
 
 		<!-- Sidebar -->
-		<jsp:include page="./dir.html/sidebar.html"></jsp:include>
+		<jsp:include page="./client_ex/sidebar.html"></jsp:include>
 		<!-- /#sidebar-wrapper -->
-
-
-
 		<!-- Page Content -->
 		<div id="page-content-wrapper" style="background-color: azure">
 			<div class="container-fluid">
 
-				<!-- import director main details -->
-				<%-- <jsp:include page="./mainPageDirPart.jsp"></jsp:include> --%>
-				<!-- import employee details -->
-				<jsp:include page="./empPageDirPart.jsp"></jsp:include>
-				<!-- import employee details -->
-				<jsp:include page="./balancePageDirPart.jsp"></jsp:include>
-				<jsp:include page="./transPageDirPart.jsp"></jsp:include>
-
+				<!-- import manager main details -->
+				<jsp:include page="./accounts.jsp"></jsp:include>
+				<jsp:include page="./transaction.jsp"></jsp:include>
+				<jsp:include page="./balance.jsp"></jsp:include>
 
 			</div>
 		</div>
 		<!-- /#page-content-wrapper -->
-
 	</div>
 	<!-- /#wrapper -->
 
 	<!-- jQuery -->
 	<script src="../../bootstrap/js/jquery.js"></script>
 
-	<!-- director scripts -->
-	<script src="../js/general.js"></script>
-	<script src="./dir.html/dirInit.js"></script>
-	<script src="./dir.html/dir.js"></script>
-	<script src="./dir.html/balance.js"></script>
-	<script src="./dir.html/employee.js"></script>
-	<script src="./dir.html/transaction.js"></script>
+
+	<!--clients scripts  -->
+	<script src="./client_ex/cliInit.js"></script>
+	<script src="./client_ex/cli.js"></script>
+	<script src="./client_ex/account.js"></script>
+	<script src="./client_ex/transaction.js"></script>
+	<script src="./client_ex/balance.js"></script>
+
 
 	<!-- flot charts -->
-	<script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.min.js"></script>
-	<script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.pie.min.js"></script>
-	<script language="javascript" type="text/javascript"
-		src="../../flot_f/jquery.flot.categories.min.js"></script>
+	<script src="../../flot_f/jquery.flot.min.js"></script>
+	<script src="../../flot_f/jquery.flot.pie.min.js"></script>
+	<script src="../../flot_f/jquery.flot.categories.min.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../../bootstrap/js/bootstrap.min.js"></script>
 
-
 	<!-- jquery-ui -->
 	<script src="../../jquery-ui/jquery-ui.min.js"></script>
-
 
 </body>
 </html>

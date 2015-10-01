@@ -1,10 +1,18 @@
 package system;
 
+//import java.util.Date;
+import java.sql.Date;
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import utils.GeneralFunctions;
 import db.DBHandler;
 import entity.Customers;
+import entity.Transaction;
 
 /**
  * @author Administrator
@@ -15,115 +23,235 @@ import entity.Customers;
  *
  */
 public class ClientQuery {
+
+	public static Logger logger = LoggerFactory.getLogger(ClientQuery.class);
 	// DBHandler dbh = new DBHandler();
 	Session s = DBHandler.getSessionFactory().openSession();
 
-	// private void init() {
-	// dbh.getSessionFactory();
-	// s = dbh.openSession();
-	// }
-
-	// private void closeSession() {
-	// if (s != null)
-	// s.close();
-	// }
-
-	// check if user exist and return primary key
-	public String dbLogInCheck(String usr, String psw) {
-		//DEPRICATED
-		// usr=e-mail -> if "@webbank.com" -> employee
-		String[] temp = usr.split("@");
-		String table;
-
-		String query;
-
-		if (temp[1].equals("webank")) {
-			table = "Customers";
-			query = "SELECT T.empId FROM" + table + " T WHERE eMail = '" + usr
-					+ "' AND password  '" + psw + "'";
-		} else {
-			table = "customer";
-			query = "SELECT T.personalId FROM " + table + " T WHERE eMail = '"
-					+ usr + "' AND pasasword = '" + psw + "'";
-		}
-		// connect to db;
-
-		Query q = s.createQuery(query);
-		s.close();
-//		flushNclear();
-
-		return q.getQueryString();
-	}
-
-	public String getBalance(String key, String acc) {
-		// TODO go to
-		String query = "FROM Account WHERE accountId= '" + acc + "'";
-		Query q = s.createQuery(query);
-		s.clear();
-//		flushNclear();
-		// query.
-		// String query =
-		// " SELECT A.integerBalance, A.decimalBalance FROM Account A"
-		// +
-		// "WHERE A.accountId in (SELECT CA.accountId FROM CustomersAccount CA WHERE CA.clienId= '"
-		// + key + "' AND CA.accountId = '" + acc + "' )";
-		// + "(CA.accountId = A.accountId)WHERE ";
-		return q.toString();
-	}
-
-	public Object allBalance(String key) {
-		// TODO get customer_accounts & for each acc get balance
-		// return list <acc-balance>
-		return null;
-	}
-
-	public Object personalData(String key) {
-		// TODO get all personal data, in case they want to change them ???
-		// maby a later function
-		return null;
-	}
-
-	public void register(Customers c) {
-		s.beginTransaction();
-		s.save(c);
-		s.getTransaction().commit();
-		s.close();
-		// flushNclear();
-
-		// TODO check validity acording to db fields
-		// store & comit
-	}
-
-	public void transfer(String key, String accFrom, String accTo, double amount) {
-		// TODO check if accFrom belongs to key
-		// if balance >=amount
-		// if accTo belongs to the bank
-		// transfer & comit
-
-	}
-
-	public void deposite(String acc, double amount) {
-		// TODO check if acc belongs to the bank
-		// add amount & comit
-	}
-
-	public void withdraw(String key, String acc, double amount) {
-		// TODO check if acc belongs to key
-		// check if amount<=balance
-		// retract amount & comit
-	}
-
-	public int checkClientId(String persId) {
+	public List<Transaction> getTransactions(List<String> accounts, Date t1,
+			Date t2) {
 		Query q = s
-				.createQuery("SELECT customerStatus FROM Customers WHERE personalId= '"
-						+ persId + "'");
-		// TODO catch non existing persId
-		return q.getFirstResult();
+				.createQuery(
+						"FROM Transaction WHERE( trData BETWEEN :d1 AND :d2)"
+								+ " AND (acc1 in (:accounts) OR acc2 in (:accounts))")
+				.setParameter("d1", t1).setParameter("d2", t2)
+				.setParameterList("accounts", accounts);
+		List<Transaction> tl = q.list();
+		return tl;
 	}
 
-	private void flushNclear() {
-		s.flush();
-		s.clear();
+	public List<Transaction> getTransactions(List<String> accounts) {
+		Query q = s
+				.createQuery(
+						"FROM Transaction WHERE acc1 in (:accounts) OR acc2 in (:accounts)")
+				.setParameterList("accounts", accounts);
+		List<Transaction> tl = q.list();
+		return tl;
 	}
 
+	public List<Transaction> getTransactions(List<String> accounts,
+			java.sql.Date t1) {
+		int dayte = t1.getDate();
+		Date d2 = new Date(t1.getTime());
+		d2.setDate(dayte + 1);
+
+		Query q = s
+				.createQuery(
+						"FROM Transaction WHERE trData > :d1 and trData <:d2"
+								+ " AND (acc1 in (:accounts) OR acc2 in (:accounts) )")
+				.setParameter("d1", t1).setParameter("d2", d2)
+				.setParameterList("accounts", accounts);
+		List<Transaction> tl = q.list();
+		return tl;
+	}
+
+	public List<Transaction> getTransactions(String searchPersId) {
+		upSession();
+		Customers c = (Customers) s.load(Customers.class, searchPersId);
+		if (c == null) {
+			return null;
+		}
+		Query q = s.createQuery("FROM Transaction WHERE personalId = :pid")
+				.setParameter("pid", searchPersId);
+		return q.list();
+	}
+
+	public List<Transaction> getTransactions(String searchPersId, Date t1) {
+		upSession();
+		Customers c = (Customers) s.load(Customers.class, searchPersId);
+		if (c == null) {
+			return null;
+		}
+		int dayte = t1.getDate();
+		Date d2 = new Date(t1.getTime());
+		d2.setDate(dayte + 1);
+
+		Query q = s
+				.createQuery(
+						"FROM Transaction WHERE personalId = :pid AND  (trData > :d1 and trData <:d2)")
+				.setParameter("pid", searchPersId).setParameter("d1", t1)
+				.setParameter("d2", d2);
+		return q.list();
+	}
+
+	public List<Transaction> getTransactions(String searchPersId, Date t1,
+			Date t2) {
+		upSession();
+		Customers c = (Customers) s.load(Customers.class, searchPersId);
+		if (c == null) {
+			return null;
+		}
+
+		Query q = s
+				.createQuery(
+						"FROM Transaction WHERE personalId = :pid AND ( trData BETWEEN :d1 AND :d2)")
+				.setParameter("pid", searchPersId).setParameter("d1", t1)
+				.setParameter("d2", t2);
+		return q.list();
+	}
+
+
+	public List<Object[]> getBalance(String searchPersId) {
+		upSession();
+		Customers c = (Customers) s.load(Customers.class, searchPersId);
+		if (c == null) {
+			return null;
+		}
+
+		Query q = s
+				.createQuery(
+						"SELECT trDate,"
+								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
+								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
+								+ "FROM Transaction "
+								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
+								+ "WHERE personalId = :pid"
+								+ "group by date(trDate) order  by trdata asc")
+				.setParameter("pid", searchPersId);
+
+		logger.info("the query is : {}", q.getQueryString());
+		List<Object[]> ol = q.list();
+		return ol;
+	}
+
+	public List<Object[]> getBalance(String searchPersId, Date t1) {
+		upSession();
+		Customers c = (Customers) s.load(Customers.class, searchPersId);
+		if (c == null) {
+			return null;
+		}
+		int dayte = t1.getDate();
+		Date d2 = new Date(t1.getTime());
+		d2.setDate(dayte + 1);
+		Query q = s
+				.createQuery(
+						"SELECT trDate,"
+								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
+								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
+								+ "FROM Transaction "
+								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-06-23' "
+								+ "WHERE (trData > :d1 and  trData < :d2) AND personalId = :pid "
+								+ "group by date(trDate) order  by trdata asc")
+				.setParameter("d1", t1).setParameter("d2", d2)
+				.setParameter("pid", searchPersId);
+
+		logger.info("the query is : {}", q.getQueryString());
+		List<Object[]> ol = q.list();
+		return ol;
+	}
+
+	public List<Object[]> getBalance(String searchPersId, Date t1, Date t2) {
+		upSession();
+		Customers c = (Customers) s.load(Customers.class, searchPersId);
+		if (c == null) {
+			return null;
+		}
+
+		Query q = s
+				.createQuery(
+						"SELECT trDate,"
+								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
+								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
+								+ "FROM Transaction "
+								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
+								+ "WHERE trData BETWEEN :fromDate AND :toDate  AND personalId = :pid"
+								+ "group by date(trDate) order  by trdata asc")
+				.setParameter("fromDate", t1).setParameter("toDate", t2)
+				.setParameter("pid", searchPersId);
+
+		logger.info("the query is : {}", q.getQueryString());
+		List<Object[]> ol = q.list();
+		return ol;
+	}
+
+	public List<Object[]> getBalance(List<String> accounts) {
+		Query q = s
+				.createQuery(
+						"SELECT trDate,"
+								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
+								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
+								+ "FROM Transaction "
+								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
+								+ "WHERE acc1 in (:accounts) OR acc2 in (:accounts)"
+								+ "group by date(trDate) order  by trdata asc")
+				.setParameterList("pid", accounts);
+
+		logger.info("the query is : {}", q.getQueryString());
+		List<Object[]> ol = q.list();
+		return ol;
+	}
+
+	public List<Object[]> getBalance(List<String> accounts, Date t1) {
+		int dayte = t1.getDate();
+		Date d2 = new Date(t1.getTime());
+		d2.setDate(dayte + 1);
+		Query q = s
+				.createQuery(
+						"SELECT trDate,"
+								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
+								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
+								+ "FROM Transaction "
+								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-06-23' "
+								+ "WHERE (trData > :d1 and  trData < :d2) AND (acc1 in (:accounts) OR acc2 in (:accounts)) "
+								+ "group by date(trDate) order  by trdata asc")
+				.setParameter("d1", t1).setParameter("d2", d2)
+				.setParameterList("pid", accounts);
+
+		logger.info("the query is : {}", q.getQueryString());
+		List<Object[]> ol = q.list();
+		return ol;
+	}
+
+	public List<Object[]> getBalance(List<String> accounts, Date t1, Date t2) {
+		Query q = s
+				.createQuery(
+						"SELECT trDate,"
+								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
+								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
+								+ "FROM Transaction "
+								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
+								+ "WHERE (trData BETWEEN :fromDate AND :toDate)  AND (acc1 in (:accounts) OR acc2 in (:accounts))"
+								+ "group by date(trDate) order  by trdata asc")
+				.setParameter("fromDate", t1).setParameter("toDate", t2)
+				.setParameterList("pid", accounts);
+
+		logger.info("the query is : {}", q.getQueryString());
+		List<Object[]> ol = q.list();
+		return ol;
+	}
+
+	public void upSession() {
+		if (!s.isOpen() || !s.isConnected()) {
+			s = DBHandler.getSessionFactory().openSession();
+		}
+	}
+
+	public void closeSession() {
+		try {
+			s.flush();
+			s.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

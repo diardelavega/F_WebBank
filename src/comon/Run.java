@@ -24,9 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
+import com.sun.security.sasl.ClientFactoryImpl;
 
 import cod.test.HQLTest;
 import system.AccountsManagment;
+import system.ClientQuery;
 import system.Coordinator;
 import system.ManagerQuery;
 import system.TellerQuery;
@@ -112,19 +114,19 @@ public class Run {
 		// fh.init();
 		// fh.filePlacementControl();
 
-//		 ManagerFunctions mf1 = new ManagerFunctions(5);
-//		 Coordinator list = new Coordinator();
-//		 list.addManagerFunc(mf1);
-//		 TellerFunctions tf = new TellerFunctions(1);
-//		 List<String> sl = new ArrayList<>();
-//		 sl.add("1234567890");
-//		 sl.add("1234567800");
-//		 sl.add("1111111111");
-//		 AccountsManagment am = new AccountsManagment ();
-//		 am.openAccount(StaticVars.BASICS_CHECKING, sl);
-//		 tf.openAccountReq(sl, StaticVars.BASICS_CHECKING);
-		 
-		 //.openAccount(sl, AccountType.BASIC_CHECKING);
+		// ManagerFunctions mf1 = new ManagerFunctions(5);
+		// Coordinator list = new Coordinator();
+		// list.addManagerFunc(mf1);
+		// TellerFunctions tf = new TellerFunctions(1);
+		// List<String> sl = new ArrayList<>();
+		// sl.add("1234567890");
+		// sl.add("1234567800");
+		// sl.add("1111111111");
+		// AccountsManagment am = new AccountsManagment ();
+		// am.openAccount(StaticVars.BASICS_CHECKING, sl);
+		// tf.openAccountReq(sl, StaticVars.BASICS_CHECKING);
+
+		// .openAccount(sl, AccountType.BASIC_CHECKING);
 		// tf.closeAccount(sl, "72418514LUCGU34");
 
 		// GeneralFunctions gf = new GeneralFunctions();
@@ -153,15 +155,31 @@ public class Run {
 		// // System.out.println(format(gc));
 		// s2 = format(gc);
 
-		// Date d1 = new Date();
-		// Date d2 = new Date();
-		// d1.setDate(18);
-		// d1.setMonth(7);
-		// System.out.println("d1 : " + d1);
-		//
-		// java.sql.Date sq1 = new java.sql.Date(d1.getTime());
-		// java.sql.Date sq2 = new java.sql.Date(d2.getTime());
-		// System.out.println("sq1 : " + sq1);
+		Date d1 = new Date();
+		Date d2 = new Date();
+		d1.setDate(18);
+		d1.setMonth(7);
+		System.out.println("d1 : " + d1);
+
+		java.sql.Date sq1 = new java.sql.Date(d1.getTime());
+		java.sql.Date sq2 = new java.sql.Date(d2.getTime());
+		System.out.println("sq1 : " + sq1);
+		System.out.println("sq2 : " + sq2);
+
+		ClientQuery cf = new ClientQuery();
+
+		List<String> sl = new ArrayList<>();
+		sl.add("68427666EXELD92");
+		sl.add("70913919GVVTP98");
+		List<Transaction> trs =cf.getTransactions(sl);
+//				"cf.getTransactions(sl, sq1, sq2);
+		logger.info("---------------->" + trs.size());
+		for (Transaction t : trs) {
+			logger.info("---: " + t.getTrDate() + "  " + t.getAcction() + "  "
+					+ t.getAccount1() + "  " + t.getAccount2() + "  "
+					+ t.getClientId());
+		}
+
 		// //
 		//
 		// Query q = ses
@@ -179,63 +197,40 @@ public class Run {
 		// .println("--------***********------------" + b.getAccount2());
 		// // }
 		// }
-		ManagerFunctions mf = new ManagerFunctions(31);
-		Coordinator.addManagerFunc(mf);
-		TellerFunctions tf = new TellerFunctions(2);
-		Coordinator.addTellerFunc(tf);
-		List<String> sl = new ArrayList<>();
-		// sl.add("1111111111");
-		// sl.add("1111111112");
-		sl.add("1122334455");
-		// tf.openAccountReq(sl, 'b');
-		// tf.closeAccountReq(sl, "68427666EXELD92");
-		Scanner sc = new Scanner(System.in);
+		/*
+		 * ManagerFunctions mf = new ManagerFunctions(31);
+		 * Coordinator.addManagerFunc(mf); TellerFunctions tf = new
+		 * TellerFunctions(2); Coordinator.addTellerFunc(tf); List<String> sl =
+		 * new ArrayList<>(); // sl.add("1111111111"); // sl.add("1111111112");
+		 * sl.add("1122334455"); // tf.openAccountReq(sl, 'b'); //
+		 * tf.closeAccountReq(sl, "68427666EXELD92"); Scanner sc = new
+		 * Scanner(System.in);
+		 * 
+		 * ManMsgHandler mmh = new ManMsgHandler();
+		 * 
+		 * int x = 1; while (x > 0) { if (x == 1) { OCRequest ocr = new
+		 * OCRequest(2, sl, StaticVars.OPEN, 'b'); Coordinator.addOCR(ocr); }
+		 * else if (x == 2) { OCRequest ocr = new OCRequest(2, sl,
+		 * StaticVars.CLOSE, "68427666EXELD92"); Coordinator.addOCR(ocr); } else
+		 * if (x == 3) { sl.add("1111111112"); OCRequest ocr = new OCRequest(2,
+		 * sl, StaticVars.PLUS_1K_TRANS, "70913919GVVTP98", "68427666EXELD92",
+		 * 1200, "Just A try"); // String accNr1, String accNr2, double amount,
+		 * String note2 Coordinator.addOCR(ocr); } else if (x == 4) {
+		 * mf.getOCR(); } else if (x == 5) { mf.leaveOCR(); } else if (x == 6) {
+		 * mf.decision("ACCEPTED", "YEsss"); } else if (x == 7) {
+		 * mf.decision("DENNIED", "Noooo"); } System.out.println("-----> " + x);
+		 * System.out.println("ocr list " + Coordinator.ocrListSize());
+		 * System.out.println("ocrs reqCount " + Coordinator.getReqCounter());
+		 * 
+		 * x = sc.nextInt(); }
+		 */
 
-		ManMsgHandler mmh = new ManMsgHandler();
+		// -----------------------------------------------------------------------
 
-		int x = 1;
-		while (x > 0) {
-			if (x == 1) {
-				OCRequest ocr = new OCRequest(2, sl, StaticVars.OPEN, 'b');
-				Coordinator.addOCR(ocr);
-			} else if (x == 2) {
-				OCRequest ocr = new OCRequest(2, sl, StaticVars.CLOSE,
-						"68427666EXELD92");
-				Coordinator.addOCR(ocr);
-			} else if (x == 3) {
-				sl.add("1111111112");
-				OCRequest ocr = new OCRequest(2, sl, StaticVars.PLUS_1K_TRANS,
-						"70913919GVVTP98", "68427666EXELD92", 1200, "Just A try");
-				// String accNr1, String accNr2, double amount, String note2
-				Coordinator.addOCR(ocr);
-			} else if (x == 4) {
-				mf.getOCR();
-			} else if (x == 5) {
-				mf.leaveOCR();
-			} else if (x == 6) {
-				mf.decision("ACCEPTED", "YEsss");
-			} else if (x == 7) {
-				mf.decision("DENNIED", "Noooo");
-			}
-			System.out.println("-----> " + x);
-			System.out.println("ocr list " + Coordinator.ocrListSize());
-			System.out.println("ocrs reqCount " + Coordinator.getReqCounter());
+		// TellerFunctions tf= new TellerFunctions ();
+		// tf.getClientAccounts("1122334455");
+		// -----------------------------------------------------------------------
 
-			x = sc.nextInt();
-		}
-		
-		
-		//-----------------------------------------------------------------------
-		
-//		TellerFunctions tf= new TellerFunctions ();
-//		tf.getClientAccounts("1122334455");
-		//-----------------------------------------------------------------------
-		
-		
-		
-		
-		
-		
 		// ocr.print();
 
 		// TellerQuery tq = new TellerQuery();

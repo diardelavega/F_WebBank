@@ -87,13 +87,6 @@ public class ManagerQuery {
 				.setParameter("toDate", dateTo);
 		List<Transaction> tl = q.list();
 
-		// for (Transaction t : tl) {
-		// System.out.println("trNr :"+t.getTransactionNr());
-		// System.out.println("trAcc :"+t.getAcction());
-		// System.out.println("trAmm :"+t.getAmount());
-		// System.out.println("trAcc1 :"+t.getAccount1());
-		// }
-		// logger.info("------------> Transaction SERVED SUCAZZ");
 		return tl;
 	}
 

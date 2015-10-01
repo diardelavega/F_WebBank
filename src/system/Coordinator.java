@@ -76,6 +76,7 @@ public class Coordinator {
 	}
 
 	public static void deleteManager(int id) {
+		getManagerFunc(id).leaveOCR();
 		managers.remove(id);
 	}
 
@@ -170,7 +171,7 @@ public class Coordinator {
 	}
 
 	public static void deleteOCR(OCRequest req) {
-//		mmReqCounter();
+		// mmReqCounter();
 		ocr.remove(req);
 		// TODO notify manager for requests nr.
 	}

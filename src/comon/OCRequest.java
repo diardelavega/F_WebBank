@@ -19,6 +19,7 @@ public class OCRequest {
 
 	private int manId;
 	private int tellerId;
+	private String clientId;
 
 	private boolean pin = false;
 	private boolean status = false;// true -complete, false-incomplete
@@ -200,4 +201,21 @@ public class OCRequest {
 		this.manId = lastManagerToConsiderIt;
 	}
 
+	public int getManId() {
+		return manId;
+	}
+
+	public void setManId(int manId) {
+		this.manId = manId;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	
 }

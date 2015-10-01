@@ -1,5 +1,6 @@
 package utils;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
 import org.jboss.weld.exceptions.UnsupportedOperationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.xml.internal.ws.api.client.ThrowableInPacketCompletionFeature;
 
@@ -19,6 +22,9 @@ import entity.Customers;
 import entity.EmployeeAction;
 
 public class GeneralFunctions {
+	public static Logger logger = LoggerFactory
+			.getLogger(GeneralFunctions.class);
+	
 	private Session s;// = DBHandler.getSessionFactory().openSession();
 
 	public String logIn(String usr, String psw) {
@@ -104,18 +110,19 @@ public class GeneralFunctions {
 		Account acc = null;
 		upSession();
 		try {
-//			List<Account> accl = s
-//					.createQuery(
-//							"SELECT accountId, accStatus, accType,balance,openDate From Account WHERE accountId=:accId")
-//					.setParameter("accId", accNr).list();
-//			if (accl.size() == 0)
-//				return null;
-//			else {
-//				acc = (Account) accl.get(0);
-//				 acc= new Account(accl.get(0)[0].,accl.get(0)[4],accl.get(0)[3],accl.get(0)[2],accl.get(0)[1]);
-//			}
-			 acc = (Account) s.get(Account.class, accNr);
-			 acc.setCustomers(null);//we don't need the customers
+			// List<Account> accl = s
+			// .createQuery(
+			// "SELECT accountId, accStatus, accType,balance,openDate From Account WHERE accountId=:accId")
+			// .setParameter("accId", accNr).list();
+			// if (accl.size() == 0)
+			// return null;
+			// else {
+			// acc = (Account) accl.get(0);
+			// acc= new
+			// Account(accl.get(0)[0].,accl.get(0)[4],accl.get(0)[3],accl.get(0)[2],accl.get(0)[1]);
+			// }
+			acc = (Account) s.get(Account.class, accNr);
+			acc.setCustomers(null);// we don't need the customers
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -345,6 +352,70 @@ public class GeneralFunctions {
 		if (q.list().size() != 0)
 			return true;
 		return false;
+	}
+
+	public List<Object[]> getBalance(Date dateFrom, Date dateTo) {
+		Query q = s
+				.createQuery(
+						"SELECT trDate,"
+								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
+								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
+								+ "FROM Transaction "
+								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
+								+ "WHERE trData BETWEEN :fromDate AND :toDate  "
+								+ "group by date(trDate) order  by trdata asc")
+				.setParameter("fromDate", dateFrom)
+				.setParameter("toDate", dateTo);
+
+		logger.info("the query is : {}", q.getQueryString());
+		List<Object[]> ol = q.list();
+		return ol;
+	}
+
+	public List<Object[]> getBalance(Date date) {
+		int dayte = date.getDate();
+		Date d2 = new Date(date.getTime());
+		d2.setDate(dayte + 1);
+		Query q = s
+				.createQuery(
+						"SELECT trDate,"
+								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
+								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
+								+ "FROM Transaction "
+								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-06-23' "
+								+ "WHERE trData > :d1 and  trData < :d2 "
+								+ "group by date(trDate) order  by trdata asc")
+				.setParameter("d1", date).setParameter("d2", d2);
+
+		logger.info("the query is : {}", q.getQueryString());
+		List<Object[]> ol = q.list();
+		return ol;
+	}
+
+	public List<entity.Transaction> getTransaction(Date dateFrom, Date dateTo) {
+		Query q = s
+				.createQuery(
+						"FROM Transaction WHERE trData BETWEEN :fromDate AND :toDate ")
+				.setParameter("fromDate", dateFrom)
+				.setParameter("toDate", dateTo);
+		List<entity.Transaction> tl = q.list();
+
+		return tl;
+	}
+
+	public List<entity.Transaction> getTransaction(Date date) {
+		int dayte = date.getDate();
+		Date d2 = new Date(date.getTime());
+		d2.setDate(dayte + 1);
+
+		Query q = s
+				.createQuery(
+						"FROM Transaction WHERE trData > :d1 and trData <:d2 ")
+				.setParameter("d1", date).setParameter("d2", d2);
+		List<entity.Transaction> tl = q.list();
+
+		// logger.info("------------> Transaction SERVED SUCAZZ");
+		return tl;
 	}
 
 }
