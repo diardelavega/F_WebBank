@@ -173,7 +173,7 @@ public class TellerQuery {
 	}
 
 	public String checkTransferRegularity(String personalId, String accFrom,
-			String accTo, double amount, char method) {
+			String accTo, double amount) {
 		GeneralFunctions gf = new GeneralFunctions();
 
 		String ret = gf.valAmmount(amount + "");

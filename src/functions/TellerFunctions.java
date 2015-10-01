@@ -277,11 +277,11 @@ public class TellerFunctions extends EmployeeFunctions {
 
 		TellerQuery tq = new TellerQuery();
 		String regCheck = tq.checkTransferRegularity(personalId, accFrom,
-				accTo, amount, 't');
+				accTo, amount);
+		
 		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();
-				// Coordinator cord = new Coordinator();
 				ocrAl.add(personalId);
 				OCRequest req = new OCRequest(empId, ocrAl,
 						StaticVars.PLUS_1K_WITH, accFrom, accTo, amount, null);

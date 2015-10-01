@@ -443,8 +443,10 @@ public class ManagerFunctions extends EmployeeFunctions {
 			for (String s : cids) {
 				acl.add(gf.getAccount(s));
 			}
+			return acl;	
 		}
-		return acl;
+		return null;
+		
 	}
 
 	public Account getAccountStatus(String accId) {

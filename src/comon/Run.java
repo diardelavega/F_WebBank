@@ -155,30 +155,47 @@ public class Run {
 		// // System.out.println(format(gc));
 		// s2 = format(gc);
 
-		Date d1 = new Date();
-		Date d2 = new Date();
-		d1.setDate(18);
-		d1.setMonth(7);
-		System.out.println("d1 : " + d1);
+		/*
+		 * Date d1 = new Date(); Date d2 = new Date(); d1.setDate(26);
+		 * d1.setMonth(8); System.out.println("d1 : " + d1);
+		 * 
+		 * java.sql.Date sq1 = new java.sql.Date(d1.getTime()); java.sql.Date
+		 * sq2 = new java.sql.Date(d2.getTime()); System.out.println("sq1 : " +
+		 * sq1); System.out.println("sq2 : " + sq2);
+		 * 
+		 * ClientQuery cf = new ClientQuery(); String cliId = "1111111111";
+		 * List<String> sl = new ArrayList<>(); sl.add("42218529RQQGP13");
+		 * sl.add("44980203ZNVUF54");
+		 */
+		CustomerFunctions cf = new CustomerFunctions();
+		// TellerFunctions tf = new TellerFunctions();
+		// TellerQuery tq = new TellerQuery ();
+		logger.info("transaction returns :{}", cf.transfer("1111111111",
+				"44980203ZNVUF54", "42218529RQQGP13", 5));
 
-		java.sql.Date sq1 = new java.sql.Date(d1.getTime());
-		java.sql.Date sq2 = new java.sql.Date(d2.getTime());
-		System.out.println("sq1 : " + sq1);
-		System.out.println("sq2 : " + sq2);
+		// List<Transaction> trs = cf.getTransactions(cliId, sq1);
+		// List<Object[]> obl = cf.getBalance(cliId,sq1,sq2);
+		// List<Object[]> obl =cf.getBalance(sl);
+		// "cf.getTransactions(sl, sq1, sq2);
+		// logger.info("---------------->" + obl.size());
 
-		ClientQuery cf = new ClientQuery();
+		// for (int i = 0; i < obl.size(); i++) {
+		// for (Object s : obl.get(i)) {
+		// if (s == null) {
+		// logger.info("--> null");
+		// } else {
+		// logger.info("--> {}", s.toString());
+		// }
+		// }
+		//
+		// }
 
-		List<String> sl = new ArrayList<>();
-		sl.add("68427666EXELD92");
-		sl.add("70913919GVVTP98");
-		List<Transaction> trs =cf.getTransactions(sl);
-//				"cf.getTransactions(sl, sq1, sq2);
-		logger.info("---------------->" + trs.size());
-		for (Transaction t : trs) {
-			logger.info("---: " + t.getTrDate() + "  " + t.getAcction() + "  "
-					+ t.getAccount1() + "  " + t.getAccount2() + "  "
-					+ t.getClientId());
-		}
+		// logger.info("---------------->" + trs.size());
+		// for (Transaction t : trs) {
+		// logger.info("---: " + t.getTransactionNr() + " " + t.getTrDate()
+		// + "  " + t.getAcction() + "  " + t.getAccount1() + "  "
+		// + t.getAccount2() + "  " + t.getClientId());
+		// }
 
 		// //
 		//

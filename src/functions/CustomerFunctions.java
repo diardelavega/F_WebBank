@@ -16,6 +16,7 @@ import utils.GeneralFunctions;
 import comon.OCRequest;
 import comon.StaticVars;
 import comon.Transfer;
+import entity.Account;
 import entity.Customers;
 import entity.Transaction;
 
@@ -34,22 +35,33 @@ public class CustomerFunctions {
 		this.personalId = personalId;
 	}
 
-	
-	
-	public String transfer(String accFrom, String accTo, String persId,
-			Double amount) {
+	public List<Account> getCustomersAccounts(String persId) {
+		GeneralFunctions gf = new GeneralFunctions();
+		List<Account> acl = null;
+		List<String> cids = gf.clientsAccounts(personalId);
+		if (cids != null) {
+			acl = new ArrayList<>();
+			for (String s : cids) {
+				acl.add(gf.getAccount(s));
+			}
+			return acl;
+		}
+		return null;
+	}
+
+	public String transfer(String persId, String accFrom, String accTo,
+			double amount) {
 		if (amount <= 0) {
 			return "Deposition Ammount Is Very Low";
 		}
 
 		TellerQuery tq = new TellerQuery();
 		String regCheck = tq.checkTransferRegularity(persId, accFrom, accTo,
-				amount, 'c');
-
+				amount);
 		if (regCheck == null) {
-			if (amount >= 1000) {// alert the manager to confirm
-				ArrayList<String> ocrAl = new ArrayList<>();
-				// Coordinator cord = new Coordinator();
+			if (amount >= 1000) {
+				System.out.println("+++++1000");
+				List<String> ocrAl = new ArrayList<>();
 				ocrAl.add(persId);
 				OCRequest req = new OCRequest();
 				req.setClientId(persId);
@@ -60,16 +72,43 @@ public class CustomerFunctions {
 				Coordinator.addOCR(req);
 				return "Transactions Over 1000, Require Manager Confirmation";
 			} else {
-				long trNr = tq
-						.transfer(personalId, accFrom, accTo, amount, 't');
-				if (trNr > 0) {
-					return "Successful completion";
-				} else {
-					return "Problem During Execution, Transaction Not Completed";
+				long trNr = tq.transfer(persId, accFrom, accTo, amount, 'c');
+				if (trNr > 0){
+					System.out.println("complete!!");
+					return "Successful Completion tr nr: "+trNr;
+					
+				}else {
+					System.out.println("Problem During Execution, Transaction Not Completed!!");
+					return  "Problem During Execution, Transaction Not Completed";
+					
 				}
 			}
 		}
 		return regCheck;
+
+		// if (regCheck == null) {
+		// if (amount >= 1000) {// alert the manager to confirm
+		// List<String> ocrAl = new ArrayList<>().add(persId);
+		// ocrAl.add(persId);
+		// OCRequest req = new OCRequest();
+		// req.setClientId(persId);
+		// req.setReqType(StaticVars.PLUS_1K_WITH);
+		// req.setAccFromNr(accFrom);
+		// req.setAccToNr(accTo);
+		// req.setAmount(amount);
+		// Coordinator.addOCR(req);
+		// return "Transactions Over 1000, Require Manager Confirmation";
+		// } else {
+		// long trNr = tq
+		// .transfer(personalId, accFrom, accTo, amount, 'c');
+		// if (trNr > 0) {
+		// return "Successful completion";
+		// } else {
+		// return "Problem During Execution, Transaction Not Completed";
+		// }
+		// }
+		// }
+		// return regCheck;
 
 	}
 

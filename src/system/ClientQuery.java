@@ -32,7 +32,7 @@ public class ClientQuery {
 			Date t2) {
 		Query q = s
 				.createQuery(
-						"FROM Transaction WHERE( trData BETWEEN :d1 AND :d2)"
+						"FROM Transaction WHERE( trDate BETWEEN :d1 AND :d2)"
 								+ " AND (acc1 in (:accounts) OR acc2 in (:accounts))")
 				.setParameter("d1", t1).setParameter("d2", t2)
 				.setParameterList("accounts", accounts);
@@ -57,7 +57,7 @@ public class ClientQuery {
 
 		Query q = s
 				.createQuery(
-						"FROM Transaction WHERE trData > :d1 and trData <:d2"
+						"FROM Transaction WHERE trDate >= :d1 and trDate <=:d2"
 								+ " AND (acc1 in (:accounts) OR acc2 in (:accounts) )")
 				.setParameter("d1", t1).setParameter("d2", d2)
 				.setParameterList("accounts", accounts);
@@ -88,7 +88,7 @@ public class ClientQuery {
 
 		Query q = s
 				.createQuery(
-						"FROM Transaction WHERE personalId = :pid AND  (trData > :d1 and trData <:d2)")
+						"FROM Transaction WHERE personalId = :pid AND  (trDate > :d1 and trDate <:d2)")
 				.setParameter("pid", searchPersId).setParameter("d1", t1)
 				.setParameter("d2", d2);
 		return q.list();
@@ -104,7 +104,7 @@ public class ClientQuery {
 
 		Query q = s
 				.createQuery(
-						"FROM Transaction WHERE personalId = :pid AND ( trData BETWEEN :d1 AND :d2)")
+						"FROM Transaction WHERE personalId = :pid AND ( trDate BETWEEN :d1 AND :d2)")
 				.setParameter("pid", searchPersId).setParameter("d1", t1)
 				.setParameter("d2", t2);
 		return q.list();
@@ -120,13 +120,13 @@ public class ClientQuery {
 
 		Query q = s
 				.createQuery(
-						"SELECT trDate,"
+						"SELECT trDate ,"
 								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
 								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
 								+ "FROM Transaction "
-								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
-								+ "WHERE personalId = :pid"
-								+ "group by date(trDate) order  by trdata asc")
+								// +"WHERE trDate BETWEEN '2015-06-16' AND '2015-08-23' "
+								+ "WHERE personalId = :pid "
+								+ "group by date(trDate) order  by trDate asc")
 				.setParameter("pid", searchPersId);
 
 		logger.info("the query is : {}", q.getQueryString());
@@ -149,9 +149,9 @@ public class ClientQuery {
 								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
 								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
 								+ "FROM Transaction "
-								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-06-23' "
-								+ "WHERE (trData > :d1 and  trData < :d2) AND personalId = :pid "
-								+ "group by date(trDate) order  by trdata asc")
+								// +"WHERE trDate BETWEEN '2015-06-16' AND '2015-06-23' "
+								+ "WHERE (trDate > :d1 and  trDate < :d2) AND personalId = :pid "
+								+ "group by date(trDate) order  by trDate asc")
 				.setParameter("d1", t1).setParameter("d2", d2)
 				.setParameter("pid", searchPersId);
 
@@ -173,9 +173,9 @@ public class ClientQuery {
 								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
 								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
 								+ "FROM Transaction "
-								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
-								+ "WHERE trData BETWEEN :fromDate AND :toDate  AND personalId = :pid"
-								+ "group by date(trDate) order  by trdata asc")
+								// +"WHERE trDate BETWEEN '2015-06-16' AND '2015-08-23' "
+								+ "WHERE (trDate BETWEEN :fromDate AND :toDate)  AND personalId = :pid "
+								+ "group by date(trDate) order  by trDate asc")
 				.setParameter("fromDate", t1).setParameter("toDate", t2)
 				.setParameter("pid", searchPersId);
 
@@ -191,10 +191,10 @@ public class ClientQuery {
 								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
 								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
 								+ "FROM Transaction "
-								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
-								+ "WHERE acc1 in (:accounts) OR acc2 in (:accounts)"
-								+ "group by date(trDate) order  by trdata asc")
-				.setParameterList("pid", accounts);
+								// +"WHERE trDate BETWEEN '2015-06-16' AND '2015-08-23' "
+								+ "WHERE acc1 in (:accounts) OR acc2 in (:accounts) "
+								+ "group by date(trDate) order  by trDate asc ")
+				.setParameterList("accounts", accounts);
 
 		logger.info("the query is : {}", q.getQueryString());
 		List<Object[]> ol = q.list();
@@ -211,11 +211,11 @@ public class ClientQuery {
 								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
 								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
 								+ "FROM Transaction "
-								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-06-23' "
-								+ "WHERE (trData > :d1 and  trData < :d2) AND (acc1 in (:accounts) OR acc2 in (:accounts)) "
-								+ "group by date(trDate) order  by trdata asc")
+								// +"WHERE trDate BETWEEN '2015-06-16' AND '2015-06-23' "
+								+ "WHERE (trDate > :d1 and  trDate < :d2) AND (acc1 in (:accounts) OR acc2 in (:accounts)) "
+								+ "group by date(trDate) order  by trDate asc ")
 				.setParameter("d1", t1).setParameter("d2", d2)
-				.setParameterList("pid", accounts);
+				.setParameterList("accounts", accounts);
 
 		logger.info("the query is : {}", q.getQueryString());
 		List<Object[]> ol = q.list();
@@ -229,17 +229,19 @@ public class ClientQuery {
 								+ "sum(case when acction = 'WITHDRAW' then amount end )as withdraw, "
 								+ "sum(case when acction = 'DEPOSITE' then amount end )as deposite "
 								+ "FROM Transaction "
-								// +"WHERE trData BETWEEN '2015-06-16' AND '2015-08-23' "
-								+ "WHERE (trData BETWEEN :fromDate AND :toDate)  AND (acc1 in (:accounts) OR acc2 in (:accounts))"
-								+ "group by date(trDate) order  by trdata asc")
+								// +"WHERE trDate BETWEEN '2015-06-16' AND '2015-08-23' "
+								+ "WHERE (trDate BETWEEN :fromDate AND :toDate)  AND (acc1 in (:accounts) OR acc2 in (:accounts)) "
+								+ "group by date(trDate) order  by trDate asc ")
 				.setParameter("fromDate", t1).setParameter("toDate", t2)
-				.setParameterList("pid", accounts);
+				.setParameterList("accounts", accounts);
 
 		logger.info("the query is : {}", q.getQueryString());
 		List<Object[]> ol = q.list();
 		return ol;
 	}
 
+	
+	
 	public void upSession() {
 		if (!s.isOpen() || !s.isConnected()) {
 			s = DBHandler.getSessionFactory().openSession();
