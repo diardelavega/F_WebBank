@@ -110,11 +110,11 @@ public class ClientQuery {
 		return q.list();
 	}
 
-
 	public List<Object[]> getBalance(String searchPersId) {
 		upSession();
 		Customers c = (Customers) s.load(Customers.class, searchPersId);
 		if (c == null) {
+			logger.info("Customer is null value");
 			return null;
 		}
 
@@ -131,6 +131,7 @@ public class ClientQuery {
 
 		logger.info("the query is : {}", q.getQueryString());
 		List<Object[]> ol = q.list();
+		logger.info("RETURN Query List SIze = {}", ol.size());
 		return ol;
 	}
 
@@ -240,8 +241,6 @@ public class ClientQuery {
 		return ol;
 	}
 
-	
-	
 	public void upSession() {
 		if (!s.isOpen() || !s.isConnected()) {
 			s = DBHandler.getSessionFactory().openSession();

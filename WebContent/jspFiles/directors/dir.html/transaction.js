@@ -73,6 +73,7 @@ function transSearch() {
 	var fDate = $("#datepicker3").val();
 	var tDate = $("#datepicker4").val();
 	var dateRangeObj = {
+		empId : window.dirEmpId,
 		head : "transaction",
 		fdate : fDate,
 		tdate : tDate

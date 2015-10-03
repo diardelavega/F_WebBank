@@ -41,6 +41,7 @@
 						<li><a data-toggle="tab" href="#balTab">balance table</a></li>
 					</ul>
 
+<!-- panel content -->
 					<div class="tab-content">
 					
 						<div id="balChart" class="tab-pane active">

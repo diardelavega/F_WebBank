@@ -37,48 +37,22 @@ function onMessage(evt) {
 	var head = jsobj.head;
 
 	switch (head) {
-	//CUSOM HEADERS
-//	case 'requestNumber':
-//		requestNumber(jsobj);
-//		break;
-//	case 'clientAccountsReply':
-//		manClientAccountsReply(jsobj);
-//		break;
-//	case 'accountStatusReply':
-//		manAccountStatusReply(jsobj);
-//		break;
-//	case 'accountOwnersReply':
-//		manAccountCooReply(jsobj);
-//		break;
-//	case 'clientTransactionReply':
-//		manClientTransReply(jsobj);
-//		break;
-//	case 'manyClientTransactionReply':
-//		manManyClientTransReply(jsobj);
-//		break;
-//	case 'accountTransactionsReply':
-//		manAccountTransRply(jsobj);
-//		break;
-//	case 'leaveRequestReply':
-//		leaveRequest(jsobj);
-//		break;
-//	case 'requestRequestReply':
-//		requestRequestReply(jsobj);
-//	case 'requestInit':
-//		requestInit(jsobj);
-//		break;
-	case 'error':
-		errorRes(jsobj);
+
+	case 'transactionReply':
+		cliTransactionReply(jsobj);
 		break;
-//	case 'requestAlert':
-//		manRequestAlert(jsobj);
-//		break;
-//	case 'approveRequestReply':
-//		approveRequestReply(jsobj);
-//		break;
-//	case 'dennieRequestReply':
-//		dennieRequestReply(jsobj);
-//		break;
+	case 'balanceReply':
+		cliBalanceReply(jsobj);
+		break;
+	case 'transferReply':
+		cliTransferReply(jsobj);
+		break;
+	case 'accountsReply':
+		cliAccountsReply(jsobj);
+		break;
+	case 'accountsPushed':
+		cliAccountsPushed(jsobj);
+		break;
 	case 'logoutReplay':
 		logOutReplay(jsobj);
 		break;

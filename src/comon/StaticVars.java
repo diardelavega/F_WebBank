@@ -42,7 +42,7 @@ public class StaticVars {
 	public static final long NON_UNIQUE_EMAIL = -4;
 
 	public static final char BASICS_CHECKING = 'b';
-	public static final char INTEREST_BARING = 'i';
+	public static final char INTEREST_RATING = 'i';
 	public static final char CERTIFICATE_OF_DEPSITE = 'c';
 	public static final char MONEY_MARKET_DEPOSITE = 'm';
 	public static final char SIMPLE_BUSINESS = 's';

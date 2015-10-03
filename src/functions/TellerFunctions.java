@@ -58,6 +58,16 @@ public class TellerFunctions extends EmployeeFunctions {
 				// open acc, +1 to the customers accounts number they poses
 				String accNr = am.openAccount(req.getAccType(),
 						req.getClientIdsList());
+				
+				// TODO for all account owners online update ss & cs accounts
+				CustomerFunctions cf;
+				for (String pid : req.getClientIdsList()) {
+					cf = Coordinator.getCustomerFunctions(pid);
+					cf.addOneAcc(accNr);
+					cf.fillAllAccounts();
+					// TODO cf.pushCS
+				}
+
 				req.setAccFromNr(accNr);
 				logger.info("Account {} is Opened", accNr);
 				ea.setAccountId1(accNr);
@@ -68,6 +78,14 @@ public class TellerFunctions extends EmployeeFunctions {
 				AccountsManagment am = new AccountsManagment();
 				// close account and decrease accounts number customers poses
 				am.closeAccount(req.getAccFromNr());
+				// TODO for all account owners online update ss & cs accounts
+				CustomerFunctions cf;
+				for (String pid : req.getClientIdsList()) {
+					cf = Coordinator.getCustomerFunctions(pid);
+					cf.delOneAcc(req.getAccFromNr());
+					cf.fillAllAccounts();
+					// TODO cf.pushCS
+				}
 				logger.info("Account {} is Closed", req.getAccFromNr());
 				ea.setAccountId1(req.getAccFromNr());
 				ea.setCustomerId(req.getClientIdsList());
@@ -77,6 +95,14 @@ public class TellerFunctions extends EmployeeFunctions {
 				TellerQuery tq = new TellerQuery();
 				long trnr = tq.deposite(req.getAccFromNr(), req.getAmount());
 				if (trnr > 0) {
+					CustomerFunctions cf;
+					for (String pid : req.getClientIdsList()) {
+						cf = Coordinator.getCustomerFunctions(pid);
+						cf.getCustomersAccounts(pid);
+						cf.fillAllAccounts();
+						// TODO cf.pushCS
+					}
+
 					ea.setEmpId(req.getTellerId());
 					ea.setAccountId1(req.getAccFromNr());
 					ea.setCustomerId(req.getClientIdsList());
@@ -90,6 +116,13 @@ public class TellerFunctions extends EmployeeFunctions {
 				long trnr = tq.withdraw(req.getClientIdsList().get(0),
 						req.getAccFromNr(), req.getAmount());
 				if (trnr > 0) {
+					CustomerFunctions cf;
+					for (String pid : req.getClientIdsList()) {
+						cf = Coordinator.getCustomerFunctions(pid);
+						cf.getCustomersAccounts(pid);
+						cf.fillAllAccounts();
+						// TODO cf.pushCS
+					}
 					ea.setEmpId(req.getTellerId());
 					ea.setAccountId1(req.getAccFromNr());
 					ea.setCustomerId(req.getClientIdsList());
@@ -104,6 +137,13 @@ public class TellerFunctions extends EmployeeFunctions {
 						req.getAccFromNr(), req.getAccToNr(), req.getAmount(),
 						't');
 				if (trnr > 0) {
+					CustomerFunctions cf;
+					for (String pid : req.getClientIdsList()) {
+						cf = Coordinator.getCustomerFunctions(pid);
+						cf.getCustomersAccounts(pid);
+						cf.fillAllAccounts();
+						// TODO cf.pushCS
+					}
 					ea.setEmpId(req.getTellerId());
 					ea.setAccountId1(req.getAccFromNr());
 					ea.setAccountId2(req.getAccToNr());
@@ -117,6 +157,14 @@ public class TellerFunctions extends EmployeeFunctions {
 				AccountsManagment am = new AccountsManagment();
 				String accNr = am.openAccount(req.getAccType(),
 						req.getClientIdsList());
+				// TODO for all account owners online update ss & cs accounts
+				CustomerFunctions cf;
+				for (String pid : req.getClientIdsList()) {
+					cf = Coordinator.getCustomerFunctions(pid);
+					cf.addOneAcc(accNr);
+					cf.fillAllAccounts();
+					// TODO cf.pushCS
+				}
 				ea.setEmpId(req.getTellerId());
 				ea.setAccountId1(accNr);
 				ea.setCustomerId(req.getClientIdsList());
@@ -278,7 +326,7 @@ public class TellerFunctions extends EmployeeFunctions {
 		TellerQuery tq = new TellerQuery();
 		String regCheck = tq.checkTransferRegularity(personalId, accFrom,
 				accTo, amount);
-		
+
 		if (regCheck == null) {
 			if (amount >= 1000) {// alert the manager to confirm
 				ArrayList<String> ocrAl = new ArrayList<>();

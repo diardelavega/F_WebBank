@@ -55,7 +55,8 @@ public class ManagerWS {
 					sendMsg(res, ses);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				// e.printStackTrace();
+				logger.info("Managers id Not Provided");
 				sendMsg("Operation Failed ", ses);
 			}
 

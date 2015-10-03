@@ -453,7 +453,7 @@ public class TelMsgHandler {
 
 		OCRequest ocr = new OCRequest();
 		ocr.setReqType(StaticVars.OPEN);
-		ocr.setAccType(StaticVars.INTEREST_BARING);
+		ocr.setAccType(StaticVars.INTEREST_RATING);
 		List<String> sl = new ArrayList<>();
 		sl.add("1234567890");
 		sl.add("0987654321");

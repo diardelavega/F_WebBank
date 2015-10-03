@@ -33,7 +33,7 @@
 <style type="text/css">
 .artdAlert {
 	position: fixed;
-	bottom: 30;
+	bottom: -30;
 	right: 0;
 	width: 300px;
 	/* border: 3px solid #8AC007;  */
@@ -117,10 +117,11 @@ window.persId="<%=ses.getAttribute("primeKey")%>"
 						<li><a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
 						</li>
 						<li class="divider"></li>
-						<li><a href="#" onclick="logOut();"><i
+						<li><a href="#" onclick="cliLogOut();"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
 					</ul></li>
 			</ul>
+			<div id="cliMsgAlert" class="artdAlert"></div>
 			<!-- /.navbar-collapse -->
 		</div>
 		<!-- /.container --> </nav>
@@ -148,6 +149,7 @@ window.persId="<%=ses.getAttribute("primeKey")%>"
 
 
 	<!--clients scripts  -->
+	<script src="../js/general.js"></script>
 	<script src="./client_ex/cliInit.js"></script>
 	<script src="./client_ex/cli.js"></script>
 	<script src="./client_ex/account.js"></script>

@@ -126,6 +126,7 @@ function dateRange() {
 	var fDate = $("#datepicker1").val();
 	var tDate = $("#datepicker2").val();
 	var dateRangeObj = {
+		empId :window.dirEmpId,
 		head : "balance",
 		fdate : fDate,
 		tdate : tDate

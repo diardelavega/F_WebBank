@@ -13,16 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import utils.CliMsgHandler;
-import utils.DirMsgWsHandler;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-
 @ServerEndpoint("/cli")
 public class ClientWS {
-	
-	Logger logger = LoggerFactory.getLogger(ManagerWS.class);
+
+	Logger logger = LoggerFactory.getLogger(ClientWS.class);
 
 	@OnOpen
 	public void open(Session ses) {
@@ -39,38 +37,71 @@ public class ClientWS {
 
 	@OnMessage
 	public void recMsg(String msg, Session ses) throws IOException {
-		// System.out.println("received msg from: " + ses.getId());
-//		System.out.println("received msg seas : " + msg);
-//		String webResponse = DirMsgWsHandler.switchit(msg);
-//
-//		sendMsg(webResponse, ses);
 
 		logger.info("ON Client :received msg seas : " + msg);
 		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
 		String head = jobj.get("head").getAsString();
 
 		CliMsgHandler cmh = new CliMsgHandler();
+
 		logger.info("HEAD  is {}", head);
 		if (head.equalsIgnoreCase("coordinate")) {
-			int persId = 0;
+			String persId;
 			try {
-				persId = jobj.get("PersId").getAsInt();
-				logger.info("EmpId  is {}", persId);
+				persId = jobj.get("persId").getAsString();
+				logger.info("persId  is {}", persId);
 				String res = cmh.coordRegister(persId, ses);
+				logger.info("response is : {}",res);
 				if (res != null) {
 					sendMsg(res, ses);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
-				sendMsg("Operation Failed ", ses);
+				logger.info("Pers Id not Provided");
+				sendMsg("Operation Failed 3333 ", ses);
 			}
 
 		} else {
 			String webResponse = cmh.switchit(jobj, head);
-			// if (webResponse != null)
+			logger.info("webResponse ={} ",webResponse);
 			sendMsg(webResponse, ses);
 		}
+	}
+	
+//	public void recMsg(String msg, String ses) throws IOException {
+//
+//		logger.info("ON Client :received msg seas : " + msg);
+//		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
+//		String head = jobj.get("head").getAsString();
+//
+//		CliMsgHandler cmh = new CliMsgHandler();
+//
+//		logger.info("HEAD  is {}", head);
+//		if (head.equalsIgnoreCase("coordinate")) {
+//			String persId;
+//			try {
+//				persId = jobj.get("persId").getAsString();
+//				logger.info("persId  is {}", persId);
+//				String res = cmh.coordRegister(persId, ses);
+//				logger.info("response is : {}",res);
+//				if (res != null) {
+//					sendMsgo(res, ses);
+//				}
+//			} catch (Exception e) {
+//				logger.info("Pers Id not Provided");
+//				sendMsgo("Operation Failed 3333 ", ses);
+//			}
+//
+//		} else {
+//			String webResponse = cmh.switchit(jobj, head);
+//			logger.info("webResponse ={} ",webResponse);
+//			sendMsgo(webResponse, ses);
+//		}
+//	}
+	
 
+	private void sendMsgo(String res, String ses) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public void sendMsg(String msg, Session ses) throws IOException {

@@ -23,9 +23,12 @@ import org.hibernate.criterion.Projections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sun.security.sasl.ClientFactoryImpl;
 
+import cod.server.ws.ClientWS;
+import cod.servlet.Log;
 import cod.test.HQLTest;
 import system.AccountsManagment;
 import system.ClientQuery;
@@ -132,6 +135,33 @@ public class Run {
 		// GeneralFunctions gf = new GeneralFunctions();
 		// gf.accountsCountCheck(sl);
 
+		
+		
+		
+//		d9029564-d39a-4275-95a5-0c2ec2c5f485
+		Gson gson = new Gson();
+		JsonObject jo = new JsonObject ();
+		jo.addProperty("head", "coordinate");
+		jo.addProperty("persId", "1122334455");
+		
+//		javax.websocket.Session ses = new javax.websocket.Session();
+//		javax.websocket.Session("d9029564-d39a-4275-95a5-0c2ec2c5f485");
+		 
+//		ClientWS cws = new ClientWS();
+//		String aa = gson.toJson(jo);
+//		cws.recMsg(aa,"AAAAAAAA");
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		/* Transactions */
 		// TellerFunctions tf = new TellerFunctions ();
 		// tf.deposite("42218529RQQGP13", 150,"Mario Rista LUVs u");
@@ -167,11 +197,11 @@ public class Run {
 		 * List<String> sl = new ArrayList<>(); sl.add("42218529RQQGP13");
 		 * sl.add("44980203ZNVUF54");
 		 */
-		CustomerFunctions cf = new CustomerFunctions();
+//		CustomerFunctions cf = new CustomerFunctions();
 		// TellerFunctions tf = new TellerFunctions();
 		// TellerQuery tq = new TellerQuery ();
-		logger.info("transaction returns :{}", cf.transfer("1111111111",
-				"44980203ZNVUF54", "42218529RQQGP13", 5));
+//		logger.info("transaction returns :{}", cf.transfer("1111111111",
+//				"44980203ZNVUF54", "42218529RQQGP13", 5));
 
 		// List<Transaction> trs = cf.getTransactions(cliId, sq1);
 		// List<Object[]> obl = cf.getBalance(cliId,sq1,sq2);

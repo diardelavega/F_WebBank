@@ -75,20 +75,7 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 					onclick="dirSeverClientTupeling(); eid();">Director</a>
 			</div>
 
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<!--  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#">About</a>
-                    </li>
-                    <li>
-                        <a href="#">Services</a>
-                    </li>
-                    <li>
-                        <a href="#">Contact</a>
-                    </li>
-                </ul>
-            </div>-->
+			
 			<ul class="nav navbar-right top-nav">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown"> <i class="fa fa-envelope"></i> <b

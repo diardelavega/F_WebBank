@@ -67,8 +67,8 @@ body {
 				chart </a></li>
 		<li><a data-toggle="tab" href="#transTab">transaction table</a></li>
 	</ul>
+	
 	<div class="tab-content">
-
 		<div id="transChart" class="tab-pane active">
 			<div id="placeholderTrans">
 			</div>

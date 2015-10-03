@@ -57,17 +57,17 @@ function closeThis(event) {
 }
 // ---------------------------
 
-$(function() {
-	/*
+/*$(function() {
+	
 	 * append the datepicker functionality to the "From date" and "To date"
 	 * input fields of balance and transaction
-	 */
+	 
 	$(".datePicker").datepicker({
 		changeMonth : true,
 		changeYear : true,
 		dateFormat : 'dd/mm/yy',
 	});
-});
+});*/
 
 $(function() {
 	/*

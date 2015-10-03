@@ -355,6 +355,7 @@ public class GeneralFunctions {
 	}
 
 	public List<Object[]> getBalance(Date dateFrom, Date dateTo) {
+		upSession();
 		Query q = s
 				.createQuery(
 						"SELECT trDate,"
@@ -393,6 +394,7 @@ public class GeneralFunctions {
 	}
 
 	public List<entity.Transaction> getTransaction(Date dateFrom, Date dateTo) {
+		upSession();
 		Query q = s
 				.createQuery(
 						"FROM Transaction WHERE trData BETWEEN :fromDate AND :toDate ")

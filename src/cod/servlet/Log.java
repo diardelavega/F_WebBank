@@ -91,7 +91,7 @@ public class Log extends HttpServlet {
 				session.setAttribute("validity", "not_ok");
 			} else {
 				logger.info("------------------>usr :{} and psw:{}", usr, psw);
-//				Coordinator co = new Coordinator();
+				// Coordinator co = new Coordinator();
 
 				LogIn log = new LogIn();
 				if (domain.equalsIgnoreCase("webank")) {
@@ -130,14 +130,15 @@ public class Log extends HttpServlet {
 				} else {
 					Customers c = log.logInCust(usr, psw);
 					if (c != null) {
-
-						CustomerFunctions cf = new CustomerFunctions(
-								c.getPersonalId());
-						Coordinator.addCustomerFunc(cf);
 						session = request.getSession(true);
 						session.setAttribute("primeKey", c.getPersonalId());
 						session.setAttribute("name", c.getFname());
-						destination = "jspFiles/Test.jsp";
+						
+						CustomerFunctions cf = new CustomerFunctions(
+								c.getPersonalId());
+						Coordinator.addCustomerFunc(cf);
+						
+						destination = "jspFiles/client/clientsPage.jsp";
 					} else {
 						session.setAttribute("validity", "user not found");
 					}
