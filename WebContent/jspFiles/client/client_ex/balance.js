@@ -229,6 +229,8 @@ function displaySearchCriteria(t) {
 	var sc = $("#showCriteria");
 	if (t != undefined || t != null) {
 		$(sc).text(persId);
+		$("#dropUl").find("input[type='checkbox']").prop("checked", false);
+		searchArray = [];
 	} else {
 		$(sc).text(searchArray);
 	}

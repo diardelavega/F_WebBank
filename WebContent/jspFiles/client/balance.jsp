@@ -26,7 +26,7 @@ table.alertTab td {
 }
 
 table.alertTab th {
-	 text-align: center; 
+	text-align: center;
 	min-width: 80px;
 }
 
@@ -36,12 +36,12 @@ table.alertTab tr {
 	/* min-width: 300px; */
 }
 
-.artAlert{
- position: fixed;
-    bottom: -30;
-    right: 0;
-    width: 300px;
-    /* border: 3px solid #8AC007; */
+.artAlert {
+	position: fixed;
+	bottom: -30;
+	right: 0;
+	width: 300px;
+	/* border: 3px solid #8AC007; */
 }
 </style>
 <div id="balanceCli" class="hidable">

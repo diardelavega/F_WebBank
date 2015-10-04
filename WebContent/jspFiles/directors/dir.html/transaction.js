@@ -34,7 +34,7 @@ function transactionHandler(jsobj) {
 				// console.log(i + " --- " + key + " --- " + line[key]);
 			}
 		}
-		transPie(depCount, witCount, witCount);
+		transPie(depCount, witCount, traCount);
 	}
 }
 

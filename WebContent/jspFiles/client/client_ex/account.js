@@ -1,3 +1,24 @@
+function cliTransfer() {
+	var tra = {
+		persId : persId,
+		head : "transfer",
+		accFrom : $('[name=accNrFrom]').val(),
+		accTo : $('[name=accNrTo]').val(),
+		amount : $('[name=transfAmount]').val(),
+	// persId :persId
+	// $('[name=transfPersId]').val()
+	}
+	doSend(JSON.stringify(tra));
+}
+
+function cliTransferReply(jsobj) {
+	if (jsobj.hasOwnProperty("tra")) {
+		dispalyMsg(jsobj.tra);
+	} else {
+		dispalyMsg(jsobj.msg);
+	}
+}
+
 var accArr = [];
 function fillAccArr(accounts) {
 	for (var i = 0; i < accounts.length; i++) {
@@ -33,8 +54,11 @@ function cliAccountsReply(jsobj) {
 }
 
 // -------------Construct & Display
-
-function fooo() {
+function cliClearTransfer() {
+	accFrom: $('[name=accNrFrom]').val("");
+	accTo: $('[name=accNrTo]').val("");
+	amount: $('[name=transfAmount]').val("");
+	persId: $('[name=transfPersId]').val("");
 }
 
 function showAccounts(accs) {
@@ -44,13 +68,13 @@ function showAccounts(accs) {
 	var divPillCont = $("#accountPillContenet");
 
 	for (var i = 0; i < accs.length; i++) {
-		console.log("---------:"+i);
+		console.log("---------:" + i);
 		/* dynamically create the pills, the header with the accounts */
 		var li = document.createElement("li");
 		var a = document.createElement("a");
 		a.setAttribute("href", "#acc" + i);
 		a.setAttribute("data-toggle", "pill");
-		a.innerHTML = "<strong>Account" + i + "<strong>";
+		a.innerHTML = "<strong>Account" + (i + 1) + "<strong>";
 		li.appendChild(a);
 		ulPill.append(li);
 
@@ -85,10 +109,10 @@ function showAccounts(accs) {
 			var td1 = document.createElement("td");
 			var td1_2 = document.createElement("td");
 			var td2 = document.createElement("td");
-			
-//			var accIds;// keep the account Id
+
+			// var accIds;// keep the account Id
 			if (key == 'accountId') {
-			var	accIds = accs[i][key];
+				var accIds = accs[i][key];
 			}
 			if (key == 'accType') {
 				td1.innerHTML = "<strong>" + 'type' + "</strong>";
@@ -126,23 +150,23 @@ function showAccounts(accs) {
 		// create the buttons
 		var transactBut = document.createElement("button");
 		transactBut.innerHTML = " <span class='glyphicon glyphicon-book'></span>  transactions ";
-		transactBut.value=accIds;
+		transactBut.value = accIds;
 		transactBut.onclick = function(event) {
 			goToTransactions(event);
 		};
 		var valBut = document.createElement("button");
 		valBut.innerHTML = " <span class='glyphicon glyphicon-stats'></span> balance ";
-		valBut.value=accIds;
+		valBut.value = accIds;
 		valBut.onclick = function(event) {
 			goToBalance(event);
 		};
 		var transBut = document.createElement("button");
 		transBut.innerHTML = " <span class='glyphicon glyphicon-transfer'></span> transfer ";
-		transBut.value=accIds;
+		transBut.value = accIds;
 		transBut.onclick = function(event) {
 			goToTransfers(event);
 		};
-		
+
 		var divr = document.createElement("div");
 		$(divr).append(transactBut);
 		var br = document.createElement("br");
@@ -164,26 +188,45 @@ function showAccounts(accs) {
 }
 // -------helpful functions
 
-// transBut.setAttribute("onclick",);
-// a.onclick = function(event) {
-// onPersId(event);
-// };
-// function onPersId(event) {
-// var txt = $(event.target).text();
-// $("#telPersonalId").val(txt);
-// }
+$(function() {
+	var amts = $(".amount").focusout(function() {
+		amountCtrl(this);
+	});
+});
+
+function setTransferPersId(accFrom) {
+	console.log("setTransferPersId");
+	var ctpi = $("#cliTransPersId");
+	$(ctpi).val(persId);
+	// $(ctpi).prop("pleaceholder", persId);
+	$(ctpi).prop("readonly", true);
+
+	var ctaf = $("#cliTransAccFrom");
+	$(ctaf).val(accFrom);
+	$(ctaf).prop("readonly", true);
+
+}
+
 function goToTransfers(event) {
 	console.log("Transfers " + event);
 	console.log("Transfers " + $(event.target).val());
+	setTransferPersId($(event.target).val());
+	$("#transferFunc").toggle();
 	// search transactions for this account
 }
 function goToBalance(event) {
-	console.log("Balance " + event);
-	console.log("Balance " + $(event.target).val());
-	// search transactions for this account
+	cliHideShow('balanceCli'); // go to balance page
+	fillHeaderTable(); // init the accounts of dropdown
+	searchArray = []; // empty search array
+	searchArray.push($(event.target).val());// put account in array
+	displaySearchCriteria() // show the account we searched
+	getBalance(); // get balance
 }
 function goToTransactions(event) {
-	console.log("Transactions " + event);
-	console.log("Transactions " + $(event.target).val());
-	// search transactions for this account
+	cliHideShow('transCli');
+	fillHeaderTableTrans();
+	searchArrayTrans = []; // empty search array
+	searchArrayTrans.push($(event.target).val());// put account in array
+	displaySearchCriteriaTrans();
+	getTransactions();
 }

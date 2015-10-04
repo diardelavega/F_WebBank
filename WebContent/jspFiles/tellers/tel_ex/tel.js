@@ -147,6 +147,11 @@ $(function() {
 	 * "amount,name,phone,address,email,password" to be ready to display user
 	 * friendly functionalities
 	 */
+	
+	var amts = $(".amount").focusout(function() {
+		amountCtrl(this);
+	});
+	
 	var addresses = $(".address").focusout(function() {
 		addressCtrl(this);
 	});
@@ -171,9 +176,7 @@ $(function() {
 		emailCtrl(this);
 	});
 
-	var amts = $(".amount").focusout(function() {
-		amountCtrl(this);
-	});
+
 	for (var i = 0; i < amts.length; i++) {
 		$(amts[i]).attr("placeholder", "ex: 125.6787");
 	}

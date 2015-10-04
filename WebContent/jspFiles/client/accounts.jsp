@@ -8,7 +8,7 @@
 	padding-top: 5px;
 	padding-left: 10px;
 	padding-right: 10px;
-	 border-spacing: 5px; 
+	border-spacing: 5px;
 	/* min-width: 30px; */
 }
 
@@ -17,7 +17,18 @@
 	vertical-align: bottom;
 }
 
+table.format {
+	table-layout: fixed;
+	width: 400px;
+	margin-top: 30px;
+	border-spacing: 5px;
+}
 
+table.format td {
+	overflow: hidden;
+	padding-left: 10px;
+	padding-right: 10px;
+}
 </style>
 <script type="text/javascript">
 	
@@ -25,22 +36,52 @@
 <div id="accCli" class="hidable">
 
 	<h3>Your Account(s)</h3>
-	<button onclick="fooo();">fooo</button>
-	<!-- <button onclick="dispalyMsg('SERAAAAAAAA!!');">msg</button> -->
+	<br>
 	<div class="container-fluid">
 		<div style="background-color: rgb(220, 220, 220); width: 100%">
 			<ul class="nav nav-pills" id="accountPills">
-				<!-- <li><a data-toggle="pill" href="#acc1"><strong>Account
-							1</strong></a></li> -->
 			</ul>
 		</div>
 
 		<br>
-		<div class="tab-content" id="accountPillContenet">
-			<!-- <div
-				style="text-align: justify ; border: thin solid black;  width: 100%;"
-				id="acc1" class="tab-pane fade">AAAAAAAAcccount 1 : ac2 ; iiis</div> -->
-		</div>
+		<div class="tab-content" id="accountPillContenet"></div>
+	</div>
+	<div id="transferFunc" style="margin: 30px; display: none;">
+		<hr>
+		<table border="0" id="cliTransfer" class="format">
+			<tbody>
+				<tr>
+					<td width="720px">
+						<table>
+							<tbody>
+								<tr>
+									<td><label>Account From :</label></td>
+									<td><input id="cliTransAccFrom" type="text" class="accNr"
+										name="accNrFrom"></td>
+									<td><label>Account To :</label></td>
+									<td><input type="text" name="accNrTo" class="accNr">
+									</td>
+								</tr>
+								<tr>
+									<td><label>Personal ID :</label></td>
+									<td><input id="cliTransPersId" type="text" class="persId"
+										name="transfPersId"></td>
+									<td><label>Amount :</label></td>
+									<td><input type="text" name="transfAmount" class="amount"></td>
+								</tr>
+								<tr align="center">
+									<td colspan="4" style="padding-top: 10px">
+										<button id="telTransOk" onclick="cliTransfer();">OK</button> <span
+										class="space"></span>
+										<button id="cliTransClear" onclick="cliClearTransfer();">Clear</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 </div>

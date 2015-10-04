@@ -1,6 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<style>
+
+#selctCriteriaTrans {
+	border-bottom: 1pt solid black;
+	border-top: 1pt solid black;
+}
+</style>
+
+
 <div id="transCli" class="hidable">
 
 	<h3>Check Your Account Balance</h3>
@@ -45,7 +55,7 @@
 
 		<!-- CONTENT -->
 		<div class="tab-content">
-			<div id="#transChart" class="tab-pane active">
+			<div id="transChart" class="tab-pane active">
 				<div id="content">
 					<div class="demo-container">
 						<div id="placeholderTrans" class="demo-placeholder"></div>
@@ -54,15 +64,10 @@
 			</div>
 
 			<!-- style="display: none" -->
-			<div id="#transTab" class="tab-pane ">
+			<div id="transTab" class="tab-pane">
+
 				<div id="translist" class="container-fluid; ">
-					<table id="transTableList" class="alertTab">
-						<thead>
-							<tr>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
+					<table id="transTableList" class="table">
 					</table>
 				</div>
 			</div>
