@@ -29,17 +29,21 @@ public class Demo {
 		// JsonObject jo = new JsonObject();
 		// Gson gson = new Gson();
 
-		Map<Integer, String> m1 = new HashMap<>();
-		m1.put(1, "oone");
-		m1.put(2, "two");
-		m1.put(3, "three");
+//		boolean f = true;
+//		foo(-1);
+	}
 
-		m1.put(1, "ten");
-
-		for (int i : m1.keySet()) {
-			System.out.println(m1.get(i));
+	public static void foo(boolean f) {
+		if(f!=(Boolean)null){
+		if (f) {
+			System.out.println("YESSSSSSSS");
 		}
-
+		if (!f) {
+			System.out.println("NOOOOOOOO");
+		}
+		}else{
+			System.out.println("NULLLLLLL");
+		}
 	}
 
 }
