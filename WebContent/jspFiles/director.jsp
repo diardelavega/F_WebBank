@@ -28,7 +28,7 @@ hello o o !
 		</p>
 	</form>
 	
-	<jsp:include page="./linkbar.jsp"></jsp:include>
+	<%-- <jsp:include page="./linkbar.jsp"></jsp:include> --%>
 	<script type="text/javascript">
 		var form = document.getElementById("f1");
 		function create() {

@@ -22,15 +22,18 @@ public class CliMsgPusher {
 		JsonObject jo = new JsonObject();
 		Gson gson = new GsonBuilder().create();
 		logger.info("on CliMsgPusher");
+		
 		jo.addProperty("head", "accountsPushed");
 		jo.add("accs", gson.toJsonTree(accl));
+		
 		String ret = gson.toJson(jo);
+		logger.info("display return on pusher {}",ret);
 		try {
 			if (ret != null)
 				ses.getBasicRemote().sendText(ret);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 }

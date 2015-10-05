@@ -34,7 +34,7 @@ function dispalyMsg(msg) {
 	$(a).attr("href", "#");
 	$(a).attr("onclick", "closeThis(event)");
 
-	var br = document.createTextNode(br);
+	var br = document.createElement("br");
 
 	span.appendChild(a);
 	$(div).append(span);

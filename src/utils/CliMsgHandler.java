@@ -115,12 +115,15 @@ public class CliMsgHandler {
 			return gson.toJson(jo);
 		}
 
-		CustomerFunctions cf = new CustomerFunctions();
+		CustomerFunctions cf =Coordinator.getCustomerFunctions(persId); 
 		String ret = cf.transfer(persId, accFrom, accTo, amount);
 		if (ret == null) {
 			jo.addProperty("msg", "Error During Transfering");
 		} else {
+			logger.info("session = {}", cf.getSession());
+			cf.getCustomersAccounts(persId);
 			jo.addProperty("tra", ret);
+//			return null;
 		}
 		return gson.toJson(jo);
 	}

@@ -22,7 +22,7 @@ function cliTransferReply(jsobj) {
 var accArr = [];
 function fillAccArr(accounts) {
 	for (var i = 0; i < accounts.length; i++) {
-		accArr[i] = accounts[i];
+		accArr[i] = accounts[i]["accountId"];
 	}
 	console.log("accArr");
 	console.log(accArr);
@@ -30,11 +30,11 @@ function fillAccArr(accounts) {
 
 function cliAccountsPushed(jsobj) {
 	// receives the updated accounts
-	console.log("cliAccountsPushed");
+	console.log("cliAccountsPushed---------------");
 	if (jsobj.hasOwnProperty("accs")) {
 		accounts = jsobj.accs;
 		fillAccArr(accounts);
-		console.log(accounts);
+		// console.log(accounts);
 		showAccounts(accounts);
 	}
 }
@@ -64,8 +64,16 @@ function cliClearTransfer() {
 function showAccounts(accs) {
 	console.log("UFFFF!!");
 	var ulPill = $("#accountPills");
+
+	if(activePillsIndex==undefined){
+		activePillsIndex=0;
+	}
+	console.log("activePillsIndex --: " + activePillsIndex);
+	// clear all content and hide tranfer form
 	$(ulPill).empty();
+	$("#transferFunc").hide();
 	var divPillCont = $("#accountPillContenet");
+	$(divPillCont).empty();
 
 	for (var i = 0; i < accs.length; i++) {
 		console.log("---------:" + i);
@@ -82,6 +90,11 @@ function showAccounts(accs) {
 		div.setAttribute("id", "acc" + i);
 		div.setAttribute("class", "tab-pane fade")
 
+		if(i==activePillsIndex){
+			li.className='active';
+			div.className='tab-pane fade active in';
+		}
+		
 		/*
 		 * create a big table inside the div, containing in one td another table
 		 * with the account data and in the other td button with the allowed
@@ -113,6 +126,9 @@ function showAccounts(accs) {
 			// var accIds;// keep the account Id
 			if (key == 'accountId') {
 				var accIds = accs[i][key];
+			}
+			if (key == 'balance') {
+				console.log("-------------" + accs[i][key]);
 			}
 			if (key == 'accType') {
 				td1.innerHTML = "<strong>" + 'type' + "</strong>";
@@ -185,6 +201,7 @@ function showAccounts(accs) {
 		div.appendChild(bigT);
 		divPillCont.append(div);
 	}
+	// }, 5000);
 }
 // -------helpful functions
 
@@ -192,6 +209,10 @@ $(function() {
 	var amts = $(".amount").focusout(function() {
 		amountCtrl(this);
 	});
+
+	for (var i = 0; i < amts.length; i++) {
+		$(amts[i]).attr("placeholder", "ex: 125.6787");
+	}
 });
 
 function setTransferPersId(accFrom) {
@@ -207,10 +228,14 @@ function setTransferPersId(accFrom) {
 
 }
 
+var activePillsIndex;
 function goToTransfers(event) {
-	console.log("Transfers " + event);
-	console.log("Transfers " + $(event.target).val());
-	setTransferPersId($(event.target).val());
+	var accNr = $(event.target).val();
+	activePillsIndex = accArr.indexOf(accNr);
+
+	// console.log("Transfers " + event);
+	// console.log("Transfers " + $(event.target).val());
+	setTransferPersId(accNr);
 	$("#transferFunc").toggle();
 	// search transactions for this account
 }

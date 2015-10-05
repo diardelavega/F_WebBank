@@ -68,10 +68,11 @@ function fillHeaderTableTrans() {
 	for (var i = 0; i < accArr.length; i++) {
 		var li = document.createElement("li");
 		var label = document.createElement("label");
-		$(label).text(accArr[i]["accountId"]);
+//		$(label).text(accArr[i]["accountId"]);
+		$(label).text(accArr[i]);
 		var cbox = document.createElement("input");
 		cbox.type = "checkbox";
-		cbox.value = accArr[i]["accountId"];
+		cbox.value = accArr[i];
 		cbox.className = "cbox";
 		cbox.onclick = function() {
 			selecTrans(this);

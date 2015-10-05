@@ -13,12 +13,11 @@ import org.slf4j.LoggerFactory;
 import system.AccountsManagment;
 import system.Coordinator;
 import system.TellerQuery;
+import utils.CliMsgPusher;
 import utils.GeneralFunctions;
 import utils.TelMsgPusher;
-
 import comon.OCRequest;
 import comon.StaticVars;
-
 import entity.Account;
 import entity.Customers;
 import entity.EmployeeAction;
@@ -58,14 +57,16 @@ public class TellerFunctions extends EmployeeFunctions {
 				// open acc, +1 to the customers accounts number they poses
 				String accNr = am.openAccount(req.getAccType(),
 						req.getClientIdsList());
-				
+
 				// TODO for all account owners online update ss & cs accounts
 				CustomerFunctions cf;
 				for (String pid : req.getClientIdsList()) {
-					cf = Coordinator.getCustomerFunctions(pid);
-					cf.addOneAcc(accNr);
-					cf.fillAllAccounts();
-					// TODO cf.pushCS
+					if ((cf = Coordinator.getCustomerFunctions(pid)) != null) {
+						cf.addOneAcc(accNr);
+//						CliMsgPusher cmp = new CliMsgPusher();
+//						cmp.pushAccounts(cf.getSession(),
+								cf.getCustomersAccounts(pid);
+					}
 				}
 
 				req.setAccFromNr(accNr);
@@ -81,10 +82,12 @@ public class TellerFunctions extends EmployeeFunctions {
 				// TODO for all account owners online update ss & cs accounts
 				CustomerFunctions cf;
 				for (String pid : req.getClientIdsList()) {
-					cf = Coordinator.getCustomerFunctions(pid);
-					cf.delOneAcc(req.getAccFromNr());
-					cf.fillAllAccounts();
-					// TODO cf.pushCS
+					if ((cf = Coordinator.getCustomerFunctions(pid)) != null) {
+						cf.delOneAcc(req.getAccFromNr());
+//						CliMsgPusher cmp = new CliMsgPusher();
+//						cmp.pushAccounts(cf.getSession(),
+								cf.getCustomersAccounts(pid);
+					}
 				}
 				logger.info("Account {} is Closed", req.getAccFromNr());
 				ea.setAccountId1(req.getAccFromNr());
@@ -96,11 +99,14 @@ public class TellerFunctions extends EmployeeFunctions {
 				long trnr = tq.deposite(req.getAccFromNr(), req.getAmount());
 				if (trnr > 0) {
 					CustomerFunctions cf;
-					for (String pid : req.getClientIdsList()) {
-						cf = Coordinator.getCustomerFunctions(pid);
-						cf.getCustomersAccounts(pid);
-						cf.fillAllAccounts();
-						// TODO cf.pushCS
+					// Coordinator.getPersId(req.getAccFromNr());
+					for (String pid : Coordinator.getPersId(req.getAccFromNr())) {
+						if ((cf = Coordinator.getCustomerFunctions(pid)) != null) {
+							cf.getCustomersAccounts(pid);
+//							CliMsgPusher cmp = new CliMsgPusher();
+//							cmp.pushAccounts(cf.getSession(),
+//									cf.getCustomersAccounts(pid));
+						}
 					}
 
 					ea.setEmpId(req.getTellerId());
@@ -117,11 +123,13 @@ public class TellerFunctions extends EmployeeFunctions {
 						req.getAccFromNr(), req.getAmount());
 				if (trnr > 0) {
 					CustomerFunctions cf;
-					for (String pid : req.getClientIdsList()) {
-						cf = Coordinator.getCustomerFunctions(pid);
-						cf.getCustomersAccounts(pid);
-						cf.fillAllAccounts();
-						// TODO cf.pushCS
+					for (String pid : Coordinator.getPersId(req.getAccFromNr())) {
+						if ((cf = Coordinator.getCustomerFunctions(pid)) != null) {
+							cf.getCustomersAccounts(pid);
+//							CliMsgPusher cmp = new CliMsgPusher();
+//							cmp.pushAccounts(cf.getSession(),
+									cf.getCustomersAccounts(pid);
+						}
 					}
 					ea.setEmpId(req.getTellerId());
 					ea.setAccountId1(req.getAccFromNr());
@@ -138,11 +146,13 @@ public class TellerFunctions extends EmployeeFunctions {
 						't');
 				if (trnr > 0) {
 					CustomerFunctions cf;
-					for (String pid : req.getClientIdsList()) {
-						cf = Coordinator.getCustomerFunctions(pid);
-						cf.getCustomersAccounts(pid);
-						cf.fillAllAccounts();
-						// TODO cf.pushCS
+					for (String pid : 	Coordinator.getPersId(req.getAccFromNr())) {
+						if ((cf = Coordinator.getCustomerFunctions(pid)) != null) {
+							cf.getCustomersAccounts(pid);
+//							CliMsgPusher cmp = new CliMsgPusher();
+//							cmp.pushAccounts(cf.getSession(),
+									cf.getCustomersAccounts(pid);
+						}
 					}
 					ea.setEmpId(req.getTellerId());
 					ea.setAccountId1(req.getAccFromNr());
@@ -160,10 +170,12 @@ public class TellerFunctions extends EmployeeFunctions {
 				// TODO for all account owners online update ss & cs accounts
 				CustomerFunctions cf;
 				for (String pid : req.getClientIdsList()) {
-					cf = Coordinator.getCustomerFunctions(pid);
-					cf.addOneAcc(accNr);
-					cf.fillAllAccounts();
-					// TODO cf.pushCS
+					if ((cf = Coordinator.getCustomerFunctions(pid)) != null) {
+						cf.addOneAcc(accNr);
+//						CliMsgPusher cmp = new CliMsgPusher();
+//						cmp.pushAccounts(cf.getSession(),
+								cf.getCustomersAccounts(pid);
+					}
 				}
 				ea.setEmpId(req.getTellerId());
 				ea.setAccountId1(accNr);

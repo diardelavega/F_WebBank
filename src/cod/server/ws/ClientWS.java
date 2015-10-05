@@ -51,7 +51,7 @@ public class ClientWS {
 				persId = jobj.get("persId").getAsString();
 				logger.info("persId  is {}", persId);
 				String res = cmh.coordRegister(persId, ses);
-				logger.info("response is : {}",res);
+				logger.info("response is : {}", res);
 				if (res != null) {
 					sendMsg(res, ses);
 				}
@@ -62,51 +62,52 @@ public class ClientWS {
 
 		} else {
 			String webResponse = cmh.switchit(jobj, head);
-			logger.info("webResponse ={} ",webResponse);
+			logger.info("webResponse ={} ", webResponse);
 			sendMsg(webResponse, ses);
 		}
 	}
-	
-//	public void recMsg(String msg, String ses) throws IOException {
-//
-//		logger.info("ON Client :received msg seas : " + msg);
-//		JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
-//		String head = jobj.get("head").getAsString();
-//
-//		CliMsgHandler cmh = new CliMsgHandler();
-//
-//		logger.info("HEAD  is {}", head);
-//		if (head.equalsIgnoreCase("coordinate")) {
-//			String persId;
-//			try {
-//				persId = jobj.get("persId").getAsString();
-//				logger.info("persId  is {}", persId);
-//				String res = cmh.coordRegister(persId, ses);
-//				logger.info("response is : {}",res);
-//				if (res != null) {
-//					sendMsgo(res, ses);
-//				}
-//			} catch (Exception e) {
-//				logger.info("Pers Id not Provided");
-//				sendMsgo("Operation Failed 3333 ", ses);
-//			}
-//
-//		} else {
-//			String webResponse = cmh.switchit(jobj, head);
-//			logger.info("webResponse ={} ",webResponse);
-//			sendMsgo(webResponse, ses);
-//		}
-//	}
-	
+
+	// public void recMsg(String msg, String ses) throws IOException {
+	//
+	// logger.info("ON Client :received msg seas : " + msg);
+	// JsonObject jobj = new Gson().fromJson(msg, JsonObject.class);
+	// String head = jobj.get("head").getAsString();
+	//
+	// CliMsgHandler cmh = new CliMsgHandler();
+	//
+	// logger.info("HEAD  is {}", head);
+	// if (head.equalsIgnoreCase("coordinate")) {
+	// String persId;
+	// try {
+	// persId = jobj.get("persId").getAsString();
+	// logger.info("persId  is {}", persId);
+	// String res = cmh.coordRegister(persId, ses);
+	// logger.info("response is : {}",res);
+	// if (res != null) {
+	// sendMsgo(res, ses);
+	// }
+	// } catch (Exception e) {
+	// logger.info("Pers Id not Provided");
+	// sendMsgo("Operation Failed 3333 ", ses);
+	// }
+	//
+	// } else {
+	// String webResponse = cmh.switchit(jobj, head);
+	// logger.info("webResponse ={} ",webResponse);
+	// sendMsgo(webResponse, ses);
+	// }
+	// }
 
 	private void sendMsgo(String res, String ses) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void sendMsg(String msg, Session ses) throws IOException {
 		System.out.println(msg);
-		ses.getBasicRemote().sendText(msg);
+		if (msg != null) {
+			ses.getBasicRemote().sendText(msg);
+		}
 	}
 
 	@OnError

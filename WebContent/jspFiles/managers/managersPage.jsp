@@ -38,7 +38,7 @@ window.manEmpId="<%=ses.getAttribute("primeKey")%>"
 	}
 </script>
 </head>
-<body onload="divhide(); capitalize(); ">
+<body onload="divhide(); ">
 
 	<div id="wrapper">
 		<!-- Navigation -->

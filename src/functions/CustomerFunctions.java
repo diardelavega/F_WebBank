@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.websocket.Session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import system.ClientQuery;
 import system.Coordinator;
 import system.TellerQuery;
@@ -17,7 +20,8 @@ import entity.Account;
 import entity.Transaction;
 
 public class CustomerFunctions {
-
+	public static final Logger logger = LoggerFactory
+			.getLogger(CustomerFunctions.class);
 	private String personalId;
 	private Session session;
 	private List<String> accountNrs;
@@ -56,6 +60,7 @@ public class CustomerFunctions {
 				return "Transactions Over 1000, Require Manager Confirmation";
 			} else {
 				long trNr = tq.transfer(persId, accFrom, accTo, amount, 'c');
+				logger.info("logger is tr nr --------: {}", trNr);
 				if (trNr > 0) {
 					System.out.println("complete!!");
 					return "Successful Completion tr nr: " + trNr;
@@ -148,6 +153,7 @@ public class CustomerFunctions {
 	}
 
 	public void setSession(Session session) {
+		logger.info("SESSIONNNNNNNNNNNNNNNNN filed ={}",session);
 		this.session = session;
 	}
 
@@ -176,10 +182,12 @@ public class CustomerFunctions {
 
 	public void addOneAcc(String accNr) {
 		accountNrs.add(accNr);
+		Coordinator.addAccount(accNr, personalId);
 	}
 
 	public void delOneAcc(String accNr) {
 		accountNrs.remove(accNr);
+		Coordinator.deleteAccount(accNr);
 	}
 
 	public void fillAllAccounts() {

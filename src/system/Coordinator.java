@@ -43,7 +43,7 @@ public class Coordinator {
 	private static Map<Integer, TellerFunctions> tellers = new HashMap<>();
 	private static Map<Integer, DirectorFunctions> directors = new HashMap<>();
 	private static Map<String, CustomerFunctions> clients = new HashMap<>();
-	private static Map<String, String> accounts = new HashMap<>();
+	private static Map<String, List<String>> accounts = new HashMap<>();
 
 	private static int reqCounter = 0;
 
@@ -116,7 +116,7 @@ public class Coordinator {
 	}
 
 	public static CustomerFunctions getCustomerFunctions(String id) {
-		logger.info("SIZE : "+clients.size());
+		logger.info("SIZE : " + clients.size());
 		return clients.get(id);
 	}
 
@@ -134,10 +134,17 @@ public class Coordinator {
 
 	/* ACCOUNTS */
 	public static void addAccount(String accNr, String persId) {
-		accounts.put(accNr, persId);
+		if (accounts.get(accNr) == null) {
+			List<String> apl = new ArrayList<>();
+			apl.add(persId);
+			accounts.put(accNr, apl);
+		} else {
+			accounts.get(accNr).add(persId);
+		}
+
 	}
 
-	public static String getPersId(String accNr) {
+	public static List<String> getPersId(String accNr) {
 		return accounts.get(accNr);
 	}
 
