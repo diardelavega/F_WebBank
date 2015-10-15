@@ -13,9 +13,6 @@ body {
 }
 </style>
 <script type="text/javascript">
-	/* function foo() {
-		$("#errorMsg").text("IIIIIIaaaaaaaaaooaaaaaaIIIIIasasIIIIN");
-	} */
 </script>
 </head>
 <body>

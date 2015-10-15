@@ -101,10 +101,10 @@ body {
 					<td style="min-width: 50px;"></td>
 				</tr>
 				<tr>
-					<td><label>password &ensp; </label><input
+					<td><label>password &ensp; </label><input name="psw" 
 						style="background-color: rgb(70, 70, 70);" type="password"></td>
 					<td style="min-width: 50px;"><input type="submit" value="log"
-						name="psw" style="width: 40px;"></td>
+						style="width: 40px;"></td>
 				</tr>
 				<tr>
 					<td>${sessionScope.validity}</td>
@@ -370,7 +370,7 @@ body {
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="3"><img alt="tree"
+				<td colspan="3"><img alt="foot"
 					src="img/footer_sponsors_en.png" width="100%" height="170px"></td>
 			</tr>
 		</tfoot>
