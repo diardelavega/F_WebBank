@@ -1,19 +1,19 @@
-//function capitalize() {
-//	// setTimeout(function() {
-//	$("input[type=text]").focusout(function() {
-//		$(this).val($(this).val().toUpperCase());
-//	});
-//	// }, 3000)
-//}
-
 $(function() {
 	$("input[type=text]").focusout(function() {
 		$(this).val($(this).val().toUpperCase());
 	});
 });
 
+function fooo() {
+	$("input[type=text]").focusout(function() {
+		$(this).val($(this).val().toUpperCase());
+	});
+}
+
 function foo() {
-	// alert("FOOOOOOO!!");
+	$("input[type=text]").focusout(function() {
+		$(this).val($(this).val().toUpperCase());
+	});
 	console.log("FOOOOOOO!!");
 }
 
@@ -162,16 +162,17 @@ function popUp(inp) {
 }
 
 function logOutReplay(jsobj) {
-	//to be called upon logout
-	
+	// to be called upon logout
+
 	console.log(jsobj);
 	if (jsobj.hasOwnProperty('response')) {
 		if (jsobj.response === 'OK') {
-//			window.location.href = "../logout.jsp";
+			window.location.href = "../../logout.jsp";
 		}
 	} else if (jsobj.hasOwnProperty('msg')) {
 		console.log("on log out  " + jsobj.msg);
-//		window.location.href = "../logout.jsp";
-	}
-	window.location.href = "../logout.jsp";
+		window.location.href = "../../logout.jsp";
+	} 
+		window.location.href = "../../logout.jsp";
+	
 }

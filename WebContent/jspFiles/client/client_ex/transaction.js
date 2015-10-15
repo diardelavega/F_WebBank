@@ -13,7 +13,7 @@ function getTransactions() {
 function cliTransactionReply(jsobj) {
 	if (jsobj.hasOwnProperty('transactionList')) {
 		var trans = jsobj.transactionList;
-		console.log(trans);
+//		console.log(trans);
 		fillTransactionTab(trans);
 	} else {
 		dispalyMsg(jsobj.msg);

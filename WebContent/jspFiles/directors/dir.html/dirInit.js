@@ -1,27 +1,13 @@
-function hideShow(chosen) {
-	$('.hidable').each(function(index) {
-		if ($(this).attr("id") === chosen) {
-			$(this).show();
-			// $(this).attr("style", "visibility: visible");
-		} else {
-			// $(this).attr("style", "visibility: collapse");
-			$(this).hide();
-		}
-	});
-}
-function divhide() {
-	hideShow('empDir');
-	// $('.hidable').attr("style", "visibility: visible");
-}
 
-var ws = new WebSocket("ws://localhost:8080/F_WebBank/dir");
+var host=window.location.hostname;
+var ws = new WebSocket("ws://"+host+":8080/F_WebBank/dir");
 
 function newWs() {
 	if (ws !== undefined && ws.readyState !== ws.CLOSED) {
 		msgPost.innerHTML = "WebSocket is already opened.";
 		return;
 	}
-	ws = new WebSocket("ws://localhost:8080/F_WebBank/dir");
+	ws = new WebSocket("ws://"+host+":8080/F_WebBank/dir");
 }
 
 ws.onmessage = function(evt) {
@@ -83,5 +69,26 @@ function onMessage(evt) {
 }
 
 function onError(evt) {
-	alert(evt.data);
+	console.log(window.location.href);
+	console.log("On Error");
+//	alert(window.location.href);
+//	alert(window.location.hostname);
+//	alert(evt.data);
+//	alert(evt.text);
+}
+
+function hideShow(chosen) {
+	$('.hidable').each(function(index) {
+		if ($(this).attr("id") === chosen) {
+			$(this).show();
+			// $(this).attr("style", "visibility: visible");
+		} else {
+			// $(this).attr("style", "visibility: collapse");
+			$(this).hide();
+		}
+	});
+}
+function divhide() {
+	hideShow('empDir');
+	// $('.hidable').attr("style", "visibility: visible");
 }

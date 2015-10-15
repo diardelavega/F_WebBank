@@ -100,7 +100,10 @@ function manMainAlertDisplay(msg, alertType, div) {
 		$(div).addClass("alert alert-danger");
 	}
 	var span = document.createElement("span");
+//	$(span).attr("align", "right");
 	$(span).attr("align", "left");
+	span.style.padding = "230px";
+	
 	var a = document.createElement("a");
 	a.innerHTML = "&times;";
 	$(a).attr("href", "#");
@@ -141,7 +144,7 @@ console.log("WTF req nr");
 	}
 }
 
-function logOut() {
+function manLogOut() {
 	var logout = {
 		head : "logout",
 		empId : window.manEmpId

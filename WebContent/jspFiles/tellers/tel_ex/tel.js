@@ -182,7 +182,7 @@ $(function() {
 	}
 });
 
-function logOut() {
+function telLogOut() {
 	var logout = {
 		head : "logout",
 		empId : telId,

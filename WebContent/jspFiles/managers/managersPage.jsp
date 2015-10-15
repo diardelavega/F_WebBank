@@ -116,7 +116,7 @@ window.manEmpId="<%=ses.getAttribute("primeKey")%>"
 						<li><a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
 						</li>
 						<li class="divider"></li>
-						<li><a href="#" onclick="logOut();"><i
+						<li><a href="#" onclick="manLogOut();"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
 					</ul></li>
 			</ul>
@@ -152,7 +152,7 @@ window.manEmpId="<%=ses.getAttribute("primeKey")%>"
 	<script src="./man_ex/man.js"></script>
 	<script src="./man_ex/manMain.js"></script>
 	<script src="./man_ex/request.js"></script>
-	<script src="../js/general.js"></script>
+	<script src="../../js/general.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../../bootstrap/js/bootstrap.min.js"></script>

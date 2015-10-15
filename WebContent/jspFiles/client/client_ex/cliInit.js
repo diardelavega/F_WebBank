@@ -1,11 +1,13 @@
-var ws = new WebSocket("ws://localhost:8080/F_WebBank/cli");
+var host=window.location.hostname;
+
+var ws = new WebSocket("ws://"+host+":8080/F_WebBank/cli");
 
 function newWs() {
 	if (ws !== undefined && ws.readyState !== ws.CLOSED) {
 		msgPost.innerHTML = "WebSocket is already opened.";
 		return;
 	}
-	ws = new WebSocket("ws://localhost:8080/F_WebBank/cli");
+	ws = new WebSocket("ws://"+host+":8080/F_WebBank/cli");
 }
 
 ws.onmessage = function(evt) {
@@ -64,7 +66,11 @@ function onMessage(evt) {
 }
 
 function onError(evt) {
-	alert(evt.data);
+	console.log(window.location.href);
+	console.log("On Error");
+//	alert(window.location.hostname);
+//	alert(evt.data);
+//	alert(evt.text);
 }
 
 function cliHideShow(chosen) {

@@ -172,11 +172,13 @@ function manWriteAllMsgs(req) {
 function onPersId(event) {
 	var txt = $(event.target).text();
 	$("#manPersonalId").val(txt);
+	ManHideShow('mainMan');
 }
 
 function onAccId(event) {
 	var txt = $(event.target).text();
 	$("#manAccountNr").val(txt);
+	ManHideShow('mainMan');
 }
 
 function clearReviewedRequesrs() {

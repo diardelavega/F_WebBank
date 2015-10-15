@@ -1,4 +1,6 @@
-var ws = new WebSocket("ws://localhost:8080/F_WebBank/tel");
+var host=window.location.hostname;
+
+var ws =  new WebSocket("ws://"+host+":8080/F_WebBank/tel");
 // var empId= $('#telEmpId').val();
 
 function newWs() {
@@ -6,7 +8,7 @@ function newWs() {
 		msgPost.innerHTML = "WebSocket is already opened.";
 		return;
 	}
-	ws = new WebSocket("ws://localhost:8080/F_WebBank/tel");
+	ws =  new WebSocket("ws://"+host+":8080/F_WebBank/tel");
 }
 
 ws.onmessage = function(evt) {

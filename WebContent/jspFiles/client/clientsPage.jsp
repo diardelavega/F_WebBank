@@ -49,8 +49,8 @@
 
 <script type="text/javascript">
 window.persId="<%=ses.getAttribute("primeKey")%>"
-	function eid() {
-		alert(persId);
+	function ceid() {
+		console.log(persId);
 	}
 </script>
 </head>
@@ -69,7 +69,7 @@ window.persId="<%=ses.getAttribute("primeKey")%>"
 						class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="#"
-					onclick="manSeverClientTupeling(); eid();">Client</a>
+					onclick="cliSeverClientTupeling(); ceid();">Client</a>
 			</div>
 
 			<ul class="nav navbar-right top-nav">
@@ -150,7 +150,7 @@ window.persId="<%=ses.getAttribute("primeKey")%>"
 
 
 	<!--clients scripts  -->
-	<script src="../js/general.js"></script>
+	<script src="../../js/general.js"></script>
 	<script src="./client_ex/cliInit.js"></script>
 	<script src="./client_ex/cli.js"></script>
 	<script src="./client_ex/account.js"></script>

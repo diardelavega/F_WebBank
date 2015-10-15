@@ -163,12 +163,12 @@ public class Run {
 		
 		
 		/* Transactions */
-		// TellerFunctions tf = new TellerFunctions ();
-		// tf.deposite("42218529RQQGP13", 150,"Mario Rista LUVs u");
-		// tf.deposite("13105279LUKHI54", 300,"Mario Rista LUVs u 2");
-		// tf.withdraw("1111111112", "42218529RQQGP13", 100,"Sa Sa Sa");
-		// tf.transfer("1111111111", "42218529RQQGP13", "70913919GVVTP98",
-		// 10.5,"AAAAA");
+//		 TellerFunctions tf = new TellerFunctions ();
+//		 tf.deposite("42218529RQQGP13", 150,"Mario Rista LUVs u");
+//		 tf.deposite("13105279LUKHI54", 300,"Mario Rista LUVs u 2");
+//		 tf.withdraw("1111111112", "42218529RQQGP13", 100,"Sa Sa Sa");
+//		 tf.transfer("1111111111", "42218529RQQGP13", "70913919GVVTP98",
+//		 10.5,"AAAAA");
 
 		// CustomerFunctions cf =new CustomerFunctions();
 		// cf.info("42218529RQQGP13");
@@ -244,50 +244,56 @@ public class Run {
 		// .println("--------***********------------" + b.getAccount2());
 		// // }
 		// }
-		/*
-		 * ManagerFunctions mf = new ManagerFunctions(31);
-		 * Coordinator.addManagerFunc(mf); TellerFunctions tf = new
-		 * TellerFunctions(2); Coordinator.addTellerFunc(tf); List<String> sl =
-		 * new ArrayList<>(); // sl.add("1111111111"); // sl.add("1111111112");
-		 * sl.add("1122334455"); // tf.openAccountReq(sl, 'b'); //
-		 * tf.closeAccountReq(sl, "68427666EXELD92"); Scanner sc = new
-		 * Scanner(System.in);
-		 * 
-		 * ManMsgHandler mmh = new ManMsgHandler();
-		 * 
-		 * int x = 1; while (x > 0) { if (x == 1) { OCRequest ocr = new
-		 * OCRequest(2, sl, StaticVars.OPEN, 'b'); Coordinator.addOCR(ocr); }
-		 * else if (x == 2) { OCRequest ocr = new OCRequest(2, sl,
-		 * StaticVars.CLOSE, "68427666EXELD92"); Coordinator.addOCR(ocr); } else
-		 * if (x == 3) { sl.add("1111111112"); OCRequest ocr = new OCRequest(2,
-		 * sl, StaticVars.PLUS_1K_TRANS, "70913919GVVTP98", "68427666EXELD92",
-		 * 1200, "Just A try"); // String accNr1, String accNr2, double amount,
-		 * String note2 Coordinator.addOCR(ocr); } else if (x == 4) {
-		 * mf.getOCR(); } else if (x == 5) { mf.leaveOCR(); } else if (x == 6) {
-		 * mf.decision("ACCEPTED", "YEsss"); } else if (x == 7) {
-		 * mf.decision("DENNIED", "Noooo"); } System.out.println("-----> " + x);
-		 * System.out.println("ocr list " + Coordinator.ocrListSize());
-		 * System.out.println("ocrs reqCount " + Coordinator.getReqCounter());
-		 * 
-		 * x = sc.nextInt(); }
-		 */
+		
+		  ManagerFunctions mf = new ManagerFunctions(31);
+		  Coordinator.addManagerFunc(mf); TellerFunctions tf = new
+		  TellerFunctions(2); Coordinator.addTellerFunc(tf); List<String> sl =
+		  new ArrayList<>(); // sl.add("1111111111"); // sl.add("1111111112");
+		  sl.add("1122334455"); // tf.openAccountReq(sl, 'b'); //
+		  tf.closeAccountReq(sl, "68427666EXELD92"); Scanner sc = new
+		  Scanner(System.in);
+		  
+		  ManMsgHandler mmh = new ManMsgHandler();
+		  
+		  int x = 1; 
+		  while (x > 0) { 
+			  if (x == 1) { 
+				  OCRequest ocr = new OCRequest(2, sl, StaticVars.OPEN, 'b');
+				  Coordinator.addOCR(ocr); 
+				  }
+		  else if (x == 2) { 
+			  OCRequest ocr = new OCRequest(2, sl, StaticVars.CLOSE, "68427666EXELD92"); 
+			  Coordinator.addOCR(ocr); 
+			  } else if (x == 3) { 
+				  sl.add("1111111112"); 
+				  OCRequest ocr = new OCRequest(2, sl, StaticVars.PLUS_1K_TRANS, "70913919GVVTP98", "68427666EXELD92", 1200, "Just A try"); // String accNr1, String accNr2, double amount,
+				//				  String note2 Coordinator.addOCR(ocr); 
+		 } else if (x == 4) {
+		  mf.getOCR(); } else if (x == 5) { mf.leaveOCR(); } else if (x == 6) {
+		  mf.decision("ACCEPTED", "YEsss"); } else if (x == 7) {
+		  mf.decision("DENNIED", "Noooo"); } System.out.println("-----> " + x);
+		  System.out.println("ocr list " + Coordinator.ocrListSize());
+		  System.out.println("ocrs reqCount " + Coordinator.getReqCounter());
+		  
+		  x = sc.nextInt(); }
+		 
 
 		// -----------------------------------------------------------------------
 
-		// TellerFunctions tf= new TellerFunctions ();
-		// tf.getClientAccounts("1122334455");
+//		 TellerFunctions tf= new TellerFunctions ();
+		 tf.getClientAccounts("1122334455");
 		// -----------------------------------------------------------------------
 
 		// ocr.print();
 
-		// TellerQuery tq = new TellerQuery();
-		// tq.checkDepositeRegularity("1233dsdd3", 123.44);
+		 TellerQuery tq = new TellerQuery();
+		 tq.checkDepositeRegularity("1233dsdd3", 123.44);
 
-		// sl = new ArrayList<>();
-		// sl.add("1111111111");
-		// OCRequest ocr2 = new OCRequest(2, sl, StaticVars.OPEN, 's');
-		// Coordinator.addOCR(ocr2);
-		// ocr.print();
+		 sl = new ArrayList<>();
+		 sl.add("1111111111");
+		 OCRequest ocr2 = new OCRequest(2, sl, StaticVars.OPEN, 's');
+		 Coordinator.addOCR(ocr2);
+//		 ocr.print();
 
 		// --------------------
 

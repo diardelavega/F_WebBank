@@ -78,9 +78,11 @@ public class Log extends HttpServlet {
 
 		String usr = request.getParameter("usr");
 		String psw = request.getParameter("psw");
+		logger.info("usr= {}  psw ={} ", usr, psw);
+
 		HttpSession session = request.getSession(false);
 		session.setAttribute("validity", null);
-		String destination = "jspFiles/LogIn.jsp";
+		String destination = "LogIn.jsp";
 		// RequestDispatcher rd;
 
 		if (usr.equals("") || psw.equals("")) {
@@ -103,8 +105,6 @@ public class Log extends HttpServlet {
 
 						switch (e.getPossition()) {
 						case "TELLER":
-							// the new entrances to the system are kept in the
-							// coordinator
 							TellerFunctions tf = new TellerFunctions(
 									e.getEmpId());
 							Coordinator.addTellerFunc(tf);
@@ -133,11 +133,11 @@ public class Log extends HttpServlet {
 						session = request.getSession(true);
 						session.setAttribute("primeKey", c.getPersonalId());
 						session.setAttribute("name", c.getFname());
-						
+
 						CustomerFunctions cf = new CustomerFunctions(
 								c.getPersonalId());
 						Coordinator.addCustomerFunc(cf);
-						
+
 						destination = "jspFiles/client/clientsPage.jsp";
 					} else {
 						session.setAttribute("validity", "user not found");
@@ -152,7 +152,7 @@ public class Log extends HttpServlet {
 		// log.closeSession();
 		// rd = request.getRequestDispatcher(destination);
 		// rd.forward(request, response);
-
+		logger.info("We are going to {}", destination);
 		response.sendRedirect(destination);
 	}
 

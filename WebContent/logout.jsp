@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>LOG OUT</title>
+<title>LOG_OUT</title>
 <%
 	HttpSession ses = request.getSession();
 	if (!ses.isNew()) {
@@ -14,7 +14,8 @@
 %>
 </head>
 <body>
-<jsp:forward page="LogIn.jsp"></jsp:forward>
-
+<jsp:forward page="./LogIn.jsp"></jsp:forward>
+	<script src="./bootstrap/js/jquery.js"></script>
+	<script src="./jspFiles/js/general.js"></script>
 </body>
 </html>

@@ -24,13 +24,13 @@ function fillAccArr(accounts) {
 	for (var i = 0; i < accounts.length; i++) {
 		accArr[i] = accounts[i]["accountId"];
 	}
-	console.log("accArr");
-	console.log(accArr);
+//	console.log("accArr");
+//	console.log(accArr);
 }
 
 function cliAccountsPushed(jsobj) {
 	// receives the updated accounts
-	console.log("cliAccountsPushed---------------");
+//	console.log("cliAccountsPushed---------------");
 	if (jsobj.hasOwnProperty("accs")) {
 		accounts = jsobj.accs;
 		fillAccArr(accounts);
@@ -41,14 +41,14 @@ function cliAccountsPushed(jsobj) {
 
 function cliAccountsReply(jsobj) {
 	// receive accounts that were asked for
-	console.log("cliAccountsReply");
+//	console.log("cliAccountsReply");
 	if (jsobj.hasOwnProperty("accounts")) {
 		accounts = jsobj.accounts;
 		fillAccArr(accounts);
-		console.log(accounts);
+//		console.log(accounts);
 		showAccounts(accounts);
 	} else {
-		console.log(jsobj.msg);
+//		console.log(jsobj.msg);
 		dispalyMsg(jsobj.msg);
 	}
 }
@@ -62,13 +62,13 @@ function cliClearTransfer() {
 }
 
 function showAccounts(accs) {
-	console.log("UFFFF!!");
+//	console.log("UFFFF!!");
 	var ulPill = $("#accountPills");
 
 	if(activePillsIndex==undefined){
 		activePillsIndex=0;
 	}
-	console.log("activePillsIndex --: " + activePillsIndex);
+//	console.log("activePillsIndex --: " + activePillsIndex);
 	// clear all content and hide tranfer form
 	$(ulPill).empty();
 	$("#transferFunc").hide();
@@ -76,7 +76,7 @@ function showAccounts(accs) {
 	$(divPillCont).empty();
 
 	for (var i = 0; i < accs.length; i++) {
-		console.log("---------:" + i);
+//		console.log("---------:" + i);
 		/* dynamically create the pills, the header with the accounts */
 		var li = document.createElement("li");
 		var a = document.createElement("a");
@@ -127,9 +127,9 @@ function showAccounts(accs) {
 			if (key == 'accountId') {
 				var accIds = accs[i][key];
 			}
-			if (key == 'balance') {
-				console.log("-------------" + accs[i][key]);
-			}
+//			if (key == 'balance') {
+////				console.log("-------------" + accs[i][key]);
+//			}
 			if (key == 'accType') {
 				td1.innerHTML = "<strong>" + 'type' + "</strong>";
 				var dx;
@@ -216,7 +216,7 @@ $(function() {
 });
 
 function setTransferPersId(accFrom) {
-	console.log("setTransferPersId");
+//	console.log("setTransferPersId");
 	var ctpi = $("#cliTransPersId");
 	$(ctpi).val(persId);
 	// $(ctpi).prop("pleaceholder", persId);

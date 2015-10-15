@@ -407,7 +407,7 @@ function mainAlertDisplay(msg, alertType) {
 	div.append(msg);
 
 	$(div).show();
-	// fadeOut(div);
+	 fadeOut(div);
 	return div;
 }
 

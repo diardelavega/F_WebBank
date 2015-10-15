@@ -121,7 +121,7 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 						<li><a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
 						</li>
 						<li class="divider"></li>
-						<li><a href="../logout.jsp"><i
+						<li><a href="#" onclick="dirLogOut();"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
 					</ul></li>
 			</ul>
@@ -160,7 +160,7 @@ window.dirEmpId="<%=ses.getAttribute("primeKey")%>"
 	<script src="../../bootstrap/js/jquery.js"></script>
 
 	<!-- director scripts -->
-	<script src="../js/general.js"></script>
+	<script src="../../js/general.js"></script>
 	<script src="./dir.html/dirInit.js"></script>
 	<script src="./dir.html/dir.js"></script>
 	<script src="./dir.html/balance.js"></script>

@@ -40,7 +40,7 @@ window.telId="<%=ses.getAttribute("primeKey")%>"
 </script>
 <title>Teller's Page</title>
 </head>
-<body onload="telDivhide(); capitalize(); ">
+<body onload="telDivhide();">
 
 	<div id="wrapper">
 		<!-- Navigation -->
@@ -115,7 +115,7 @@ window.telId="<%=ses.getAttribute("primeKey")%>"
 						<li><a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
 						</li>
 						<li class="divider"></li>
-						<li><a href="../logout.jsp"><i
+						<li><a href="#" onclick="telLogOut();"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
 					</ul></li>
 			</ul>
@@ -147,7 +147,7 @@ window.telId="<%=ses.getAttribute("primeKey")%>"
 	<script src="../../bootstrap/js/jquery.js"></script>
 
 	<!-- teller scripts -->
-	<script src="../js/general.js"></script>
+	<script src="../../js/general.js"></script>
 	<script src="./tel_ex/telInit.js"></script>
 	<script src="./tel_ex/tel.js"></script>
 	<script src="./tel_ex/main.js"></script>

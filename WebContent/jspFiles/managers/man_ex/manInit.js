@@ -1,11 +1,12 @@
-var ws = new WebSocket("ws://localhost:8080/F_WebBank/man");
+var host=window.location.hostname;
+var ws = new WebSocket("ws://"+host+":8080/F_WebBank/man");
 
 function newWs() {
 	if (ws !== undefined && ws.readyState !== ws.CLOSED) {
 		msgPost.innerHTML = "WebSocket is already opened.";
 		return;
 	}
-	ws = new WebSocket("ws://localhost:8080/F_WebBank/man");
+	ws = new WebSocket("ws://"+host+":8080/F_WebBank/man");
 }
 
 ws.onmessage = function(evt) {
